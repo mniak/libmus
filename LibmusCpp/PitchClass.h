@@ -7,6 +7,7 @@ private:
 
 public:
 	PitchClass();
+	static PitchClass Random();
 
 	__declspec(property(get = GetStep, put = SetStep)) int Step;
 	int GetStep();
