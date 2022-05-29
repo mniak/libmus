@@ -8,6 +8,7 @@ private:
 public:
 	PitchClass();
 	static PitchClass Random();
+	static PitchClass ExtendedRandom();
 
 	__declspec(property(get = GetStep, put = SetStep)) int Step;
 	int GetStep();

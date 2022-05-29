@@ -39,10 +39,16 @@ std::uniform_int_distribution<> usualAlterationDistribution(-1, 1);
 std::uniform_int_distribution<> alterationDistribution(PITCHCLASS_MIN_ALTERATION, PITCHCLASS_MAX_ALTERATION);
 std::uniform_int_distribution<> stepDistribution(PITCHCLASS_MIN_STEP, PITCHCLASS_MAX_STEP);
 
-
 PitchClass PitchClass::Random() {
 	PitchClass pc;
 	pc.Step = stepDistribution(generator);
 	pc.Alteration = usualAlterationDistribution(generator);
+	return pc;
+}
+
+PitchClass PitchClass::ExtendedRandom() {
+	PitchClass pc;
+	pc.Step = stepDistribution(generator);
+	pc.Alteration = alterationDistribution(generator);
 	return pc;
 }

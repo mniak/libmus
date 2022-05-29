@@ -119,13 +119,14 @@ TEST(PitchClass_Alteration, When_value_is_greater_than_limit_then_keep_max_value
 	}
 }
 
+
 TEST(PitchClass_Random, Steps_should_have_a_good_distribution) {
 	map<int, bool> steps;
 	for (auto i = 1; i <= 7 * 5; i++) {
 		auto pc = PitchClass::Random();
 		steps[pc.Step] = true;
 	}
-	for (auto i = 1; i<= 7; i++) {
+	for (auto i = 1; i <= 7; i++) {
 		auto pc = PitchClass::Random();
 		EXPECT_TRUE(steps[i]);
 	}
@@ -133,7 +134,7 @@ TEST(PitchClass_Random, Steps_should_have_a_good_distribution) {
 
 TEST(PitchClass_Random, Alterations_should_never_be_double) {
 	map<int, bool> alterations;
-	for (auto i = 1; i <= 5 * 5; i++) {
+	for (auto i = 1; i <= 3 * 5; i++) {
 		auto pc = PitchClass::Random();
 		alterations[pc.Alteration] = true;
 	}
@@ -142,5 +143,29 @@ TEST(PitchClass_Random, Alterations_should_never_be_double) {
 	}
 	for (auto v : { -2, 2 }) {
 		EXPECT_FALSE(alterations[v]);
+	}
+}
+
+
+TEST(PitchClass_ExtendedRandom, Steps_should_have_a_good_distribution) {
+	map<int, bool> steps;
+	for (auto i = 1; i <= 7 * 5; i++) {
+		auto pc = PitchClass::ExtendedRandom();
+		steps[pc.Step] = true;
+	}
+	for (auto i = 1; i <= 7; i++) {
+		auto pc = PitchClass::ExtendedRandom();
+		EXPECT_TRUE(steps[i]);
+	}
+}
+
+TEST(PitchClass_ExtendedRandom, Alterations_should_have_a_good_distribution) {
+	map<int, bool> alterations;
+	for (auto i = 1; i <= 5 * 5; i++) {
+		auto pc = PitchClass::ExtendedRandom();
+		alterations[pc.Alteration] = true;
+	}
+	for (auto i = -2; i <= 2; i++) {
+		EXPECT_TRUE(alterations[i]);
 	}
 }
