@@ -75,3 +75,43 @@ TEST(PitchClass_Step, Attributing_zero_or_negative_should_do_nothing) {
 		}
 	}
 }
+
+
+TEST(PitchClass_Alteration, When_value_is_in_range_store_the_same) {
+	PitchClass pc;
+
+	pc.Alteration = -2;
+	EXPECT_EQ(-2, pc.Alteration);
+
+	pc.Alteration = -1;
+	EXPECT_EQ(-1, pc.Alteration);
+
+	pc.Alteration = 0;
+	EXPECT_EQ(0, pc.Alteration);
+
+	pc.Alteration = 1;
+	EXPECT_EQ(1, pc.Alteration);
+
+	pc.Alteration = 2;
+	EXPECT_EQ(2, pc.Alteration);
+}
+
+TEST(PitchClass_Alteration, When_value_is_smaller_than_limit_then_keep_min_value) {
+	PitchClass pc;
+
+	for (auto v = -12; v <= -2; v++) {
+		pc.Alteration = 0;
+		pc.Alteration = v;
+		EXPECT_EQ(-2, pc.Alteration);
+	}
+}
+
+TEST(PitchClass_Alteration, When_value_is_greater_than_limit_then_keep_max_value) {
+	PitchClass pc;
+
+	for (auto v = 2; v <= 12; v++) {
+		pc.Alteration = 0;
+		pc.Alteration = v;
+		EXPECT_EQ(2, pc.Alteration);
+	}
+}
