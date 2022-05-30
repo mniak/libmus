@@ -3,6 +3,8 @@
 #include "Utils.h"
 #include <random>
 
+using namespace std;
+
 namespace libmus {
 
 	PitchClass::PitchClass() {
@@ -26,26 +28,24 @@ namespace libmus {
 	}
 
 	void PitchClass::SetAlteration(int value) {
-		this->alteration = truncateRange(value, MIN_ALTERATION, MAX_ALTERATION);
+		this->alteration = utils::truncateRange(value, MIN_ALTERATION, MAX_ALTERATION);
 	}
 
-	std::random_device randDevice;
-	std::mt19937 generator(randDevice());
-	std::uniform_int_distribution<> usualAlterationDistribution(-1, 1);
-	std::uniform_int_distribution<> alterationDistribution(PitchClass::MIN_ALTERATION, PitchClass::MAX_ALTERATION);
-	std::uniform_int_distribution<> stepDistribution(PitchClass::MIN_STEP, PitchClass::MAX_STEP);
+	uniform_int_distribution<> usualAlterationDistribution(-1, 1);
+	uniform_int_distribution<> alterationDistribution(PitchClass::MIN_ALTERATION, PitchClass::MAX_ALTERATION);
+	uniform_int_distribution<> stepDistribution(PitchClass::MIN_STEP, PitchClass::MAX_STEP);
 
 	PitchClass PitchClass::Random() {
 		PitchClass pc;
-		pc.Step = stepDistribution(generator);
-		pc.Alteration = usualAlterationDistribution(generator);
+		pc.Step = utils::generateRandom(stepDistribution);
+		pc.Alteration = utils::generateRandom(usualAlterationDistribution);
 		return pc;
 	}
 
 	PitchClass PitchClass::ExtendedRandom() {
 		PitchClass pc;
-		pc.Step = stepDistribution(generator);
-		pc.Alteration = alterationDistribution(generator);
+		pc.Step = utils::generateRandom(stepDistribution);
+		pc.Alteration = utils::generateRandom(alterationDistribution);
 		return pc;
 	}
 }

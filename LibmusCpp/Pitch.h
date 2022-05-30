@@ -30,11 +30,7 @@ namespace libmus {
 		std::string PrettyName();
 		std::string FullName();
 
-		const int MIN_STEP = PitchClass::MIN_STEP;
-		const int MAX_STEP = PitchClass::MAX_STEP;
-		const int MIN_ALTERATION = PitchClass::MIN_ALTERATION;
-		const int MAX_ALTERATION = PitchClass::MAX_ALTERATION;
-		const int MIN_OCTAVE = 0;
-		const int MAX_OCTAVE = 10;
+		static const int MIN_OCTAVE = 0;
+		static const int MAX_OCTAVE = 10;
 	};
 }

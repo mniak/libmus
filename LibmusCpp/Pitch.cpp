@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Pitch.h"
 #include "Utils.h"
+#include <random>
 
 namespace libmus {
 	Pitch::Pitch()
@@ -8,14 +9,18 @@ namespace libmus {
 		this->octave = 4;
 	}
 
-	Pitch Pitch::Parse(std::string pitch)
+	Pitch Pitch::Parse(string pitch)
 	{
 		return Pitch();
 	}
 
+	uniform_int_distribution<> octaveDistribution(Pitch::MIN_OCTAVE, Pitch::MAX_OCTAVE);
 	Pitch Pitch::Random()
 	{
-		return Pitch();
+		Pitch pitch;
+		pitch.pitchClass = PitchClass::Random();
+		pitch.octave = utils::generateRandom(octaveDistribution);
+		return pitch;
 	}
 
 	Pitch Pitch::ExtendedRandom()
@@ -50,22 +55,22 @@ namespace libmus {
 
 	void Pitch::SetOctave(int value)
 	{
-		this->octave = truncateRange(value, MIN_OCTAVE, MAX_OCTAVE);
+		this->octave = utils::truncateRange(value, MIN_OCTAVE, MAX_OCTAVE);
 	}
 
-	std::string Pitch::Name()
+	string Pitch::Name()
 	{
-		return std::string();
+		return string();
 	}
 
-	std::string Pitch::PrettyName()
+	string Pitch::PrettyName()
 	{
-		return std::string();
+		return string();
 	}
 
-	std::string Pitch::FullName()
+	string Pitch::FullName()
 	{
-		return std::string();
+		return string();
 	}
 
 }
