@@ -52,10 +52,20 @@ namespace libmus {
 	{
 		return PitchClass();
 	}
+
+	const vector<string> NAMES = { "C", "D", "E", "F", "G", "A", "B" };
 	std::string PitchClass::Name()
 	{
-		return std::string();
+		auto result = NAMES[this->Step -1];
+		for (auto i = 1; i <= this->alteration; i++) {
+			result = result + "#";
+		}
+		for (auto i = -1; i >= this->alteration; i--) {
+			result = result + "b";
+		}
+		return result;
 	}
+
 	std::string PitchClass::PrettyName()
 	{
 		return std::string();
