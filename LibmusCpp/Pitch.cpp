@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Pitch.h"
+#include "Utils.h"
 
 namespace libmus {
 	Pitch::Pitch()
@@ -49,7 +50,7 @@ namespace libmus {
 
 	void Pitch::SetOctave(int value)
 	{
-		this->octave = value;
+		this->octave = truncateRange(value, MIN_OCTAVE, MAX_OCTAVE);
 	}
 
 	std::string Pitch::Name()

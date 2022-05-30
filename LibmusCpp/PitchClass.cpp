@@ -3,11 +3,6 @@
 #include "Utils.h"
 #include <random>
 
-#define PITCHCLASS_MIN_STEP 1
-#define PITCHCLASS_MAX_STEP 7
-#define PITCHCLASS_MIN_ALTERATION -2
-#define PITCHCLASS_MAX_ALTERATION 2
-
 namespace libmus {
 
 	PitchClass::PitchClass() {
@@ -20,10 +15,10 @@ namespace libmus {
 	}
 
 	void PitchClass::SetStep(int value) {
-		if (value < PITCHCLASS_MIN_STEP)
+		if (value < MIN_STEP)
 			return;
 
-		this->step = (value - PITCHCLASS_MIN_STEP) % (PITCHCLASS_MAX_STEP - PITCHCLASS_MIN_STEP + 1) + PITCHCLASS_MIN_STEP;
+		this->step = (value - MIN_STEP) % (MAX_STEP - MIN_STEP + 1) + MIN_STEP;
 	}
 
 	int PitchClass::GetAlteration() {
@@ -31,14 +26,14 @@ namespace libmus {
 	}
 
 	void PitchClass::SetAlteration(int value) {
-		this->alteration = truncateRange(value, PITCHCLASS_MIN_ALTERATION, PITCHCLASS_MAX_ALTERATION);
+		this->alteration = truncateRange(value, MIN_ALTERATION, MAX_ALTERATION);
 	}
 
 	std::random_device randDevice;
 	std::mt19937 generator(randDevice());
 	std::uniform_int_distribution<> usualAlterationDistribution(-1, 1);
-	std::uniform_int_distribution<> alterationDistribution(PITCHCLASS_MIN_ALTERATION, PITCHCLASS_MAX_ALTERATION);
-	std::uniform_int_distribution<> stepDistribution(PITCHCLASS_MIN_STEP, PITCHCLASS_MAX_STEP);
+	std::uniform_int_distribution<> alterationDistribution(PitchClass::MIN_ALTERATION, PitchClass::MAX_ALTERATION);
+	std::uniform_int_distribution<> stepDistribution(PitchClass::MIN_STEP, PitchClass::MAX_STEP);
 
 	PitchClass PitchClass::Random() {
 		PitchClass pc;
