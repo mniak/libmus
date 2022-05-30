@@ -25,7 +25,10 @@ namespace libmus {
 
 	Pitch Pitch::ExtendedRandom()
 	{
-		return Pitch();
+		Pitch pitch;
+		pitch.pitchClass = PitchClass::ExtendedRandom();
+		pitch.octave = utils::generateRandom(octaveDistribution);
+		return pitch;
 	}
 
 	int Pitch::GetStep()
