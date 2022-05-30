@@ -86,16 +86,6 @@ TEST(Pitch_Step, Zero_or_negative_values_should_do_nothing) {
 	}
 }
 
-TEST(Pitch_Step, Decimals_should_be_rounded) {
-	Pitch pitch;
-	for (auto v = 1; v <= 4; v += 0.123) {
-		pitch.Step = v;
-		EXPECT_EQ(0, pitch.Step % 1);
-		EXPECT_TRUE(pitch.Step >= floor(v));
-		EXPECT_TRUE(pitch.Step <= ceil(v));
-	}
-}
-
 TEST(Pitch_Alteration, When_value_is_in_range_store_the_same) {
 	Pitch pitch;
 
@@ -136,16 +126,6 @@ TEST(Pitch_Alteration, When_value_is_greater_than_limit_keep_max_value) {
 	}
 }
 
-TEST(Pitch_Alteration, Decimals_should_be_rounded) {
-	Pitch pitch;
-	for (auto v = -2; v <= 2; v += 0.123) {
-		pitch.Alteration = v;
-		EXPECT_EQ(0, pitch.Alteration % 1);
-		EXPECT_TRUE(pitch.Alteration >= floor(v));
-		EXPECT_TRUE(pitch.Alteration <= ceil(v));
-	}
-}
-
 TEST(Pitch_Octave, When_value_is_in_range_store_the_same) {
 	Pitch pitch;
 	for (auto v = 0; v <= 10; v++) {
@@ -172,16 +152,6 @@ TEST(Pitch_Octave, When_value_is_greater_than_limit_keep_max_value) {
 		pitch.Octave = 0;
 		pitch.Octave = v;
 		EXPECT_EQ(10, pitch.Octave);
-	}
-}
-
-TEST(Pitch_Octave, Decimals_should_be_rounded) {
-	Pitch pitch;
-	for (auto v = 0; v <= 10; v += 0.123) {
-		pitch.Octave = v;
-		EXPECT_EQ(0, pitch.Octave % 1);
-		EXPECT_TRUE(pitch.Octave >= floor(v));
-		EXPECT_TRUE(pitch.Octave <= ceil(v));
 	}
 }
 
