@@ -1,8 +1,9 @@
 #include "pch.h"
 #include <map>
+#include "../LibmusCpp/PitchClass.h"
 
 using namespace std;
-
+using namespace libmus;
 
 TEST(PitchClass_Step, Constructor_should_set_initial_values) {
 	PitchClass pc;
@@ -10,7 +11,6 @@ TEST(PitchClass_Step, Constructor_should_set_initial_values) {
 	EXPECT_EQ(1, pc.Step);
 	EXPECT_EQ(0, pc.Alteration);
 }
-
 
 TEST(PitchClass_Step, Normal_values_should_work) {
 	PitchClass pc;
