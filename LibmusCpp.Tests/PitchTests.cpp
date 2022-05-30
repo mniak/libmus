@@ -78,7 +78,7 @@ TEST(Pitch_Step, Zero_or_negative_values_should_do_nothing) {
 	Pitch pitch;
 
 	for (auto goodValue = 1; goodValue <= 6; goodValue++) {
-		for (auto badValue = -1; badValue <= -20; badValue += -1) {
+		for (auto badValue = -1; badValue >= -20; badValue--) {
 			pitch.Step = goodValue;
 			pitch.Step = badValue;
 			EXPECT_EQ(goodValue, pitch.Step);
@@ -162,7 +162,7 @@ TEST(Pitch_Random, Steps_should_have_a_good_distribution) {
 		steps[pitch.Step] = true;
 	}
 	for (auto i = 1; i <= 7; i++) {
-		EXPECT_TRUE(steps[i]);
+		EXPECT_TRUE(steps.count(i) && steps[i]);
 	}
 }
 
@@ -173,7 +173,7 @@ TEST(Pitch_Random, Alterations_should_never_be_double) {
 		alterations[pitch.Alteration] = true;
 	}
 	for (auto i = -1; i <= 1; i++) {
-		EXPECT_TRUE(alterations[i]);
+		EXPECT_TRUE(alterations.count(i) && alterations[i]);
 	}
 	for (auto v : { -2, 2 }) {
 		EXPECT_FALSE(alterations[v]);
@@ -187,7 +187,7 @@ TEST(Pitch_Random, Octaves_should_have_a_good_distribution) {
 		octaves[pitch.Octave] = true;
 	}
 	for (auto i = 0; i <= 10; i++) {
-		EXPECT_TRUE(octaves[i]);
+		EXPECT_TRUE(octaves.count(i) && octaves[i]);
 	}
 }
 
@@ -198,7 +198,7 @@ TEST(Pitch_ExtendedRandom, Steps_should_have_a_good_distribution) {
 		steps[pitch.Step] = true;
 	}
 	for (auto i = 1; i <= 7; i++) {
-		EXPECT_TRUE(steps[i]);
+		EXPECT_TRUE(steps.count(i) && steps[i]);
 	}
 }
 
@@ -209,7 +209,7 @@ TEST(Pitch_ExtendedRandom, Alterations_should_have_a_good_distribution) {
 		alterations[pitch.Alteration] = true;
 	}
 	for (auto i = -2; i <= 2; i++) {
-		EXPECT_TRUE(alterations[i]);
+		EXPECT_TRUE(alterations.count(i) && alterations.count(i) && alterations.count(i) && alterations[i]);
 	}
 }
 
@@ -220,7 +220,7 @@ TEST(Pitch_ExtendedRandom, Octaves_should_have_a_good_distribution) {
 		octaves[pitch.Octave] = true;
 	}
 	for (auto i = 0; i <= 10; i++) {
-		EXPECT_TRUE(octaves[i]);
+		EXPECT_TRUE(octaves.count(i) && octaves[i]);
 	}
 }
 
@@ -232,7 +232,7 @@ TEST(Pitch_SimpleName, Without_alterations) {
 		pitch.Octave = o;
 		for (auto i = 1; i <= 7; i++) {
 			pitch.Step = i;
-			auto 	expected = replace(names[i], "?", to_string(pitch.Octave));
+			auto expected = replace(names[i - 1], "?", to_string(pitch.Octave));
 			auto actual = pitch.Name();
 			EXPECT_EQ(expected, actual);
 		}
@@ -247,7 +247,7 @@ TEST(Pitch_SimpleName, With_1_flat) {
 		pitch.Octave = o;
 		for (auto i = 1; i <= 7; i++) {
 			pitch.Step = i;
-			auto 	expected = replace(names[i], "?", to_string(pitch.Octave));
+			auto expected = replace(names[i - 1], "?", to_string(pitch.Octave));
 			auto actual = pitch.Name();
 			EXPECT_EQ(expected, actual);
 		}
@@ -262,7 +262,7 @@ TEST(Pitch_SimpleName, With_2_flats) {
 		pitch.Octave = o;
 		for (auto i = 1; i <= 7; i++) {
 			pitch.Step = i;
-			auto 	expected = replace(names[i], "?", to_string(pitch.Octave));
+			auto expected = replace(names[i - 1], "?", to_string(pitch.Octave));
 			auto actual = pitch.Name();
 			EXPECT_EQ(expected, actual);
 		}
@@ -277,7 +277,7 @@ TEST(Pitch_SimpleName, With_1_sharp) {
 		pitch.Octave = o;
 		for (auto i = 1; i <= 7; i++) {
 			pitch.Step = i;
-			auto 	expected = replace(names[i], "?", to_string(pitch.Octave));
+			auto expected = replace(names[i - 1], "?", to_string(pitch.Octave));
 			auto actual = pitch.Name();
 			EXPECT_EQ(expected, actual);
 		}
@@ -292,7 +292,7 @@ TEST(Pitch_SimpleName, With_2_sharps) {
 		pitch.Octave = o;
 		for (auto i = 1; i <= 7; i++) {
 			pitch.Step = i;
-			auto 	expected = replace(names[i], "?", to_string(pitch.Octave));
+			auto expected = replace(names[i - 1], "?", to_string(pitch.Octave));
 			auto actual = pitch.Name();
 			EXPECT_EQ(expected, actual);
 		}
@@ -300,8 +300,7 @@ TEST(Pitch_SimpleName, With_2_sharps) {
 }
 
 vector<string> superscripts = { "⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹", "¹⁰" };
-
-TEST(Pitch, Without_alterations) {
+TEST(Pitch_PrettyName, Without_alterations) {
 	Pitch pitch;
 	pitch.Alteration = 0;
 	vector<string> names = { "C?", "D?", "E?", "F?", "G?", "A?", "B?" };
@@ -309,7 +308,7 @@ TEST(Pitch, Without_alterations) {
 		pitch.Octave = o;
 		for (auto i = 1; i <= 7; i++) {
 			pitch.Step = i;
-			auto 	expected = replace(names[i], "?", superscripts[pitch.Octave + 1]);
+			auto expected = replace(names[i - 1], "?", superscripts[pitch.Octave]);
 			auto actual = pitch.PrettyName();
 			EXPECT_EQ(expected, actual);
 		}
@@ -324,7 +323,7 @@ TEST(Pitch_PrettyName, With_1_flat) {
 		pitch.Octave = o;
 		for (auto i = 1; i <= 7; i++) {
 			pitch.Step = i;
-			auto 	expected = replace(names[i], "?", superscripts[pitch.Octave + 1]);
+			auto expected = replace(names[i - 1], "?", superscripts[pitch.Octave]);
 			auto actual = pitch.PrettyName();
 			EXPECT_EQ(expected, actual);
 		}
@@ -339,7 +338,7 @@ TEST(Pitch_PrettyName, With_2_flats) {
 		pitch.Octave = o;
 		for (auto i = 1; i <= 7; i++) {
 			pitch.Step = i;
-			auto 	expected = replace(names[i], "?", superscripts[pitch.Octave + 1]);
+			auto expected = replace(names[i - 1], "?", superscripts[pitch.Octave]);
 			auto actual = pitch.PrettyName();
 			EXPECT_EQ(expected, actual);
 		}
@@ -354,7 +353,7 @@ TEST(Pitch_PrettyName, With_1_sharp) {
 		pitch.Octave = o;
 		for (auto i = 1; i <= 7; i++) {
 			pitch.Step = i;
-			auto 	expected = replace(names[i], "?", superscripts[pitch.Octave + 1]);
+			auto expected = replace(names[i - 1], "?", superscripts[pitch.Octave]);
 			auto actual = pitch.PrettyName();
 			EXPECT_EQ(expected, actual);
 		}
@@ -369,7 +368,7 @@ TEST(Pitch_PrettyName, With_2_sharps) {
 		pitch.Octave = o;
 		for (auto i = 1; i <= 7; i++) {
 			pitch.Step = i;
-			auto 	expected = replace(names[i], "?", superscripts[pitch.Octave + 1]);
+			auto expected = replace(names[i - 1], "?", superscripts[pitch.Octave]);
 			auto actual = pitch.PrettyName();
 			EXPECT_EQ(expected, actual);
 		}
@@ -382,7 +381,7 @@ TEST(Pitch_FullName, Without_alterations) {
 	vector<string> names = { "C ?", "D ?", "E ?", "F ?", "G ?", "A ?", "B ?" };
 	for (auto i = 1; i <= 7; i++) {
 		pitch.Step = i;
-		auto 	expected = replace(names[i], "?", to_string(pitch.Octave));
+		auto expected = replace(names[i - 1], "?", to_string(pitch.Octave));
 		auto actual = pitch.FullName();
 		EXPECT_EQ(expected, actual);
 	}
@@ -394,7 +393,7 @@ TEST(Pitch_FullName, With_1_flat) {
 	vector<string> names = { "C flat ?", "D flat ?", "E flat ?", "F flat ?", "G flat ?", "A flat ?", "B flat ?" };
 	for (auto i = 1; i <= 7; i++) {
 		pitch.Step = i;
-		auto 	expected = replace(names[i], "?", to_string(pitch.Octave));
+		auto expected = replace(names[i - 1], "?", to_string(pitch.Octave));
 		auto actual = pitch.FullName();
 		EXPECT_EQ(expected, actual);
 	}
@@ -407,7 +406,7 @@ TEST(Pitch_FullName, With_2_flats) {
 	"A double flat ?", "B double flat ?" };
 	for (auto i = 1; i <= 7; i++) {
 		pitch.Step = i;
-		auto 	expected = replace(names[i], "?", to_string(pitch.Octave));
+		auto expected = replace(names[i - 1], "?", to_string(pitch.Octave));
 		auto actual = pitch.FullName();
 		EXPECT_EQ(expected, actual);
 	}
@@ -419,7 +418,7 @@ TEST(Pitch_FullName, With_1_sharp) {
 	vector<string> names = { "C sharp ?", "D sharp ?", "E sharp ?", "F sharp ?", "G sharp ?", "A sharp ?", "B sharp ?" };
 	for (auto i = 1; i <= 7; i++) {
 		pitch.Step = i;
-		auto 	expected = replace(names[i], "?", to_string(pitch.Octave));
+		auto expected = replace(names[i - 1], "?", to_string(pitch.Octave));
 		auto actual = pitch.FullName();
 		EXPECT_EQ(expected, actual);
 	}
@@ -440,7 +439,7 @@ TEST(Pitch_FullName, With_2_sharps) {
 
 	for (auto i = 1; i <= 7; i++) {
 		pitch.Step = i;
-		auto 	expected = replace(names[i], "?", to_string(pitch.Octave));
+		auto expected = replace(names[i - 1], "?", to_string(pitch.Octave));
 		auto actual = pitch.FullName();
 		EXPECT_EQ(expected, actual);
 	}
