@@ -48,4 +48,20 @@ namespace libmus {
 		pc.Alteration = utils::generateRandom(alterationDistribution);
 		return pc;
 	}
+	PitchClass PitchClass::Parse(std::string text)
+	{
+		return PitchClass();
+	}
+	std::string PitchClass::Name()
+	{
+		return std::string();
+	}
+	std::string PitchClass::PrettyName()
+	{
+		return std::string();
+	}
+	std::string PitchClass::FullName()
+	{
+		return std::string();
+	}
 }

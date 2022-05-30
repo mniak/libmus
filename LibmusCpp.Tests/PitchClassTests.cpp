@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include <map>
 #include "../LibmusCpp/PitchClass.h"
 
@@ -167,5 +167,228 @@ TEST(PitchClass_ExtendedRandom, Alterations_should_have_a_good_distribution) {
 	}
 	for (auto i = -2; i <= 2; i++) {
 		EXPECT_TRUE(alterations[i]);
+	}
+}
+
+
+
+TEST(PitchClass_SimpleName, Without_alterations) {
+	PitchClass pc;
+	pc.Alteration = 0;
+	vector<string> names = { "C", "D", "E", "F", "G", "A", "B" };
+	for (auto i = 1; i <= 7; i++) {
+		pc.Step = i;
+		auto	expected = names[i-1];
+		auto actual = pc.Name();
+		EXPECT_EQ(expected, actual);
+	}
+}
+
+TEST(PitchClass_SimpleName, With_1_flat) {
+	PitchClass pc;
+	pc.Alteration = -1;
+	vector<string> names = { "Cb", "Db", "Eb", "Fb", "Gb", "Ab", "Bb" };
+	for (auto i = 1; i <= 7; i++) {
+		pc.Step = i;
+		auto	expected = names[i-1];
+		auto actual = pc.Name();
+		EXPECT_EQ(expected, actual);
+	}
+}
+
+TEST(PitchClass_SimpleName, With_2_flats) {
+	PitchClass pc;
+	pc.Alteration = -2;
+	vector<string> names = { "Cbb", "Dbb", "Ebb", "Fbb", "Gbb", "Abb", "Bbb" };
+	for (auto i = 1; i <= 7; i++) {
+		pc.Step = i;
+		auto	expected = names[i-1];
+		auto actual = pc.Name();
+		EXPECT_EQ(expected, actual);
+	}
+}
+
+TEST(PitchClass_SimpleName, With_1_sharp) {
+	PitchClass pc;
+	pc.Alteration = 1;
+	vector<string> names = { "C#", "D#", "E#", "F#", "G#", "A#", "B#" };
+	for (auto i = 1; i <= 7; i++) {
+		pc.Step = i;
+		auto	expected = names[i-1];
+		auto actual = pc.Name();
+		EXPECT_EQ(expected, actual);
+	}
+}
+
+TEST(PitchClass_SimpleName, With_2_sharps) {
+	PitchClass pc;
+	pc.Alteration = 2;
+	vector<string> names = { "C##", "D##", "E##", "F##", "G##", "A##", "B##" };
+	for (auto i = 1; i <= 7; i++) {
+		pc.Step = i;
+		auto	expected = names[i-1];
+		auto actual = pc.Name();
+		EXPECT_EQ(expected, actual);
+	}
+}
+
+TEST(PitchClass_PrettyName, Without_alterations) {
+	PitchClass pc;
+	pc.Alteration = 0;
+	vector<string> names = { "C", "D", "E", "F", "G", "A", "B" };
+	for (auto i = 1; i <= 7; i++) {
+		pc.Step = i;
+		auto	expected = names[i-1];
+		auto actual = pc.PrettyName();
+		EXPECT_EQ(expected, actual);
+	}
+}
+
+TEST(PitchClass_PrettyName, With_1_flat) {
+	PitchClass pc;
+	pc.Alteration = -1;
+	vector<string> names = { "C♭", "D♭", "E♭", "F♭", "G♭", "A♭", "B♭" };
+	for (auto i = 1; i <= 7; i++) {
+		pc.Step = i;
+		auto	expected = names[i-1];
+		auto actual = pc.PrettyName();
+		EXPECT_EQ(expected, actual);
+	}
+}
+
+TEST(PitchClass_PrettyName, With_2_flats) {
+	PitchClass pc;
+	pc.Alteration = -2;
+	vector<string> names = { "C𝄫", "D𝄫", "E𝄫", "F𝄫", "G𝄫", "A𝄫", "B𝄫" };
+	for (auto i = 1; i <= 7; i++) {
+		pc.Step = i;
+		auto	expected = names[i-1];
+		auto actual = pc.PrettyName();
+		EXPECT_EQ(expected, actual);
+	}
+}
+
+TEST(PitchClass_PrettyName, With_1_sharp) {
+	PitchClass pc;
+	pc.Alteration = 1;
+	vector<string> names = { "C♯", "D♯", "E♯", "F♯", "G♯", "A♯", "B♯" };
+	for (auto i = 1; i <= 7; i++) {
+		pc.Step = i;
+		auto	expected = names[i-1];
+		auto actual = pc.PrettyName();
+		EXPECT_EQ(expected, actual);
+	}
+}
+
+TEST(PitchClass_PrettyName, With_2_sharps) {
+	PitchClass pc;
+	pc.Alteration = 2;
+	vector<string> names = { "C𝄪", "D𝄪", "E𝄪", "F𝄪", "G𝄪", "A𝄪", "B𝄪" };
+	for (auto i = 1; i <= 7; i++) {
+		pc.Step = i;
+		auto	expected = names[i-1];
+		auto actual = pc.PrettyName();
+		EXPECT_EQ(expected, actual);
+	}
+}
+
+TEST(PitchClass_FullName, Without_alterations) {
+	PitchClass pc;
+	pc.Alteration = 0;
+	vector<string> names = { "C", "D", "E", "F", "G", "A", "B" };
+	for (auto i = 1; i <= 7; i++) {
+		pc.Step = i;
+		auto	expected = names[i-1];
+		auto actual = pc.FullName();
+		EXPECT_EQ(expected, actual);
+	}
+}
+
+TEST(PitchClass_FullName, With_1_flat) {
+	PitchClass pc;
+	pc.Alteration = -1;
+	vector<string> names = { "C flat", "D flat", "E flat", "F flat", "G flat", "A flat", "B flat" };
+	for (auto i = 1; i <= 7; i++) {
+		pc.Step = i;
+		auto	expected = names[i-1];
+		auto actual = pc.FullName();
+		EXPECT_EQ(expected, actual);
+	}
+}
+
+TEST(PitchClass_FullName, With_2_flats) {
+	PitchClass pc;
+	pc.Alteration = -2;
+	vector<string> names = { "C double flat", "D double flat", "E double flat", "F double flat", "G double flat", "A double flat",
+			 "B double flat" };
+	for (auto i = 1; i <= 7; i++) {
+		pc.Step = i;
+		auto	expected = names[i-1];
+		auto actual = pc.FullName();
+		EXPECT_EQ(expected, actual);
+	}
+}
+
+TEST(PitchClass_FullName, With_1_sharp) {
+	PitchClass pc;
+	pc.Alteration = 1;
+	vector<string> names = { "C sharp", "D sharp", "E sharp", "F sharp", "G sharp", "A sharp", "B sharp" };
+	for (auto i = 1; i <= 7; i++) {
+		pc.Step = i;
+		auto	expected = names[i-1];
+		auto actual = pc.FullName();
+		EXPECT_EQ(expected, actual);
+	}
+}
+
+TEST(PitchClass_FullName, With_2_sharps) {
+	PitchClass pc;
+	pc.Alteration = 2;
+	vector<string> names = { "C double sharp", "D double sharp", "E double sharp", "F double sharp", "G double sharp",
+			 "A double sharp", "B double sharp" };
+	for (auto i = 1; i <= 7; i++) {
+		pc.Step = i;
+		auto	expected = names[i-1];
+		auto actual = pc.FullName();
+		EXPECT_EQ(expected, actual);
+	}
+}
+
+TEST(PitchClass_Parse, Simple_name) {
+	vector<string> alterationTexts = { "bb", "b", "", "#", "##" };
+	for (auto iterAlt = alterationTexts.begin(); iterAlt != alterationTexts.end(); iterAlt++) {
+		auto ialt = iterAlt - alterationTexts.begin();
+		auto alt = *iterAlt;
+
+		vector<string> stepTexts = { "C", "D", "E", "F", "G", "A", "B" };
+		for (auto iterStep = stepTexts.begin(); iterStep != stepTexts.end(); iterStep++) {
+			auto istep = iterStep - stepTexts.begin();
+			auto step = *iterStep;
+
+			auto text = step + alt;
+			auto parsed = PitchClass::Parse(text);
+
+			EXPECT_EQ(istep, parsed.Step);
+			EXPECT_EQ(ialt - 3, parsed.Alteration);
+		}
+	}
+}
+TEST(PitchClass_Parse, Pretty_name) {
+	vector<string> alterationTexts = { "𝄫", "♭", "", "♯", "𝄪" };
+	for (auto iterAlt = alterationTexts.begin(); iterAlt != alterationTexts.end(); iterAlt++) {
+		auto ialt = iterAlt - alterationTexts.begin();
+		auto alt = *iterAlt;
+
+		vector<string> stepTexts = { "C", "D", "E", "F", "G", "A", "B" };
+		for (auto iterStep = stepTexts.begin(); iterStep != stepTexts.end(); iterStep++) {
+			auto istep = iterStep - stepTexts.begin();
+			auto step = *iterStep;
+
+			auto text = step + alt;
+			auto parsed = PitchClass::Parse(text);
+
+			EXPECT_EQ(istep, parsed.Step);
+			EXPECT_EQ(ialt - 3, parsed.Alteration);
+		}
 	}
 }
