@@ -1,6 +1,6 @@
 ﻿---
 BasedOnStyle: Chromium
-AlignConsecutiveAssignments: 'true'
+AlignConsecutiveAssignments: 'false'
 AllowShortFunctionsOnASingleLine: Empty
 ColumnLimit: '200'
 FixNamespaceComments: 'false'
