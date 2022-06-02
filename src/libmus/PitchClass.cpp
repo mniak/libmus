@@ -1,5 +1,4 @@
-﻿#include "pch.h"
-#include "PitchClass.h"
+﻿#include "PitchClass.h"
 #include "Utils.h"
 #include <random>
 

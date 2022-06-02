@@ -430,3 +430,4 @@ FodyWeavers.xsd
 *.out
 *.app
 *.bak
+out/

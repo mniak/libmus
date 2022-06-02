@@ -1,5 +1,4 @@
-﻿#include "pch.h"
-#include <map>
+﻿#include <map>
 #include <math.h>
 
 #include "../LibmusCpp/Pitch.h"

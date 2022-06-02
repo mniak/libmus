@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "Pitch.h"
 #include "Utils.h"
 #include <random>

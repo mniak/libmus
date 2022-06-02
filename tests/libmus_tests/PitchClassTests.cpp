@@ -1,5 +1,5 @@
-﻿#include "pch.h"
-#include "../LibmusCpp/PitchClass.h"
+﻿#include <gtest/gtest.h>
+#include <libmus/PitchClass.h>
 #include <map>
 
 using namespace std;
