@@ -36,15 +36,15 @@ uniform_int_distribution<> stepDistribution(PitchClass::MIN_STEP, PitchClass::MA
 
 PitchClass PitchClass::Random() {
     PitchClass pc;
-    pc.Step       = utils::generateRandom(stepDistribution);
-    pc.Alteration = utils::generateRandom(usualAlterationDistribution);
+    pc.SetStep(utils::generateRandom(stepDistribution));
+    pc.SetAlteration(utils::generateRandom(usualAlterationDistribution));
     return pc;
 }
 
 PitchClass PitchClass::ExtendedRandom() {
     PitchClass pc;
-    pc.Step       = utils::generateRandom(stepDistribution);
-    pc.Alteration = utils::generateRandom(alterationDistribution);
+    pc.SetStep(utils::generateRandom(stepDistribution));
+    pc.SetAlteration(utils::generateRandom(alterationDistribution));
     return pc;
 }
 
@@ -91,7 +91,7 @@ PitchClass PitchClass::Parse(wstring value) {
 }
 
 wstring PitchClass::Name() {
-    auto result = NAMES[this->Step - 1];
+    auto result = NAMES[this->step - 1];
     for (auto i = 1; i <= this->alteration; i++) {
         result = result + L'#';
     }
