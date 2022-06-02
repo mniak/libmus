@@ -7,4 +7,3 @@ add_library (libmus
 	"Pitch.cpp"
 	"Utils.cpp"
 )
-
