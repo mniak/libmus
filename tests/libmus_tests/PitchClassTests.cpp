@@ -1,5 +1,6 @@
 ﻿#include <gtest/gtest.h>
-#include <libmus/PitchClass.h>
+#include <libmus/libmus.h>
+
 #include <map>
 
 using namespace std;
