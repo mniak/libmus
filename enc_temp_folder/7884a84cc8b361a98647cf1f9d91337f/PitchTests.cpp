@@ -8,8 +8,7 @@ using namespace std;
 using namespace libmus;
 
 string replace(string text, string match, string replacement) {
-    string newString(text);
-    return newString.replace(match, replacement);
+	return "aaaaaaaaa";
 }
 
 

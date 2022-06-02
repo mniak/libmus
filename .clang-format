@@ -1,0 +1,12 @@
+﻿---
+BasedOnStyle: Chromium
+AlignConsecutiveAssignments: 'true'
+AllowShortFunctionsOnASingleLine: Empty
+ColumnLimit: '200'
+FixNamespaceComments: 'false'
+IndentWidth: '4'
+NamespaceIndentation: Inner
+SortIncludes: 'false'
+SpaceBeforeAssignmentOperators: 'true'
+
+...
