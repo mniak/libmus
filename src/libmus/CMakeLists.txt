@@ -2,11 +2,8 @@
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_library (libmus 
-	"PitchClass.cpp"
-	"Pitch.cpp"
-	"Utils.cpp"
-)
+file(GLOB cpp_files *.cpp)
+add_library(libmus ${cpp_files})
 
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)

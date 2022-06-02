@@ -5,7 +5,9 @@
         "*.pd_lua": "lua",
         "dot_bashrc": "shellscript",
         "iosfwd": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "string": "cpp",
+        "filesystem": "cpp"
     },
     "editor.formatOnSave": true,
 }

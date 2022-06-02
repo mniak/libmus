@@ -14,7 +14,6 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 file(GLOB cpp_files *.cpp)
-
 add_executable(libmus_tests ${cpp_files})
 
 target_link_libraries(libmus_tests

@@ -57,33 +57,34 @@ const auto DOUBLE_SHARP_SYMBOL = L'𝄪';
 PitchClass PitchClass::Parse(wstring value) {
     PitchClass newpc;
 
-    auto head = value.substr(1, 1);
-    auto tail = value.substr(2);
+    auto head = value.substr(0, 1);
+    auto tail = value.substr(1);
 
     for (auto iname = 0; iname < NAMES.size(); iname++) {
         auto name = NAMES[iname];
 
         if (name == head) {
-            newpc.step = iname;
+            newpc.step = iname + 1;
             break;
         }
     }
 
-    while (true) {
-        auto head = tail[1];
-        tail = tail.substr(2);
-
-        switch (head) {
-                /*		case 'b':
-                                case FLAT_SYMBOL:
-                                        newpc.alteration = newpc.alteration - 1;*/
-                // case '#':
-                // case SHARP_SYMBOL:
-                //	newpc.alteration = newpc.alteration + 1;
+    for (auto ch : tail) {
+        switch (ch) {
+            case L'b':
+            case FLAT_SYMBOL:
+                newpc.alteration = newpc.alteration - 1;
+                break;
+            case L'#':
+            case SHARP_SYMBOL:
+                newpc.alteration = newpc.alteration + 1;
+                break;
             case DOUBLE_FLAT_SYMBOL:
                 newpc.alteration = newpc.alteration - 2;
-                /*case DOUBLE_SHARP_SYMBOL:
-                        newpc.alteration = newpc.alteration + 2;*/
+                break;
+            case DOUBLE_SHARP_SYMBOL:
+                newpc.alteration = newpc.alteration + 2;
+                break;
             default:
                 return newpc;
         }

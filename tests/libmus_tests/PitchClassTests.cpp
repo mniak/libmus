@@ -301,7 +301,7 @@ TEST(PitchClass_FullName, Without_alterations) {
 TEST(PitchClass_FullName, With_1_flat) {
     PitchClass pc;
     pc.SetAlteration(-1);
-    vector<wstring> names = {L"C flat", L"D flat", L"E flat", L"F flat", L"G flat", L"A flat L", L"B flat"};
+    vector<wstring> names = {L"C flat", L"D flat", L"E flat", L"F flat", L"G flat", L"A flat", L"B flat"};
     for (auto i = 1; i <= 7; i++) {
         pc.SetStep(i);
         auto expected = names[i - 1];
@@ -326,7 +326,7 @@ TEST(PitchClass_FullName, With_2_flats) {
 TEST(PitchClass_FullName, With_1_sharp) {
     PitchClass pc;
     pc.SetAlteration(1);
-    vector<wstring> names = {L"C sharp", L"D sharp", L"E sharp", L"F sharp", L"G sharp", L" A sharp", L"B sharp"};
+    vector<wstring> names = {L"C sharp", L"D sharp", L"E sharp", L"F sharp", L"G sharp", L"A sharp", L"B sharp"};
     for (auto i = 1; i <= 7; i++) {
         pc.SetStep(i);
         auto expected = names[i - 1];
@@ -338,8 +338,8 @@ TEST(PitchClass_FullName, With_1_sharp) {
 TEST(PitchClass_FullName, With_2_sharps) {
     PitchClass pc;
     pc.SetAlteration(2);
-    vector<wstring> names = {L"C double sharp",  L"D double sharp",  L"E double sharp", L"F double sharp",
-                             L" G double sharp", L" A double sharp", L"B double sharp"};
+    vector<wstring> names = {L"C double sharp", L"D double sharp", L"E double sharp", L"F double sharp",
+                             L"G double sharp", L"A double sharp", L"B double sharp"};
     for (auto i = 1; i <= 7; i++) {
         pc.SetStep(i);
         auto expected = names[i - 1];
