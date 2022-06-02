@@ -174,7 +174,7 @@ TEST(PitchClass_SimpleName, Without_alterations) {
         pc.SetStep(i);
         auto expected = names[i - 1];
         auto actual = pc.Name();
-        EXPECT_EQ(expected.c_str(), actual.c_str());
+        EXPECT_STREQ(expected.c_str(), actual.c_str());
     }
 }
 

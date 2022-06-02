@@ -11,9 +11,6 @@
                 "type": "cppvsdbg",
                 "program": "${workspaceFolder}/build/tests/libmus_tests/Debug/libmus_tests.exe",
             },
-            "osx": {
-                "externalConsole": true,
-            },
             "MIMode": "lldb",
             "console": "integratedTerminal",
             "preLaunchTask": "cmake.build",
