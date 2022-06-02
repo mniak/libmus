@@ -1,15 +1,17 @@
 ﻿#include <gtest/gtest.h>
 #include <libmus/libmus.h>
+#include <boost/algorithm/string/replace.hpp>
 
 #include <map>
 #include <math.h>
 
 using namespace std;
 using namespace libmus;
+using namespace boost;
 
 string replace(string text, string match, string replacement) {
-    string newString(text);
-    return newString.replace(match, replacement);
+    // string newString(text);
+    return boost::algorithm::replace_all_copy(text, match, replacement);
 }
 
 TEST(Pitch, Assert_initial_values_from_constructor_are_being_set) {
