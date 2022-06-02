@@ -7,7 +7,7 @@ using namespace std;
 namespace libmus {
 
 PitchClass::PitchClass() {
-    this->step       = 1;
+    this->step = 1;
     this->alteration = 0;
 }
 
@@ -48,10 +48,10 @@ PitchClass PitchClass::ExtendedRandom() {
     return pc;
 }
 
-const vector<wstring> NAMES    = {L"C", L"D", L"E", L"F", L"G", L"A", L"B"};
-const auto FLAT_SYMBOL         = L'♭';
-const auto SHARP_SYMBOL        = L'♯';
-const auto DOUBLE_FLAT_SYMBOL  = L'𝄫';
+const vector<wstring> NAMES = {L"C", L"D", L"E", L"F", L"G", L"A", L"B"};
+const auto FLAT_SYMBOL = L'♭';
+const auto SHARP_SYMBOL = L'♯';
+const auto DOUBLE_FLAT_SYMBOL = L'𝄫';
 const auto DOUBLE_SHARP_SYMBOL = L'𝄪';
 
 PitchClass PitchClass::Parse(wstring value) {
@@ -71,7 +71,7 @@ PitchClass PitchClass::Parse(wstring value) {
 
     while (true) {
         auto head = tail[1];
-        tail      = tail.substr(2);
+        tail = tail.substr(2);
 
         switch (head) {
                 /*		case 'b':
@@ -131,4 +131,4 @@ wstring PitchClass::FullName() {
             return name;
     }
 }
-} 
+}

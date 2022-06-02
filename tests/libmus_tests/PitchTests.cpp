@@ -226,7 +226,7 @@ TEST(Pitch_ExtendedRandom, Octaves_should_have_a_good_distribution) {
 TEST(Pitch_SimpleName, Without_alterations) {
     Pitch pitch;
     pitch.SetAlteration(0);
-    vector<string> names = {"C?", "D?", "E?", "F?", "G?", "A?", "B?"};
+    vector<wstring> names = {"C?", "D?", "E?", "F?", "G?", "A?", "B?"};
     for (auto o = 0; o <= 10; o++) {
         pitch.SetOctave(o);
         for (auto i = 1; i <= 7; i++) {
@@ -241,14 +241,14 @@ TEST(Pitch_SimpleName, Without_alterations) {
 TEST(Pitch_SimpleName, With_1_flat) {
     Pitch pitch;
     pitch.SetAlteration(-1);
-    vector<string> names = {"Cb?", "Db?", "Eb?", "Fb?", "Gb?", "Ab?", "Bb?"};
+    vector<wstring> names = {L"Cb?", L"Db?", L"Eb?", L"Fb?", L"Gb?", L"Ab?", L"Bb?"};
     for (auto o = 0; o <= 10; o++) {
         pitch.SetOctave(o);
         for (auto i = 1; i <= 7; i++) {
             pitch.SetStep(i);
             auto expected = replace(names[i - 1], "?", to_string(pitch.GetOctave()));
             auto actual = pitch.Name();
-            EXPECT_EQ(expected, actual);
+            EXPECT_STREQ(expected.c_str(), actual.c_str());
         }
     }
 }
@@ -256,7 +256,7 @@ TEST(Pitch_SimpleName, With_1_flat) {
 TEST(Pitch_SimpleName, With_2_flats) {
     Pitch pitch;
     pitch.SetAlteration(-2);
-    vector<string> names = {"Cbb?", "Dbb?", "Ebb?", "Fbb?", "Gbb?", "Abb?", "Bbb?"};
+    vector<wstring> names = {"Cbb?", "Dbb?", "Ebb?", "Fbb?", "Gbb?", "Abb?", "Bbb?"};
     for (auto o = 0; o <= 10; o++) {
         pitch.SetOctave(o);
         for (auto i = 1; i <= 7; i++) {
@@ -271,7 +271,7 @@ TEST(Pitch_SimpleName, With_2_flats) {
 TEST(Pitch_SimpleName, With_1_sharp) {
     Pitch pitch;
     pitch.SetAlteration(1);
-    vector<string> names = {"C#?", "D#?", "E#?", "F#?", "G#?", "A#?", "B#?"};
+    vector<wstring> names = {"C#?", "D#?", "E#?", "F#?", "G#?", "A#?", "B#?"};
     for (auto o = 0; o <= 10; o++) {
         pitch.SetOctave(o);
         for (auto i = 1; i <= 7; i++) {
@@ -286,7 +286,7 @@ TEST(Pitch_SimpleName, With_1_sharp) {
 TEST(Pitch_SimpleName, With_2_sharps) {
     Pitch pitch;
     pitch.SetAlteration(2);
-    vector<string> names = {"C##?", "D##?", "E##?", "F##?", "G##?", "A##?", "B##?"};
+    vector<wstring> names = {"C##?", "D##?", "E##?", "F##?", "G##?", "A##?", "B##?"};
     for (auto o = 0; o <= 10; o++) {
         pitch.SetOctave(o);
         for (auto i = 1; i <= 7; i++) {
@@ -298,11 +298,11 @@ TEST(Pitch_SimpleName, With_2_sharps) {
     }
 }
 
-vector<string> superscripts = {"⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹", "¹⁰"};
+vector<wstring> superscripts = {"⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹", "¹⁰"};
 TEST(Pitch_PrettyName, Without_alterations) {
     Pitch pitch;
     pitch.SetAlteration(0);
-    vector<string> names = {"C?", "D?", "E?", "F?", "G?", "A?", "B?"};
+    vector<wstring> names = {"C?", "D?", "E?", "F?", "G?", "A?", "B?"};
     for (auto o = 0; o <= 10; o++) {
         pitch.SetOctave(o);
         for (auto i = 1; i <= 7; i++) {
@@ -317,7 +317,7 @@ TEST(Pitch_PrettyName, Without_alterations) {
 TEST(Pitch_PrettyName, With_1_flat) {
     Pitch pitch;
     pitch.SetAlteration(-1);
-    vector<string> names = {"C♭?", "D♭?", "E♭?", "F♭?", "G♭?", "A♭?", "B♭?"};
+    vector<wstring> names = {"C♭?", "D♭?", "E♭?", "F♭?", "G♭?", "A♭?", "B♭?"};
     for (auto o = 0; o <= 10; o++) {
         pitch.SetOctave(o);
         for (auto i = 1; i <= 7; i++) {
@@ -332,7 +332,7 @@ TEST(Pitch_PrettyName, With_1_flat) {
 TEST(Pitch_PrettyName, With_2_flats) {
     Pitch pitch;
     pitch.SetAlteration(-2);
-    vector<string> names = {"C♭♭?", "D♭♭?", "E♭♭?", "F♭♭?", "G♭♭?", "A♭♭?", "B♭♭?"};
+    vector<wstring> names = {"C♭♭?", "D♭♭?", "E♭♭?", "F♭♭?", "G♭♭?", "A♭♭?", "B♭♭?"};
     for (auto o = 0; o <= 10; o++) {
         pitch.SetOctave(o);
         for (auto i = 1; i <= 7; i++) {
@@ -347,7 +347,7 @@ TEST(Pitch_PrettyName, With_2_flats) {
 TEST(Pitch_PrettyName, With_1_sharp) {
     Pitch pitch;
     pitch.SetAlteration(1);
-    vector<string> names = {"C♯?", "D♯?", "E♯?", "F♯?", "G♯?", "A♯?", "B♯?"};
+    vector<wstring> names = {"C♯?", "D♯?", "E♯?", "F♯?", "G♯?", "A♯?", "B♯?"};
     for (auto o = 0; o <= 10; o++) {
         pitch.SetOctave(o);
         for (auto i = 1; i <= 7; i++) {
@@ -362,7 +362,7 @@ TEST(Pitch_PrettyName, With_1_sharp) {
 TEST(Pitch_PrettyName, With_2_sharps) {
     Pitch pitch;
     pitch.SetAlteration(2);
-    vector<string> names = {"C♯♯?", "D♯♯?", "E♯♯?", "F♯♯?", "G♯♯?", "A♯♯?", "B♯♯?"};
+    vector<wstring> names = {"C♯♯?", "D♯♯?", "E♯♯?", "F♯♯?", "G♯♯?", "A♯♯?", "B♯♯?"};
     for (auto o = 0; o <= 10; o++) {
         pitch.SetOctave(o);
         for (auto i = 1; i <= 7; i++) {
@@ -377,7 +377,7 @@ TEST(Pitch_PrettyName, With_2_sharps) {
 TEST(Pitch_FullName, Without_alterations) {
     Pitch pitch;
     pitch.SetAlteration(0);
-    vector<string> names = {"C ?", "D ?", "E ?", "F ?", "G ?", "A ?", "B ?"};
+    vector<wstring> names = {"C ?", "D ?", "E ?", "F ?", "G ?", "A ?", "B ?"};
     for (auto i = 1; i <= 7; i++) {
         pitch.SetStep(i);
         auto expected = replace(names[i - 1], "?", to_string(pitch.GetOctave()));
@@ -389,7 +389,7 @@ TEST(Pitch_FullName, Without_alterations) {
 TEST(Pitch_FullName, With_1_flat) {
     Pitch pitch;
     pitch.SetAlteration(-1);
-    vector<string> names = {"C flat ?", "D flat ?", "E flat ?", "F flat ?", "G flat ?", "A flat ?", "B flat ?"};
+    vector<wstring> names = {"C flat ?", "D flat ?", "E flat ?", "F flat ?", "G flat ?", "A flat ?", "B flat ?"};
     for (auto i = 1; i <= 7; i++) {
         pitch.SetStep(i);
         auto expected = replace(names[i - 1], "?", to_string(pitch.GetOctave()));
@@ -401,7 +401,8 @@ TEST(Pitch_FullName, With_1_flat) {
 TEST(Pitch_FullName, With_2_flats) {
     Pitch pitch;
     pitch.SetAlteration(-2);
-    vector<string> names = {"C double flat ?", "D double flat ?", "E double flat ?", "F double flat ?", "G double flat ?", "A double flat ?", "B double flat ?"};
+    vector<wstring> names = {"C double flat ?", "D double flat ?", "E double flat ?", "F double flat ?",
+                             "G double flat ?", "A double flat ?", "B double flat ?"};
     for (auto i = 1; i <= 7; i++) {
         pitch.SetStep(i);
         auto expected = replace(names[i - 1], "?", to_string(pitch.GetOctave()));
@@ -413,7 +414,7 @@ TEST(Pitch_FullName, With_2_flats) {
 TEST(Pitch_FullName, With_1_sharp) {
     Pitch pitch;
     pitch.SetAlteration(1);
-    vector<string> names = {"C sharp ?", "D sharp ?", "E sharp ?", "F sharp ?", "G sharp ?", "A sharp ?", "B sharp ?"};
+    vector<wstring> names = {"C sharp ?", "D sharp ?", "E sharp ?", "F sharp ?", "G sharp ?", "A sharp ?", "B sharp ?"};
     for (auto i = 1; i <= 7; i++) {
         pitch.SetStep(i);
         auto expected = replace(names[i - 1], "?", to_string(pitch.GetOctave()));
@@ -425,7 +426,8 @@ TEST(Pitch_FullName, With_1_sharp) {
 TEST(Pitch_FullName, With_2_sharps) {
     Pitch pitch;
     pitch.SetAlteration(2);
-    vector<string> names = {"C double sharp ?", "D double sharp ?", "E double sharp ?", "F double sharp ?", "G double sharp ?", "A double sharp ?", "B double sharp ?"};
+    vector<wstring> names = {"C double sharp ?", "D double sharp ?", "E double sharp ?", "F double sharp ?",
+                             "G double sharp ?", "A double sharp ?", "B double sharp ?"};
 
     for (auto i = 1; i <= 7; i++) {
         pitch.SetStep(i);
@@ -436,8 +438,8 @@ TEST(Pitch_FullName, With_2_sharps) {
 }
 
 TEST(Pitch_Parse_without_octave, Simple_name_without_octave) {
-    vector<string> alterationTexts = {"bb", "b", "", "#", "##"};
-    vector<string> stepTexts = {"C", "D", "E", "F", "G", "A", "B"};
+    vector<wstring> alterationTexts = {"bb", "b", "", "#", "##"};
+    vector<wstring> stepTexts = {"C", "D", "E", "F", "G", "A", "B"};
 
     for (auto iterAlt = alterationTexts.begin(); iterAlt != alterationTexts.end(); iterAlt++) {
         auto ialt = iterAlt - alterationTexts.begin();
@@ -458,8 +460,8 @@ TEST(Pitch_Parse_without_octave, Simple_name_without_octave) {
 }
 
 TEST(Pitch_Parse_without_octave, Pretty_name) {
-    vector<string> alterationTexts = {"♭♭", "♭", "", "♯", "♯♯"};
-    vector<string> stepTexts = {"C", "D", "E", "F", "G", "A", "B"};
+    vector<wstring> alterationTexts = {"♭♭", "♭", "", "♯", "♯♯"};
+    vector<wstring> stepTexts = {"C", "D", "E", "F", "G", "A", "B"};
 
     for (auto iterAlt = alterationTexts.begin(); iterAlt != alterationTexts.end(); iterAlt++) {
         auto ialt = iterAlt - alterationTexts.begin();
@@ -479,8 +481,8 @@ TEST(Pitch_Parse_without_octave, Pretty_name) {
     }
 }
 TEST(Pitch_Parse_with_octave, Simple_name) {
-    vector<string> alterationTexts = {"bb", "b", "", "#", "##"};
-    vector<string> stepTexts = {"C", "D", "E", "F", "G", "A", "B"};
+    vector<wstring> alterationTexts = {"bb", "b", "", "#", "##"};
+    vector<wstring> stepTexts = {"C", "D", "E", "F", "G", "A", "B"};
 
     for (auto oct = 0; oct <= 10; oct++) {
         for (auto iterAlt = alterationTexts.begin(); iterAlt != alterationTexts.end(); iterAlt++) {
@@ -502,8 +504,8 @@ TEST(Pitch_Parse_with_octave, Simple_name) {
     }
 }
 TEST(Pitch_Parse_with_octave, Pretty_name) {
-    vector<string> alterationTexts = {"♭♭", "♭", "", "♯", "♯♯"};
-    vector<string> stepTexts = {"C", "D", "E", "F", "G", "A", "B"};
+    vector<wstring> alterationTexts = {"♭♭", "♭", "", "♯", "♯♯"};
+    vector<wstring> stepTexts = {"C", "D", "E", "F", "G", "A", "B"};
 
     for (auto oct = 0; oct <= 10; oct++) {
         for (auto iterAlt = alterationTexts.begin(); iterAlt != alterationTexts.end(); iterAlt++) {

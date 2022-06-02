@@ -7,7 +7,7 @@ Pitch::Pitch() {
     this->octave = 4;
 }
 
-Pitch Pitch::Parse(string pitch) {
+Pitch Pitch::Parse(wstring pitch) {
     return Pitch();
 }
 
@@ -50,16 +50,16 @@ void Pitch::SetOctave(int value) {
     this->octave = utils::truncateRange(value, MIN_OCTAVE, MAX_OCTAVE);
 }
 
-string Pitch::Name() {
-    return string();
+wstring Pitch::Name() {
+    return this->pitchClass.Name();
 }
 
-string Pitch::PrettyName() {
-    return string();
+wstring Pitch::PrettyName() {
+    return this->pitchClass.Name();
 }
 
-string Pitch::FullName() {
-    return string();
+wstring Pitch::FullName() {
+    return this->pitchClass.Name();
 }
 
 }

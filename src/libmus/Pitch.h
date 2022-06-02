@@ -10,7 +10,7 @@ class Pitch {
 
    public:
     Pitch();
-    static Pitch Parse(std::string pitch);
+    static Pitch Parse(std::wstring pitch);
     static Pitch Random();
     static Pitch ExtendedRandom();
 
@@ -23,9 +23,9 @@ class Pitch {
     int GetOctave();
     void SetOctave(int value);
 
-    std::string Name();
-    std::string PrettyName();
-    std::string FullName();
+    std::wstring Name();
+    std::wstring PrettyName();
+    std::wstring FullName();
 
     static const int MIN_OCTAVE = 0;
     static const int MAX_OCTAVE = 10;

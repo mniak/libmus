@@ -1,4 +1,11 @@
 {
     "makefile.extensionOutputFolder": "./.vscode",
-    "cmake.configureOnOpen": true
+    "cmake.configureOnOpen": true,
+    "files.associations": {
+        "*.pd_lua": "lua",
+        "dot_bashrc": "shellscript",
+        "iosfwd": "cpp",
+        "vector": "cpp"
+    },
+    "editor.formatOnSave": true,
 }
