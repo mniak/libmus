@@ -2,25 +2,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Tests VS",
-            "type": "cppvsdbg",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "program": "${workspaceFolder}/build/tests/libmus_tests/Debug/libmus_tests",
-            "windows": {
-                "program": "${workspaceFolder}/build/tests/libmus_tests/Debug/libmus_tests.exe",
-            },
-            "preLaunchTask": "cmake.build",
-        },
-        {
-            "name": "(lldb) Launch",
+            "name": "Launch Tests",
             "type": "cppdbg",
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "program": "${workspaceFolder}/build/tests/libmus_tests/libmus_tests",
+            "windows": {
+                "type": "cppvsdbg",
+                "program": "${workspaceFolder}/build/tests/libmus_tests/Debug/libmus_tests.exe",
+            },
             "externalConsole": false,
             "MIMode": "lldb",
             "preLaunchTask": "cmake.build",
-        },
+        }
     ]
 }
