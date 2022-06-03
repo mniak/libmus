@@ -3,4 +3,4 @@
 
 // using namespace std;
 
-// wstring replace(wstring text, wstring match, wstring replacement);
+// u32string replace(u32string text, u32string match, u32string replacement);

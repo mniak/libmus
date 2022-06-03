@@ -169,31 +169,31 @@ TEST(PitchClass_ExtendedRandom, Alterations_should_have_a_good_distribution) {
 TEST(PitchClass_SimpleName, Without_alterations) {
     PitchClass pc;
     pc.SetAlteration(0);
-    vector<wstring> names = {L"C", L"D", L"E", L"F", L"G", L"A", L"B"};
+    vector<u32string> names = {U"C", U"D", U"E", U"F", U"G", U"A", U"B"};
     for (auto i = 1; i <= 7; i++) {
         pc.SetStep(i);
         auto expected = names[i - 1];
         auto actual = pc.Name();
-        EXPECT_STREQ(expected.c_str(), actual.c_str());
+        EXPECT_EQ(expected, actual);
     }
 }
 
 TEST(PitchClass_SimpleName, With_1_flat) {
     PitchClass pc;
     pc.SetAlteration(-1);
-    vector<wstring> names = {L"Cb", L"Db", L"Eb", L"Fb", L"Gb", L"Ab", L"Bb"};
+    vector<u32string> names = {U"Cb", U"Db", U"Eb", U"Fb", U"Gb", U"Ab", U"Bb"};
     for (auto i = 1; i <= 7; i++) {
         pc.SetStep(i);
         auto expected = names[i - 1];
         auto actual = pc.Name();
-        EXPECT_STREQ(expected.c_str(), actual.c_str());
+        EXPECT_EQ(expected, actual);
     }
 }
 
 TEST(PitchClass_SimpleName, With_2_flats) {
     PitchClass pc;
     pc.SetAlteration(-2);
-    vector<wstring> names = {L"Cbb", L"Dbb", L"Ebb", L"Fbb", L"Gbb", L"Abb", L"Bbb"};
+    vector<u32string> names = {U"Cbb", U"Dbb", U"Ebb", U"Fbb", U"Gbb", U"Abb", U"Bbb"};
     for (auto i = 1; i <= 7; i++) {
         pc.SetStep(i);
         auto expected = names[i - 1];
@@ -205,7 +205,7 @@ TEST(PitchClass_SimpleName, With_2_flats) {
 TEST(PitchClass_SimpleName, With_1_sharp) {
     PitchClass pc;
     pc.SetAlteration(1);
-    vector<wstring> names = {L"C#", L"D#", L"E#", L"F#", L"G#", L"A#", L"B#"};
+    vector<u32string> names = {U"C#", U"D#", U"E#", U"F#", U"G#", U"A#", U"B#"};
     for (auto i = 1; i <= 7; i++) {
         pc.SetStep(i);
         auto expected = names[i - 1];
@@ -217,7 +217,7 @@ TEST(PitchClass_SimpleName, With_1_sharp) {
 TEST(PitchClass_SimpleName, With_2_sharps) {
     PitchClass pc;
     pc.SetAlteration(2);
-    vector<wstring> names = {L"C##", L"D##", L"E##", L"F##", L"G##", L"A##", L"B##"};
+    vector<u32string> names = {U"C##", U"D##", U"E##", U"F##", U"G##", U"A##", U"B##"};
     for (auto i = 1; i <= 7; i++) {
         pc.SetStep(i);
         auto expected = names[i - 1];
@@ -229,7 +229,7 @@ TEST(PitchClass_SimpleName, With_2_sharps) {
 TEST(PitchClass_PrettyName, Without_alterations) {
     PitchClass pc;
     pc.SetAlteration(0);
-    vector<wstring> names = {L"C", L"D", L"E", L"F", L"G", L"A", L"B"};
+    vector<u32string> names = {U"C", U"D", U"E", U"F", U"G", U"A", U"B"};
     for (auto i = 1; i <= 7; i++) {
         pc.SetStep(i);
         auto expected = names[i - 1];
@@ -241,7 +241,7 @@ TEST(PitchClass_PrettyName, Without_alterations) {
 TEST(PitchClass_PrettyName, With_1_flat) {
     PitchClass pc;
     pc.SetAlteration(-1);
-    vector<wstring> names = {L"C♭", L"D♭", L"E♭", L"F♭", L"G♭", L"A♭", L"B♭"};
+    vector<u32string> names = {U"C♭", U"D♭", U"E♭", U"F♭", U"G♭", U"A♭", U"B♭"};
     for (auto i = 1; i <= 7; i++) {
         pc.SetStep(i);
         auto expected = names[i - 1];
@@ -253,7 +253,7 @@ TEST(PitchClass_PrettyName, With_1_flat) {
 TEST(PitchClass_PrettyName, With_2_flats) {
     PitchClass pc;
     pc.SetAlteration(-2);
-    vector<wstring> names = {L"C𝄫", L"D𝄫", L"E𝄫", L"F𝄫", L"G𝄫", L"A𝄫", L"B𝄫"};
+    vector<u32string> names = {U"C𝄫", U"D𝄫", U"E𝄫", U"F𝄫", U"G𝄫", U"A𝄫", U"B𝄫"};
     for (auto i = 1; i <= 7; i++) {
         pc.SetStep(i);
         auto expected = names[i - 1];
@@ -265,7 +265,7 @@ TEST(PitchClass_PrettyName, With_2_flats) {
 TEST(PitchClass_PrettyName, With_1_sharp) {
     PitchClass pc;
     pc.SetAlteration(1);
-    vector<wstring> names = {L"C♯", L"D♯", L"E♯", L"F♯", L"G♯", L"A♯", L"B♯"};
+    vector<u32string> names = {U"C♯", U"D♯", U"E♯", U"F♯", U"G♯", U"A♯", U"B♯"};
     for (auto i = 1; i <= 7; i++) {
         pc.SetStep(i);
         auto expected = names[i - 1];
@@ -277,7 +277,7 @@ TEST(PitchClass_PrettyName, With_1_sharp) {
 TEST(PitchClass_PrettyName, With_2_sharps) {
     PitchClass pc;
     pc.SetAlteration(2);
-    vector<wstring> names = {L"C𝄪", L"D𝄪", L"E𝄪", L"F𝄪", L"G𝄪", L"A𝄪", L"B𝄪"};
+    vector<u32string> names = {U"C𝄪", U"D𝄪", U"E𝄪", U"F𝄪", U"G𝄪", U"A𝄪", U"B𝄪"};
     for (auto i = 1; i <= 7; i++) {
         pc.SetStep(i);
         auto expected = names[i - 1];
@@ -289,7 +289,7 @@ TEST(PitchClass_PrettyName, With_2_sharps) {
 TEST(PitchClass_FullName, Without_alterations) {
     PitchClass pc;
     pc.SetAlteration(0);
-    vector<wstring> names = {L"C", L"D", L"E", L"F", L"G", L"A", L"B"};
+    vector<u32string> names = {U"C", U"D", U"E", U"F", U"G", U"A", U"B"};
     for (auto i = 1; i <= 7; i++) {
         pc.SetStep(i);
         auto expected = names[i - 1];
@@ -301,7 +301,7 @@ TEST(PitchClass_FullName, Without_alterations) {
 TEST(PitchClass_FullName, With_1_flat) {
     PitchClass pc;
     pc.SetAlteration(-1);
-    vector<wstring> names = {L"C flat", L"D flat", L"E flat", L"F flat", L"G flat", L"A flat", L"B flat"};
+    vector<u32string> names = {U"C flat", U"D flat", U"E flat", U"F flat", U"G flat", U"A flat", U"B flat"};
     for (auto i = 1; i <= 7; i++) {
         pc.SetStep(i);
         auto expected = names[i - 1];
@@ -313,8 +313,8 @@ TEST(PitchClass_FullName, With_1_flat) {
 TEST(PitchClass_FullName, With_2_flats) {
     PitchClass pc;
     pc.SetAlteration(-2);
-    vector<wstring> names = {L"C double flat", L"D double flat", L"E double flat", L"F double flat",
-                             L"G double flat", L"A double flat", L"B double flat"};
+    vector<u32string> names = {U"C double flat", U"D double flat", U"E double flat", U"F double flat",
+                               U"G double flat", U"A double flat", U"B double flat"};
     for (auto i = 1; i <= 7; i++) {
         pc.SetStep(i);
         auto expected = names[i - 1];
@@ -326,7 +326,7 @@ TEST(PitchClass_FullName, With_2_flats) {
 TEST(PitchClass_FullName, With_1_sharp) {
     PitchClass pc;
     pc.SetAlteration(1);
-    vector<wstring> names = {L"C sharp", L"D sharp", L"E sharp", L"F sharp", L"G sharp", L"A sharp", L"B sharp"};
+    vector<u32string> names = {U"C sharp", U"D sharp", U"E sharp", U"F sharp", U"G sharp", U"A sharp", U"B sharp"};
     for (auto i = 1; i <= 7; i++) {
         pc.SetStep(i);
         auto expected = names[i - 1];
@@ -338,8 +338,8 @@ TEST(PitchClass_FullName, With_1_sharp) {
 TEST(PitchClass_FullName, With_2_sharps) {
     PitchClass pc;
     pc.SetAlteration(2);
-    vector<wstring> names = {L"C double sharp", L"D double sharp", L"E double sharp", L"F double sharp",
-                             L"G double sharp", L"A double sharp", L"B double sharp"};
+    vector<u32string> names = {U"C double sharp", U"D double sharp", U"E double sharp", U"F double sharp",
+                               U"G double sharp", U"A double sharp", U"B double sharp"};
     for (auto i = 1; i <= 7; i++) {
         pc.SetStep(i);
         auto expected = names[i - 1];
@@ -349,8 +349,8 @@ TEST(PitchClass_FullName, With_2_sharps) {
 }
 
 TEST(PitchClass_Parse, Simple_name) {
-    vector<wstring> alterationTexts = {L"bb", L"b", L"", L"#", L"##"};
-    vector<wstring> stepTexts = {L"C", L"D", L"E", L"F", L"G", L"A", L"B"};
+    vector<u32string> alterationTexts = {U"bb", U"b", U"", U"#", U"##"};
+    vector<u32string> stepTexts = {U"C", U"D", U"E", U"F", U"G", U"A", U"B"};
 
     for (auto ialt = 0; ialt < alterationTexts.size(); ialt++) {
         auto alt = alterationTexts[ialt];
@@ -367,8 +367,8 @@ TEST(PitchClass_Parse, Simple_name) {
     }
 }
 TEST(PitchClass_Parse, Pretty_name) {
-    vector<wstring> alterationTexts = {L"𝄫", L"♭", L"", L"♯", L"𝄪"};
-    vector<wstring> stepTexts = {L"C", L"D", L"E", L"F", L"G", L"A", L"B"};
+    vector<u32string> alterationTexts = {U"𝄫", U"♭", U"", U"♯", U"𝄪"};
+    vector<u32string> stepTexts = {U"C", U"D", U"E", U"F", U"G", U"A", U"B"};
 
     for (auto ialt = 0; ialt < alterationTexts.size(); ialt++) {
         auto alt = alterationTexts[ialt];

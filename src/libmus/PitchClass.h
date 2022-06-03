@@ -18,11 +18,11 @@ class PitchClass {
     PitchClass();
     static PitchClass Random();
     static PitchClass ExtendedRandom();
-    static PitchClass Parse(std::wstring text);
+    static PitchClass Parse(std::u32string text);
 
-    std::wstring Name();
-    std::wstring PrettyName();
-    std::wstring FullName();
+    std::u32string Name();
+    std::u32string PrettyName();
+    std::u32string FullName();
 
     int GetStep();
     void SetStep(int value);

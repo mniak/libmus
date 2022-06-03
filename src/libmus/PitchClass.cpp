@@ -1,6 +1,7 @@
 ﻿#include "PitchClass.h"
 #include "Utils.h"
 #include <random>
+#include <iostream>
 
 using namespace std;
 
@@ -48,15 +49,15 @@ PitchClass PitchClass::ExtendedRandom() {
     return pc;
 }
 
-const vector<wstring> NAMES = {L"C", L"D", L"E", L"F", L"G", L"A", L"B"};
-const auto FLAT_SYMBOL = L'♭';
-const auto SHARP_SYMBOL = L'♯';
-const auto DOUBLE_FLAT_SYMBOL = L'𝄫';
-const auto DOUBLE_SHARP_SYMBOL = L'𝄪';
+const vector<u32string> NAMES = {U"C", U"D", U"E", U"F", U"G", U"A", U"B"};
 
-PitchClass PitchClass::Parse(wstring value) {
+const auto FLAT_SYMBOL = U'\x266D';
+const auto SHARP_SYMBOL = U'\x266F';
+const auto DOUBLE_FLAT_SYMBOL = U'\xD834DD2B';
+const auto DOUBLE_SHARP_SYMBOL = U'\xD834DD2A';
+
+PitchClass PitchClass::Parse(u32string value) {
     PitchClass newpc;
-
     auto head = value.substr(0, 1);
     auto tail = value.substr(1);
 
@@ -69,13 +70,13 @@ PitchClass PitchClass::Parse(wstring value) {
         }
     }
 
-    for (auto ch : tail) {
+    for (wchar_t ch : tail) {
         switch (ch) {
-            case L'b':
+            case U'b':
             case FLAT_SYMBOL:
                 newpc.alteration = newpc.alteration - 1;
                 break;
-            case L'#':
+            case U'#':
             case SHARP_SYMBOL:
                 newpc.alteration = newpc.alteration + 1;
                 break;
@@ -91,18 +92,18 @@ PitchClass PitchClass::Parse(wstring value) {
     }
 }
 
-wstring PitchClass::Name() {
+u32string PitchClass::Name() {
     auto result = NAMES[this->step - 1];
     for (auto i = 1; i <= this->alteration; i++) {
-        result = result + L'#';
+        result = result + U'#';
     }
     for (auto i = -1; i >= this->alteration; i--) {
-        result = result + L'b';
+        result = result + U'b';
     }
     return result;
 }
 
-wstring PitchClass::PrettyName() {
+u32string PitchClass::PrettyName() {
     auto result = NAMES[this->step - 1];
     switch (this->alteration) {
         case -2:
@@ -117,17 +118,17 @@ wstring PitchClass::PrettyName() {
     return result;
 }
 
-wstring PitchClass::FullName() {
+u32string PitchClass::FullName() {
     auto name = NAMES[this->step - 1];
     switch (this->alteration) {
         case -2:
-            return name + L" double flat";
+            return name + U" double flat";
         case -1:
-            return name + L" flat";
+            return name + U" flat";
         case 1:
-            return name + L" sharp";
+            return name + U" sharp";
         case 2:
-            return name + L" double sharp";
+            return name + U" double sharp";
         default:
             return name;
     }

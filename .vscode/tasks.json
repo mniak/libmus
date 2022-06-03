@@ -9,9 +9,12 @@
             "command": "build",
             "presentation": {
                 "echo": false,
-                "reveal": "never"
+                "reveau8": "never"
             },
             "problemMatcher": [],
+            "runOptions": {
+                "instanceLimit": 1,
+            },
             "group": {
                 "kind": "build",
                 "isDefault": true

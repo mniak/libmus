@@ -12,7 +12,7 @@
                 "program": "${workspaceFolder}/build/tests/libmus_tests/Debug/libmus_tests.exe",
             },
             "MIMode": "lldb",
-            "console": "integratedTerminal",
+            "console": "integratedTerminau8",
             "preLaunchTask": "cmake.build",
         }
     ]

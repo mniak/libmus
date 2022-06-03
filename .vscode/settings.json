@@ -7,7 +7,8 @@
         "iosfwd": "cpp",
         "vector": "cpp",
         "string": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "xstring": "cpp"
     },
     "editor.formatOnSave": true,
 }
