@@ -4,10 +4,8 @@
 
 using namespace std;
 
-namespace libmus {
-	namespace utils {
-		int truncateRange(int value, int min, int max);
+namespace libmus::utils {
+int truncateRange(int value, int min, int max);
 
-		int generateRandom(uniform_int_distribution<> distribution);
-	}
+int generateRandom(uniform_int_distribution<> distribution);
 }

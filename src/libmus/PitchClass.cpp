@@ -1,11 +1,14 @@
-﻿#include "PitchClass.h"
-#include "Utils.h"
+﻿#include "libmus.h"
+#include "utils.h"
+#include "constants.h"
 #include <random>
-#include <iostream>
 
 using namespace std;
 
 namespace libmus {
+
+using namespace utils;
+using namespace constants;
 
 PitchClass::PitchClass() {
     this->step = 1;
@@ -28,7 +31,7 @@ int PitchClass::GetAlteration() {
 }
 
 void PitchClass::SetAlteration(int value) {
-    this->alteration = utils::truncateRange(value, MIN_ALTERATION, MAX_ALTERATION);
+    this->alteration = truncateRange(value, MIN_ALTERATION, MAX_ALTERATION);
 }
 
 uniform_int_distribution<> usualAlterationDistribution(-1, 1);
@@ -37,24 +40,17 @@ uniform_int_distribution<> stepDistribution(PitchClass::MIN_STEP, PitchClass::MA
 
 PitchClass PitchClass::Random() {
     PitchClass pc;
-    pc.SetStep(utils::generateRandom(stepDistribution));
-    pc.SetAlteration(utils::generateRandom(usualAlterationDistribution));
+    pc.SetStep(generateRandom(stepDistribution));
+    pc.SetAlteration(generateRandom(usualAlterationDistribution));
     return pc;
 }
 
 PitchClass PitchClass::ExtendedRandom() {
     PitchClass pc;
-    pc.SetStep(utils::generateRandom(stepDistribution));
-    pc.SetAlteration(utils::generateRandom(alterationDistribution));
+    pc.SetStep(generateRandom(stepDistribution));
+    pc.SetAlteration(generateRandom(alterationDistribution));
     return pc;
 }
-
-const vector<u32string> NAMES = {U"C", U"D", U"E", U"F", U"G", U"A", U"B"};
-
-const auto FLAT_SYMBOL = U'\x266D';
-const auto SHARP_SYMBOL = U'\x266F';
-const auto DOUBLE_FLAT_SYMBOL = U'\xD834DD2B';
-const auto DOUBLE_SHARP_SYMBOL = U'\xD834DD2A';
 
 PitchClass PitchClass::Parse(u32string value) {
     PitchClass newpc;
@@ -90,6 +86,7 @@ PitchClass PitchClass::Parse(u32string value) {
                 return newpc;
         }
     }
+    return newpc;
 }
 
 u32string PitchClass::Name() {
