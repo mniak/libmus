@@ -32,19 +32,31 @@ Pitch Pitch::Parse(u32string text) {
     }
     for (char32_t ch : tail) {
         try {
-            pitch.pitchClass.SetStep(stoi(convert.to_bytes(tail)));
+            pitch.octave = stoi(convert.to_bytes(tail));
+            ;
         } catch (invalid_argument& err) {
         }
 
         head = tail[0];
         tail = tail.substr(1);
 
-        if (head == U'b' || head == FLAT_SYMBOL) {
-            pitch.pitchClass.SetAlteration(pitch.GetAlteration() - 1);
-        } else if (head == U'#' || head == SHARP_SYMBOL) {
-            pitch.pitchClass.SetAlteration(pitch.GetAlteration() + 1);
-        } else {
-            return pitch;
+        switch (head) {
+            case U'b':
+            case FLAT_SYMBOL:
+                pitch.SetAlteration(pitch.GetAlteration() - 1);
+                break;
+            case U'#':
+            case SHARP_SYMBOL:
+                pitch.SetAlteration(pitch.GetAlteration() + 1);
+                break;
+            case DOUBLE_FLAT_SYMBOL:
+                pitch.SetAlteration(pitch.GetAlteration() - 2);
+                break;
+            case DOUBLE_SHARP_SYMBOL:
+                pitch.SetAlteration(pitch.GetAlteration() + 2);
+                break;
+            default:
+                return pitch;
         }
     }
     return pitch;
