@@ -218,85 +218,85 @@ TEST(Pitch_ExtendedRandom, Octaves_should_have_a_good_distribution) {
     }
 }
 
-// TEST(Pitch_SimpleName, Without_alterations) {
-//     Pitch pitch;
-//     pitch.SetAlteration(0);
-//     vector<u32string> names = {U"C?", U"D?", U"E?", U"F?", U"G?", U"A?", U"B?"};
-//     for (auto o = 0; o <= 10; o++) {
-//         pitch.SetOctave(o);
-//         for (auto i = 1; i <= 7; i++) {
-//             pitch.SetStep(i);
-//             auto expected = new u32string(names[i - 1]);
-//             boost::algorithm::replace_all(expected, "?", to_string(pitch.GetOctave()));
-//             auto actual = pitch.Name();
-//             EXPECT_EQ(expected, actual);
-//         }
-//     }
-// }
+TEST(Pitch_SimpleName, Without_alterations) {
+    Pitch pitch;
+    pitch.SetAlteration(0);
+    vector<u32string> names = {U"C?", U"D?", U"E?", U"F?", U"G?", U"A?", U"B?"};
+    for (auto o = 0; o <= 10; o++) {
+        pitch.SetOctave(o);
+        for (auto i = 1; i <= 7; i++) {
+            pitch.SetStep(i);
+            u32string expected(names[i - 1]);
+            boost::algorithm::replace_all(expected, "?", to_string(pitch.GetOctave()));
+            auto actual = pitch.Name();
+            EXPECT_EQ(expected, actual);
+        }
+    }
+}
 
-// TEST(Pitch_SimpleName, With_1_flat) {
-//     Pitch pitch;
-//     pitch.SetAlteration(-1);
-//     vector<u32string> names = {U"Cb?", U"Db?", U"Eb?", U"Fb?", U"Gb?", U"Ab?", U"Bb?"};
-//     for (auto o = 0; o <= 10; o++) {
-//         pitch.SetOctave(o);
-//         for (auto i = 1; i <= 7; i++) {
-//             pitch.SetStep(i);
-//             auto expected = new u32string(names[i - 1]);
-//             boost::algorithm::replace_all(expected, "?", to_string(pitch.GetOctave()));
-//             auto actual = pitch.Name();
-//             EXPECT_EQ(expected, actual);
-//         }
-//     }
-// }
+TEST(Pitch_SimpleName, With_1_flat) {
+    Pitch pitch;
+    pitch.SetAlteration(-1);
+    vector<u32string> names = {U"Cb?", U"Db?", U"Eb?", U"Fb?", U"Gb?", U"Ab?", U"Bb?"};
+    for (auto o = 0; o <= 10; o++) {
+        pitch.SetOctave(o);
+        for (auto i = 1; i <= 7; i++) {
+            pitch.SetStep(i);
+            u32string expected(names[i - 1]);
+            boost::algorithm::replace_all(expected, "?", to_string(pitch.GetOctave()));
+            auto actual = pitch.Name();
+            EXPECT_EQ(expected, actual);
+        }
+    }
+}
 
-// TEST(Pitch_SimpleName, With_2_flats) {
-//     Pitch pitch;
-//     pitch.SetAlteration(-2);
-//     vector<u32string> names = {U"Cbb?", U"Dbb?", U"Ebb?", U"Fbb?", U"Gbb?", U"Abb?", U"Bbb?"};
-//     for (auto o = 0; o <= 10; o++) {
-//         pitch.SetOctave(o);
-//         for (auto i = 1; i <= 7; i++) {
-//             pitch.SetStep(i);
-//             auto expected = new u32string(names[i - 1]);
-//             boost::algorithm::replace_all(expected, "?", to_string(pitch.GetOctave()));
-//             auto actual = pitch.Name();
-//             EXPECT_EQ(expected, actual);
-//         }
-//     }
-// }
+TEST(Pitch_SimpleName, With_2_flats) {
+    Pitch pitch;
+    pitch.SetAlteration(-2);
+    vector<u32string> names = {U"Cbb?", U"Dbb?", U"Ebb?", U"Fbb?", U"Gbb?", U"Abb?", U"Bbb?"};
+    for (auto o = 0; o <= 10; o++) {
+        pitch.SetOctave(o);
+        for (auto i = 1; i <= 7; i++) {
+            pitch.SetStep(i);
+            u32string expected(names[i - 1]);
+            boost::algorithm::replace_all(expected, "?", to_string(pitch.GetOctave()));
+            auto actual = pitch.Name();
+            EXPECT_EQ(expected, actual);
+        }
+    }
+}
 
-// TEST(Pitch_SimpleName, With_1_sharp) {
-//     Pitch pitch;
-//     pitch.SetAlteration(1);
-//     vector<u32string> names = {U"C#?", U"D#?", U"E#?", U"F#?", U"G#?", U"A#?", U"B#?"};
-//     for (auto o = 0; o <= 10; o++) {
-//         pitch.SetOctave(o);
-//         for (auto i = 1; i <= 7; i++) {
-//             pitch.SetStep(i);
-//             auto expected = new u32string(names[i - 1]);
-//             boost::algorithm::replace_all(expected, "?", to_string(pitch.GetOctave()));
-//             auto actual = pitch.Name();
-//             EXPECT_EQ(expected, actual);
-//         }
-//     }
-// }
+TEST(Pitch_SimpleName, With_1_sharp) {
+    Pitch pitch;
+    pitch.SetAlteration(1);
+    vector<u32string> names = {U"C#?", U"D#?", U"E#?", U"F#?", U"G#?", U"A#?", U"B#?"};
+    for (auto o = 0; o <= 10; o++) {
+        pitch.SetOctave(o);
+        for (auto i = 1; i <= 7; i++) {
+            pitch.SetStep(i);
+            u32string expected(names[i - 1]);
+            boost::algorithm::replace_all(expected, "?", to_string(pitch.GetOctave()));
+            auto actual = pitch.Name();
+            EXPECT_EQ(expected, actual);
+        }
+    }
+}
 
-// TEST(Pitch_SimpleName, With_2_sharps) {
-//     Pitch pitch;
-//     pitch.SetAlteration(2);
-//     vector<u32string> names = {U"C##?", U"D##?", U"E##?", U"F##?", U"G##?", U"A##?", U"B##?"};
-//     for (auto o = 0; o <= 10; o++) {
-//         pitch.SetOctave(o);
-//         for (auto i = 1; i <= 7; i++) {
-//             pitch.SetStep(i);
-//             auto expected = new u32string(names[i - 1]);
-//             boost::algorithm::replace_all(expected, "?", to_string(pitch.GetOctave()));
-//             auto actual = pitch.Name();
-//             EXPECT_EQ(expected, actual);
-//         }
-//     }
-// }
+TEST(Pitch_SimpleName, With_2_sharps) {
+    Pitch pitch;
+    pitch.SetAlteration(2);
+    vector<u32string> names = {U"C##?", U"D##?", U"E##?", U"F##?", U"G##?", U"A##?", U"B##?"};
+    for (auto o = 0; o <= 10; o++) {
+        pitch.SetOctave(o);
+        for (auto i = 1; i <= 7; i++) {
+            pitch.SetStep(i);
+            u32string expected(names[i - 1]);
+            boost::algorithm::replace_all(expected, "?", to_string(pitch.GetOctave()));
+            auto actual = pitch.Name();
+            EXPECT_EQ(expected, actual);
+        }
+    }
+}
 
 // vector<u32string> superscripts = {"⁰", U"¹", U"²", U"³", U"⁴", U"⁵", U"⁶", U"⁷", U"⁸", U"⁹", U"¹⁰"};
 // TEST(Pitch_PrettyName, Without_alterations) {
