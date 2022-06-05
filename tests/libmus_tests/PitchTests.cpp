@@ -1,21 +1,21 @@
-﻿// #include <gtest/gtest.h>
-// #include <libmus/libmus.h>
-// #include <boost/algorithm/string/replace.hpp>
+﻿#include <gtest/gtest.h>
+#include <libmus/libmus.h>
+#include <boost/algorithm/string/replace.hpp>
 
-// #include <map>
-// #include <math.h>
+#include <map>
+#include <math.h>
 
-// using namespace std;
-// using namespace libmus;
-// using namespace boost;
+using namespace std;
+using namespace libmus;
+using namespace boost;
 
-// TEST(Pitch, Assert_initial_values_from_constructor_are_being_set) {
-//     Pitch pitch;
+TEST(Pitch, Assert_initial_values_from_constructor_are_being_set) {
+    Pitch pitch;
 
-//     EXPECT_EQ(1, pitch.GetStep());
-//     EXPECT_EQ(0, pitch.GetAlteration());
-//     EXPECT_EQ(4, pitch.GetOctave());
-// }
+    EXPECT_EQ(1, pitch.GetStep());
+    EXPECT_EQ(0, pitch.GetAlteration());
+    EXPECT_EQ(4, pitch.GetOctave());
+}
 
 // TEST(Pitch_Step, Normal_values_should_work) {
 //     Pitch pitch;
