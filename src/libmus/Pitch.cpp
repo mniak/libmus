@@ -55,11 +55,14 @@ void Pitch::SetOctave(int value) {
 }
 
 u32string Pitch::Name() {
-    return this->pitchClass.Name();
+    auto s = to_string(this->octave);
+    u32string o(s.begin(), s.end());
+    return this->pitchClass.Name() + o;
 }
 
 u32string Pitch::PrettyName() {
-    return this->pitchClass.Name();
+    auto oct = constants::SUPERSCRIPT_OCTAVES[this->octave];
+    return this->pitchClass.PrettyName() + oct;
 }
 
 u32string Pitch::FullName() {
