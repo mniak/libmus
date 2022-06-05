@@ -361,8 +361,8 @@ TEST(PitchClass_Parse, Simple_name) {
             auto text = step + alt;
             auto parsed = PitchClass::Parse(text);
 
-            EXPECT_EQ(istep, parsed.GetStep());
-            EXPECT_EQ(ialt - 3, parsed.GetAlteration());
+            EXPECT_EQ(istep + 1, parsed.GetStep());
+            EXPECT_EQ(ialt - 2, parsed.GetAlteration());
         }
     }
 }
@@ -379,8 +379,8 @@ TEST(PitchClass_Parse, Pretty_name) {
             auto text = step + alt;
             auto parsed = PitchClass::Parse(text);
 
-            EXPECT_EQ(istep, parsed.GetStep());
-            EXPECT_EQ(ialt - 3, parsed.GetAlteration());
+            EXPECT_EQ(istep + 1, parsed.GetStep());
+            EXPECT_EQ(ialt - 2, parsed.GetAlteration());
         }
     }
 }

@@ -66,7 +66,7 @@ PitchClass PitchClass::Parse(u32string value) {
         }
     }
 
-    for (wchar_t ch : tail) {
+    for (char32_t ch : tail) {
         switch (ch) {
             case U'b':
             case FLAT_SYMBOL:
