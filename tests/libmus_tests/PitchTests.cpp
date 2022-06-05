@@ -449,27 +449,27 @@ TEST(Pitch_FullName, With_2_sharps) {
     }
 }
 
-// TEST(Pitch_Parse_without_octave, Simple_name_without_octave) {
-//     vector<u32string> alterationTexts = {U"bb", U"b", U"", U"#", U"##"};
-//     vector<u32string> stepTexts = {U"C", U"D", U"E", U"F", U"G", U"A", U"B"};
+TEST(Pitch_Parse_without_octave, Simple_name_without_octave) {
+    vector<u32string> alterationTexts = {U"bb", U"b", U"", U"#", U"##"};
+    vector<u32string> stepTexts = {U"C", U"D", U"E", U"F", U"G", U"A", U"B"};
 
-//     for (auto iterAlt = alterationTexts.begin(); iterAlt != alterationTexts.end(); iterAlt++) {
-//         auto ialt = iterAlt - alterationTexts.begin();
-//         auto alt = *iterAlt;
+    for (auto iterAlt = alterationTexts.begin(); iterAlt != alterationTexts.end(); iterAlt++) {
+        auto ialt = iterAlt - alterationTexts.begin();
+        auto alt = *iterAlt;
 
-//         for (auto iterStep = stepTexts.begin(); iterStep != stepTexts.end(); iterStep++) {
-//             auto istep = iterStep - stepTexts.begin();
-//             auto step = *iterStep;
+        for (auto iterStep = stepTexts.begin(); iterStep != stepTexts.end(); iterStep++) {
+            auto istep = iterStep - stepTexts.begin();
+            auto step = *iterStep;
 
-//             auto text = step + alt;
-//             auto parsed = Pitch::Parse(text);
+            auto text = step + alt;
+            auto parsed = Pitch::Parse(text);
 
-//             EXPECT_EQ(istep, parsed.GetStep());
-//             EXPECT_EQ(ialt - 3, parsed.GetAlteration());
-//             EXPECT_EQ(4, parsed.GetOctave());
-//         }
-//     }
-// }
+            EXPECT_EQ(istep + 1, parsed.GetStep());
+            EXPECT_EQ(ialt - 2, parsed.GetAlteration());
+            EXPECT_EQ(4, parsed.GetOctave());
+        }
+    }
+}
 
 // TEST(Pitch_Parse_without_octave, Pretty_name) {
 //     vector<u32string> alterationTexts = {U"𝄫", U"♭", U"", U"♯", U"𝄪"};

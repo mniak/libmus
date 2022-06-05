@@ -10,7 +10,7 @@ class Pitch {
 
    public:
     Pitch();
-    static Pitch Parse(std::u32string pitch);
+    static Pitch Parse(std::u32string text);
     static Pitch Random();
     static Pitch ExtendedRandom();
 

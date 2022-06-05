@@ -52,10 +52,10 @@ PitchClass PitchClass::ExtendedRandom() {
     return pc;
 }
 
-PitchClass PitchClass::Parse(u32string value) {
+PitchClass PitchClass::Parse(u32string text) {
     PitchClass newpc;
-    auto head = value.substr(0, 1);
-    auto tail = value.substr(1);
+    auto head = text.substr(0, 1);
+    auto tail = text.substr(1);
 
     for (auto iname = 0; iname < NAMES.size(); iname++) {
         auto name = NAMES[iname];
