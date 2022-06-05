@@ -55,9 +55,9 @@ void Pitch::SetOctave(int value) {
 }
 
 u32string Pitch::Name() {
-    auto s = to_string(this->octave);
-    u32string o(s.begin(), s.end());
-    return this->pitchClass.Name() + o;
+    auto octaveString = to_string(this->octave);
+    u32string octave32(octaveString.begin(), octaveString.end());
+    return this->pitchClass.Name() + octave32;
 }
 
 u32string Pitch::PrettyName() {
@@ -66,7 +66,9 @@ u32string Pitch::PrettyName() {
 }
 
 u32string Pitch::FullName() {
-    return this->pitchClass.Name();
+    auto octaveString = to_string(this->octave);
+    u32string octave32(octaveString.begin(), octaveString.end());
+    return this->pitchClass.FullName() + U" " + octave32;
 }
 
 }
