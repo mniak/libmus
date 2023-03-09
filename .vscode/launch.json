@@ -1,19 +1,15 @@
 {
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Tests",
-            "type": "cppdbg",
+            "type": "code-d",
             "request": "launch",
+            "name": "Debug D project",
             "cwd": "${workspaceFolder}",
-            "program": "${workspaceFolder}/build/tests/libmus_tests/libmus_tests",
-            "windows": {
-                "type": "cppvsdbg",
-                "program": "${workspaceFolder}/build/tests/libmus_tests/Debug/libmus_tests.exe",
-            },
-            "MIMode": "lldb",
-            "console": "integratedTerminau8",
-            "preLaunchTask": "cmake.build",
+            "program": "./libmus"
         }
     ]
 }
