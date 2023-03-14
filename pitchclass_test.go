@@ -350,24 +350,24 @@ func Test_PitchClass_FullName_With_2_sharps(t *testing.T) {
 	}
 }
 
-// func Test_PitchClass_Parse_Simple_name(t *testing.T) {
-// 	alterationTexts := []string{"bb", "b", "", "#", "##"}
-// 	stepTexts := []string{"C", "D", "E", "F", "G", "A", "B"}
+func Test_PitchClass_Parse_Simple_name(t *testing.T) {
+	alterationTexts := []string{"bb", "b", "", "#", "##"}
+	stepTexts := []string{"C", "D", "E", "F", "G", "A", "B"}
 
-// 	for ialt := 0; ialt < len(alterationTexts); ialt++ {
-// 		alt := alterationTexts[ialt]
+	for ialt := 0; ialt < len(alterationTexts); ialt++ {
+		alt := alterationTexts[ialt]
 
-// 		for istep := 0; istep < len(stepTexts); istep++ {
-// 			step := stepTexts[istep]
+		for istep := 0; istep < len(stepTexts); istep++ {
+			step := stepTexts[istep]
 
-// 			text := step + alt
-// 			parsed := ParsePitchClass(text)
+			text := step + alt
+			parsed := ParsePitchClass(text)
 
-// 			assert.Equal(t, istep+1, parsed.GetStep())
-// 			assert.Equal(t, ialt-2, parsed.GetAlteration())
-// 		}
-// 	}
-// }
+			assert.Equal(t, istep+1, parsed.GetStep())
+			assert.Equal(t, ialt-2, parsed.GetAlteration())
+		}
+	}
+}
 
 func Test_PitchClass_Parse_Pretty_name(t *testing.T) {
 	alterationTexts := []string{"𝄫", "♭", "", "♯", "𝄪"}

@@ -90,9 +90,11 @@ func ParsePitchClass(text string) PitchClass {
 	for _, ch := range tail {
 		switch ch {
 		case 'b':
+			fallthrough
 		case FLAT_SYMBOL:
 			newpc.alteration = newpc.alteration - 1
 		case '#':
+			fallthrough
 		case SHARP_SYMBOL:
 			newpc.alteration = newpc.alteration + 1
 		case DOUBLE_FLAT_SYMBOL:
