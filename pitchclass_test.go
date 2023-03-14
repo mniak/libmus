@@ -1,62 +1,71 @@
 ﻿package libmus
 
-// func Test_PitchClass_Step_Constructor_should_set_initial_values(t *testing.T) {
-//     var  pc PitchClass;
+import (
+	"testing"
 
-//     assert.Equalt(t, 1, pc.GetStep());
-//     assert.Equalt(t, 0, pc.GetAlteration());
-// }
-// func Test_PitchClass_Step_Normal_values_should_work(t *testing.T) {
-//     var  pc PitchClass;
+	"github.com/stretchr/testify/assert"
+)
 
-//     pc.SetStep(1);
-//     assert.Equalt(t, 1, pc.GetStep());
+func Test_PitchClass_Step_Constructor_should_set_initial_values(t *testing.T) {
+	pc := NewPitchClass()
 
-//     pc.SetStep(2);
-//     assert.Equalt(t, 2, pc.GetStep());
+	assert.Equal(t, 1, pc.GetStep())
+	assert.Equal(t, 0, pc.GetAlteration())
+}
 
-//     pc.SetStep(3);
-//     assert.Equalt(t, 3, pc.GetStep());
+func Test_PitchClass_Step_Normal_values_should_work(t *testing.T) {
+	var pc PitchClass
 
-//     pc.SetStep(4);
-//     assert.Equalt(t, 4, pc.GetStep());
+	pc.SetStep(1)
+	assert.Equal(t, 1, pc.GetStep())
 
-//     pc.SetStep(5);
-//     assert.Equalt(t, 5, pc.GetStep());
+	pc.SetStep(2)
+	assert.Equal(t, 2, pc.GetStep())
 
-//     pc.SetStep(6);
-//     assert.Equalt(t, 6, pc.GetStep());
+	pc.SetStep(3)
+	assert.Equal(t, 3, pc.GetStep())
 
-//     pc.SetStep(7);
-//     assert.Equalt(t, 7, pc.GetStep());
-// }
-// func Test_PitchClass_Step_Bigger_values_should_be_normalized(t *testing.T) {
-//     var  pc PitchClass;
+	pc.SetStep(4)
+	assert.Equal(t, 4, pc.GetStep())
 
-//     pc.SetStep(8);
-//     assert.Equalt(t, 1, pc.GetStep());
+	pc.SetStep(5)
+	assert.Equal(t, 5, pc.GetStep())
 
-//     pc.SetStep(9);
-//     assert.Equalt(t, 2, pc.GetStep());
+	pc.SetStep(6)
+	assert.Equal(t, 6, pc.GetStep())
 
-//     pc.SetStep(10);
-//     assert.Equalt(t, 3, pc.GetStep());
+	pc.SetStep(7)
+	assert.Equal(t, 7, pc.GetStep())
+}
 
-//     pc.SetStep(11);
-//     assert.Equalt(t, 4, pc.GetStep());
+func Test_PitchClass_Step_Bigger_values_should_be_normalized(t *testing.T) {
+	var pc PitchClass
 
-//     pc.SetStep(12);
-//     assert.Equalt(t, 5, pc.GetStep());
+	pc.SetStep(8)
+	assert.Equal(t, 1, pc.GetStep())
 
-//     pc.SetStep(13);
-//     assert.Equalt(t, 6, pc.GetStep());
+	pc.SetStep(9)
+	assert.Equal(t, 2, pc.GetStep())
 
-//     pc.SetStep(14);
-//     assert.Equalt(t, 7, pc.GetStep());
+	pc.SetStep(10)
+	assert.Equal(t, 3, pc.GetStep())
 
-//     pc.SetStep(15);
-//     assert.Equalt(t, 1, pc.GetStep());
-// }
+	pc.SetStep(11)
+	assert.Equal(t, 4, pc.GetStep())
+
+	pc.SetStep(12)
+	assert.Equal(t, 5, pc.GetStep())
+
+	pc.SetStep(13)
+	assert.Equal(t, 6, pc.GetStep())
+
+	pc.SetStep(14)
+	assert.Equal(t, 7, pc.GetStep())
+
+	pc.SetStep(15)
+	assert.Equal(t, 1, pc.GetStep())
+}
+
 // func Test_PitchClass_Step_Attributing_zero_or_negative_should_do_nothing(t *testing.T) {
 //     var  pc PitchClass;
 
@@ -64,7 +73,7 @@
 //         for (auto badValue = -1; badValue >= -20; badValue--) {
 //             pc.SetStep(goodValue);
 //             pc.SetStep(badValue);
-//             assert.Equalt(t, goodValue, pc.GetStep());
+//             assert.Equal(t, goodValue, pc.GetStep());
 //         }
 //     }
 // }
@@ -72,19 +81,19 @@
 //     var  pc PitchClass;
 
 //     pc.SetAlteration(-2);
-//     assert.Equalt(t, -2, pc.GetAlteration());
+//     assert.Equal(t, -2, pc.GetAlteration());
 
 //     pc.SetAlteration(-1);
-//     assert.Equalt(t, -1, pc.GetAlteration());
+//     assert.Equal(t, -1, pc.GetAlteration());
 
 //     pc.SetAlteration(0);
-//     assert.Equalt(t, 0, pc.GetAlteration());
+//     assert.Equal(t, 0, pc.GetAlteration());
 
 //     pc.SetAlteration(1);
-//     assert.Equalt(t, 1, pc.GetAlteration());
+//     assert.Equal(t, 1, pc.GetAlteration());
 
 //     pc.SetAlteration(2);
-//     assert.Equalt(t, 2, pc.GetAlteration());
+//     assert.Equal(t, 2, pc.GetAlteration());
 // }
 // func Test_PitchClass_Alteration_When_value_is_smaller_than_limit_then_keep_min_value(t *testing.T) {
 //     var  pc PitchClass;
@@ -92,7 +101,7 @@
 //     for (auto v = -12; v <= -2; v++) {
 //         pc.SetAlteration(0);
 //         pc.SetAlteration(v);
-//         assert.Equalt(t, -2, pc.GetAlteration());
+//         assert.Equal(t, -2, pc.GetAlteration());
 //     }
 // }
 // func Test_PitchClass_Alteration_When_value_is_greater_than_limit_then_keep_max_value(t *testing.T) {
@@ -101,7 +110,7 @@
 //     for (auto v = 2; v <= 12; v++) {
 //         pc.SetAlteration(0);
 //         pc.SetAlteration(v);
-//         assert.Equalt(t, 2, pc.GetAlteration());
+//         assert.Equal(t, 2, pc.GetAlteration());
 //     }
 // }
 // func Test_PitchClass_Random_Steps_should_have_a_good_distribution(t *testing.T) {
@@ -157,7 +166,7 @@
 //         pc.SetStep(i);
 //         auto expected = names[i - 1];
 //         auto actual = pc.Name();
-//         assert.Equalt(t, expected, actual);
+//         assert.Equal(t, expected, actual);
 //     }
 // }
 // func Test_PitchClass_SimpleName_With_1_flat(t *testing.T) {
@@ -168,7 +177,7 @@
 //         pc.SetStep(i);
 //         auto expected = names[i - 1];
 //         auto actual = pc.Name();
-//         assert.Equalt(t, expected, actual);
+//         assert.Equal(t, expected, actual);
 //     }
 // }
 // func Test_PitchClass_SimpleName_With_2_flats(t *testing.T) {
@@ -179,7 +188,7 @@
 //         pc.SetStep(i);
 //         auto expected = names[i - 1];
 //         auto actual = pc.Name();
-//         assert.Equalt(t, expected, actual);
+//         assert.Equal(t, expected, actual);
 //     }
 // }
 // func Test_PitchClass_SimpleName_With_1_sharp(t *testing.T) {
@@ -190,7 +199,7 @@
 //         pc.SetStep(i);
 //         auto expected = names[i - 1];
 //         auto actual = pc.Name();
-//         assert.Equalt(t, expected, actual);
+//         assert.Equal(t, expected, actual);
 //     }
 // }
 // func Test_PitchClass_SimpleName_With_2_sharps(t *testing.T) {
@@ -201,7 +210,7 @@
 //         pc.SetStep(i);
 //         auto expected = names[i - 1];
 //         auto actual = pc.Name();
-//         assert.Equalt(t, expected, actual);
+//         assert.Equal(t, expected, actual);
 //     }
 // }
 // func Test_PitchClass_PrettyName_Without_alterations(t *testing.T) {
@@ -212,7 +221,7 @@
 //         pc.SetStep(i);
 //         auto expected = names[i - 1];
 //         auto actual = pc.PrettyName();
-//         assert.Equalt(t, expected, actual);
+//         assert.Equal(t, expected, actual);
 //     }
 // }
 // func Test_PitchClass_PrettyName_With_1_flat(t *testing.T) {
@@ -223,7 +232,7 @@
 //         pc.SetStep(i);
 //         auto expected = names[i - 1];
 //         auto actual = pc.PrettyName();
-//         assert.Equalt(t, expected, actual);
+//         assert.Equal(t, expected, actual);
 //     }
 // }
 // func Test_PitchClass_PrettyName_With_2_flats(t *testing.T) {
@@ -234,7 +243,7 @@
 //         pc.SetStep(i);
 //         auto expected = names[i - 1];
 //         auto actual = pc.PrettyName();
-//         assert.Equalt(t, expected, actual);
+//         assert.Equal(t, expected, actual);
 //     }
 // }
 // func Test_PitchClass_PrettyName_With_1_sharp(t *testing.T) {
@@ -245,7 +254,7 @@
 //         pc.SetStep(i);
 //         auto expected = names[i - 1];
 //         auto actual = pc.PrettyName();
-//         assert.Equalt(t, expected, actual);
+//         assert.Equal(t, expected, actual);
 //     }
 // }
 // func Test_PitchClass_PrettyName_With_2_sharps(t *testing.T) {
@@ -256,7 +265,7 @@
 //         pc.SetStep(i);
 //         auto expected = names[i - 1];
 //         auto actual = pc.PrettyName();
-//         assert.Equalt(t, expected, actual);
+//         assert.Equal(t, expected, actual);
 //     }
 // }
 // func Test_PitchClass_FullName_Without_alterations(t *testing.T) {
@@ -267,7 +276,7 @@
 //         pc.SetStep(i);
 //         auto expected = names[i - 1];
 //         auto actual = pc.FullName();
-//         assert.Equalt(t, expected, actual);
+//         assert.Equal(t, expected, actual);
 //     }
 // }
 // func Test_PitchClass_FullName_With_1_flat(t *testing.T) {
@@ -278,7 +287,7 @@
 //         pc.SetStep(i);
 //         auto expected = names[i - 1];
 //         auto actual = pc.FullName();
-//         assert.Equalt(t, expected, actual);
+//         assert.Equal(t, expected, actual);
 //     }
 // }
 // func Test_PitchClass_FullName_With_2_flats(t *testing.T) {
@@ -290,7 +299,7 @@
 //         pc.SetStep(i);
 //         auto expected = names[i - 1];
 //         auto actual = pc.FullName();
-//         assert.Equalt(t, expected, actual);
+//         assert.Equal(t, expected, actual);
 //     }
 // }
 // func Test_PitchClass_FullName_With_1_sharp(t *testing.T) {
@@ -301,7 +310,7 @@
 //         pc.SetStep(i);
 //         auto expected = names[i - 1];
 //         auto actual = pc.FullName();
-//         assert.Equalt(t, expected, actual);
+//         assert.Equal(t, expected, actual);
 //     }
 // }
 // func Test_PitchClass_FullName_With_2_sharps(t *testing.T) {
@@ -313,7 +322,7 @@
 //         pc.SetStep(i);
 //         auto expected = names[i - 1];
 //         auto actual = pc.FullName();
-//         assert.Equalt(t, expected, actual);
+//         assert.Equal(t, expected, actual);
 //     }
 // }
 // func Test_PitchClass_Parse_Simple_name(t *testing.T) {
@@ -329,8 +338,8 @@
 //             auto text = step + alt;
 //             auto parsed = PitchClass::Parse(text);
 
-//             assert.Equalt(t, istep + 1, parsed.GetStep());
-//             assert.Equalt(t, ialt - 2, parsed.GetAlteration());
+//             assert.Equal(t, istep + 1, parsed.GetStep());
+//             assert.Equal(t, ialt - 2, parsed.GetAlteration());
 //         }
 //     }
 // }func Test_PitchClass_Parse_Pretty_name(t *testing.T) {
@@ -346,8 +355,8 @@
 //             auto text = step + alt;
 //             auto parsed = PitchClass::Parse(text);
 
-//             assert.Equalt(t, istep + 1, parsed.GetStep());
-//             assert.Equalt(t, ialt - 2, parsed.GetAlteration());
+//             assert.Equal(t, istep + 1, parsed.GetStep());
+//             assert.Equal(t, ialt - 2, parsed.GetAlteration());
 //         }
 //     }
 // }
