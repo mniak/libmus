@@ -107,59 +107,60 @@ func Test_PitchClass_Alteration_When_value_is_smaller_than_limit_then_keep_min_v
 	}
 }
 
-// func Test_PitchClass_Alteration_When_value_is_greater_than_limit_then_keep_max_value(t *testing.T) {
-// 	var pc PitchClass
+func Test_PitchClass_Alteration_When_value_is_greater_than_limit_then_keep_max_value(t *testing.T) {
+	var pc PitchClass
 
-// 	for v := 2; v <= 12; v++ {
-// 		pc.SetAlteration(0)
-// 		pc.SetAlteration(v)
-// 		assert.Equal(t, 2, pc.GetAlteration())
-// 	}
-// }
+	for v := 2; v <= 12; v++ {
+		pc.SetAlteration(0)
+		pc.SetAlteration(v)
+		assert.Equal(t, 2, pc.GetAlteration())
+	}
+}
 
-// func Test_PitchClass_Random_Steps_should_have_a_good_distribution(t *testing.T) {
-//     map<int, bool> steps;
-//     for i := 1; i <= 7 * 5; i++ {
-//         auto pc = PitchClass::Random();
-//         steps[pc.GetStep()] = true;
-//     }
-//     for i := 1; i <= 7; i++ {
-//         auto pc = PitchClass::Random();
-//         EXPECT_TRUE(steps[i]);
-//     }
-// }
-// func Test_PitchClass_Random_Alterations_should_never_be_double(t *testing.T) {
-//     map<int, bool> alterations;
-//     for i := 1; i <= 3 * 5; i++ {
-//         auto pc = PitchClass::Random();
-//         alterations[pc.GetAlteration()] = true;
-//     }
-//     for i := -1; i <= 1; i++ {
-//         EXPECT_TRUE(alterations[i]);
-//     }
-//     for (auto v : {-2, 2}) {
-//         EXPECT_FALSE(alterations[v]);
-//     }
-// }
+func Test_PitchClass_Random_Steps_should_have_a_good_distribution(t *testing.T) {
+	steps := make(map[int]bool)
+	for i := 1; i <= 7*5; i++ {
+		pc := RandomPitchClass()
+		steps[pc.GetStep()] = true
+	}
+	for i := 1; i <= 7; i++ {
+		assert.True(t, steps[i])
+	}
+}
+
+func Test_PitchClass_Random_Alterations_should_never_be_double(t *testing.T) {
+	alterations := make(map[int]bool)
+	for i := 1; i <= 3*5; i++ {
+		pc := RandomPitchClass()
+		alterations[pc.GetAlteration()] = true
+	}
+	for i := -1; i <= 1; i++ {
+		assert.True(t, alterations[i])
+	}
+	for _, v := range []int{-2, 2} {
+		assert.False(t, alterations[v])
+	}
+}
+
 // func Test_PitchClass_ExtendedRandom_Steps_should_have_a_good_distribution(t *testing.T) {
-//     map<int, bool> steps;
+//     steps := make(map[int]bool)
 //     for i := 1; i <= 7 * 5; i++ {
-//         auto pc = PitchClass::ExtendedRandom();
+//         pc := PitchClass::ExtendedRandom();
 //         steps[pc.GetStep()] = true;
 //     }
 //     for i := 1; i <= 7; i++ {
-//         auto pc = PitchClass::ExtendedRandom();
-//         EXPECT_TRUE(steps[i]);
+//         pc := PitchClass::ExtendedRandom();
+//         assert.True(t, steps[i]);
 //     }
 // }
 // func Test_PitchClass_ExtendedRandom_Alterations_should_have_a_good_distribution(t *testing.T) {
-//     map<int, bool> alterations;
+//     alterations := make(map[int]bool)
 //     for i := 1; i <= 5 * 5; i++ {
-//         auto pc = PitchClass::ExtendedRandom();
+//         pc := PitchClass::ExtendedRandom();
 //         alterations[pc.GetAlteration()] = true;
 //     }
 //     for i := -2; i <= 2; i++ {
-//         EXPECT_TRUE(alterations[i]);
+//         assert.True(t, alterations[i]);
 //     }
 // }
 // func Test_PitchClass_SimpleName_Without_alterations(t *testing.T) {
@@ -168,8 +169,8 @@ func Test_PitchClass_Alteration_When_value_is_smaller_than_limit_then_keep_min_v
 //     vector<u32string> names = {U"C", U"D", U"E", U"F", U"G", U"A", U"B"};
 //     for i := 1; i <= 7; i++ {
 //         pc.SetStep(i);
-//         auto expected = names[i - 1];
-//         auto actual = pc.Name();
+//         expected := names[i - 1];
+//         actual := pc.Name();
 //         assert.Equal(t, expected, actual);
 //     }
 // }
@@ -179,8 +180,8 @@ func Test_PitchClass_Alteration_When_value_is_smaller_than_limit_then_keep_min_v
 //     vector<u32string> names = {U"Cb", U"Db", U"Eb", U"Fb", U"Gb", U"Ab", U"Bb"};
 //     for i := 1; i <= 7; i++ {
 //         pc.SetStep(i);
-//         auto expected = names[i - 1];
-//         auto actual = pc.Name();
+//         expected := names[i - 1];
+//         actual := pc.Name();
 //         assert.Equal(t, expected, actual);
 //     }
 // }
@@ -190,8 +191,8 @@ func Test_PitchClass_Alteration_When_value_is_smaller_than_limit_then_keep_min_v
 //     vector<u32string> names = {U"Cbb", U"Dbb", U"Ebb", U"Fbb", U"Gbb", U"Abb", U"Bbb"};
 //     for i := 1; i <= 7; i++ {
 //         pc.SetStep(i);
-//         auto expected = names[i - 1];
-//         auto actual = pc.Name();
+//         expected := names[i - 1];
+//         actual := pc.Name();
 //         assert.Equal(t, expected, actual);
 //     }
 // }
@@ -201,8 +202,8 @@ func Test_PitchClass_Alteration_When_value_is_smaller_than_limit_then_keep_min_v
 //     vector<u32string> names = {U"C#", U"D#", U"E#", U"F#", U"G#", U"A#", U"B#"};
 //     for i := 1; i <= 7; i++ {
 //         pc.SetStep(i);
-//         auto expected = names[i - 1];
-//         auto actual = pc.Name();
+//         expected := names[i - 1];
+//         actual := pc.Name();
 //         assert.Equal(t, expected, actual);
 //     }
 // }
@@ -212,8 +213,8 @@ func Test_PitchClass_Alteration_When_value_is_smaller_than_limit_then_keep_min_v
 //     vector<u32string> names = {U"C##", U"D##", U"E##", U"F##", U"G##", U"A##", U"B##"};
 //     for i := 1; i <= 7; i++ {
 //         pc.SetStep(i);
-//         auto expected = names[i - 1];
-//         auto actual = pc.Name();
+//         expected := names[i - 1];
+//         actual := pc.Name();
 //         assert.Equal(t, expected, actual);
 //     }
 // }
@@ -223,8 +224,8 @@ func Test_PitchClass_Alteration_When_value_is_smaller_than_limit_then_keep_min_v
 //     vector<u32string> names = {U"C", U"D", U"E", U"F", U"G", U"A", U"B"};
 //     for i := 1; i <= 7; i++ {
 //         pc.SetStep(i);
-//         auto expected = names[i - 1];
-//         auto actual = pc.PrettyName();
+//         expected := names[i - 1];
+//         actual := pc.PrettyName();
 //         assert.Equal(t, expected, actual);
 //     }
 // }
@@ -234,8 +235,8 @@ func Test_PitchClass_Alteration_When_value_is_smaller_than_limit_then_keep_min_v
 //     vector<u32string> names = {U"C♭", U"D♭", U"E♭", U"F♭", U"G♭", U"A♭", U"B♭"};
 //     for i := 1; i <= 7; i++ {
 //         pc.SetStep(i);
-//         auto expected = names[i - 1];
-//         auto actual = pc.PrettyName();
+//         expected := names[i - 1];
+//         actual := pc.PrettyName();
 //         assert.Equal(t, expected, actual);
 //     }
 // }
@@ -245,8 +246,8 @@ func Test_PitchClass_Alteration_When_value_is_smaller_than_limit_then_keep_min_v
 //     vector<u32string> names = {U"C𝄫", U"D𝄫", U"E𝄫", U"F𝄫", U"G𝄫", U"A𝄫", U"B𝄫"};
 //     for i := 1; i <= 7; i++ {
 //         pc.SetStep(i);
-//         auto expected = names[i - 1];
-//         auto actual = pc.PrettyName();
+//         expected := names[i - 1];
+//         actual := pc.PrettyName();
 //         assert.Equal(t, expected, actual);
 //     }
 // }
@@ -256,8 +257,8 @@ func Test_PitchClass_Alteration_When_value_is_smaller_than_limit_then_keep_min_v
 //     vector<u32string> names = {U"C♯", U"D♯", U"E♯", U"F♯", U"G♯", U"A♯", U"B♯"};
 //     for i := 1; i <= 7; i++ {
 //         pc.SetStep(i);
-//         auto expected = names[i - 1];
-//         auto actual = pc.PrettyName();
+//         expected := names[i - 1];
+//         actual := pc.PrettyName();
 //         assert.Equal(t, expected, actual);
 //     }
 // }
@@ -267,8 +268,8 @@ func Test_PitchClass_Alteration_When_value_is_smaller_than_limit_then_keep_min_v
 //     vector<u32string> names = {U"C𝄪", U"D𝄪", U"E𝄪", U"F𝄪", U"G𝄪", U"A𝄪", U"B𝄪"};
 //     for i := 1; i <= 7; i++ {
 //         pc.SetStep(i);
-//         auto expected = names[i - 1];
-//         auto actual = pc.PrettyName();
+//         expected := names[i - 1];
+//         actual := pc.PrettyName();
 //         assert.Equal(t, expected, actual);
 //     }
 // }
@@ -278,8 +279,8 @@ func Test_PitchClass_Alteration_When_value_is_smaller_than_limit_then_keep_min_v
 //     vector<u32string> names = {U"C", U"D", U"E", U"F", U"G", U"A", U"B"};
 //     for i := 1; i <= 7; i++ {
 //         pc.SetStep(i);
-//         auto expected = names[i - 1];
-//         auto actual = pc.FullName();
+//         expected := names[i - 1];
+//         actual := pc.FullName();
 //         assert.Equal(t, expected, actual);
 //     }
 // }
@@ -289,8 +290,8 @@ func Test_PitchClass_Alteration_When_value_is_smaller_than_limit_then_keep_min_v
 //     vector<u32string> names = {U"C flat", U"D flat", U"E flat", U"F flat", U"G flat", U"A flat", U"B flat"};
 //     for i := 1; i <= 7; i++ {
 //         pc.SetStep(i);
-//         auto expected = names[i - 1];
-//         auto actual = pc.FullName();
+//         expected := names[i - 1];
+//         actual := pc.FullName();
 //         assert.Equal(t, expected, actual);
 //     }
 // }
@@ -301,8 +302,8 @@ func Test_PitchClass_Alteration_When_value_is_smaller_than_limit_then_keep_min_v
 //                                U"G double flat", U"A double flat", U"B double flat"};
 //     for i := 1; i <= 7; i++ {
 //         pc.SetStep(i);
-//         auto expected = names[i - 1];
-//         auto actual = pc.FullName();
+//         expected := names[i - 1];
+//         actual := pc.FullName();
 //         assert.Equal(t, expected, actual);
 //     }
 // }
@@ -312,8 +313,8 @@ func Test_PitchClass_Alteration_When_value_is_smaller_than_limit_then_keep_min_v
 //     vector<u32string> names = {U"C sharp", U"D sharp", U"E sharp", U"F sharp", U"G sharp", U"A sharp", U"B sharp"};
 //     for i := 1; i <= 7; i++ {
 //         pc.SetStep(i);
-//         auto expected = names[i - 1];
-//         auto actual = pc.FullName();
+//         expected := names[i - 1];
+//         actual := pc.FullName();
 //         assert.Equal(t, expected, actual);
 //     }
 // }
@@ -324,8 +325,8 @@ func Test_PitchClass_Alteration_When_value_is_smaller_than_limit_then_keep_min_v
 //                                U"G double sharp", U"A double sharp", U"B double sharp"};
 //     for i := 1; i <= 7; i++ {
 //         pc.SetStep(i);
-//         auto expected = names[i - 1];
-//         auto actual = pc.FullName();
+//         expected := names[i - 1];
+//         actual := pc.FullName();
 //         assert.Equal(t, expected, actual);
 //     }
 // }
@@ -334,13 +335,13 @@ func Test_PitchClass_Alteration_When_value_is_smaller_than_limit_then_keep_min_v
 //     vector<u32string> stepTexts = {U"C", U"D", U"E", U"F", U"G", U"A", U"B"};
 
 //     for ialt := 0; ialt < alterationTexts.size(); ialt++ {
-//         auto alt = alterationTexts[ialt];
+//         alt := alterationTexts[ialt];
 
 //         for istep := 0; istep < stepTexts.size(); istep++ {
-//             auto step = stepTexts[istep];
+//             step := stepTexts[istep];
 
-//             auto text = step + alt;
-//             auto parsed = PitchClass::Parse(text);
+//             text := step + alt;
+//             parsed := PitchClass::Parse(text);
 
 //             assert.Equal(t, istep + 1, parsed.GetStep());
 //             assert.Equal(t, ialt - 2, parsed.GetAlteration());
@@ -351,13 +352,13 @@ func Test_PitchClass_Alteration_When_value_is_smaller_than_limit_then_keep_min_v
 //     vector<u32string> stepTexts = {U"C", U"D", U"E", U"F", U"G", U"A", U"B"};
 
 //     for ialt := 0; ialt < alterationTexts.size(); ialt++ {
-//         auto alt = alterationTexts[ialt];
+//         alt := alterationTexts[ialt];
 
 //         for istep := 0; istep < stepTexts.size(); istep++ {
-//             auto step = stepTexts[istep];
+//             step := stepTexts[istep];
 
-//             auto text = step + alt;
-//             auto parsed = PitchClass::Parse(text);
+//             text := step + alt;
+//             parsed := PitchClass::Parse(text);
 
 //             assert.Equal(t, istep + 1, parsed.GetStep());
 //             assert.Equal(t, ialt - 2, parsed.GetAlteration());

@@ -1,10 +1,12 @@
 ﻿package libmus
 
 const (
-	MIN_STEP       = 1
-	MAX_STEP       = 7
-	MIN_ALTERATION = -2
-	MAX_ALTERATION = 2
+	MIN_STEP             = 1
+	MAX_STEP             = 7
+	MIN_USUAL_ALTERATION = -1
+	MAX_USUAL_ALTERATION = 1
+	MIN_ALTERATION       = -2
+	MAX_ALTERATION       = 2
 )
 
 type PitchClass struct {
@@ -46,15 +48,15 @@ var (
 )
 
 func init() {
-	for i := -1; i <= 1; i++ {
+	for i := MIN_USUAL_ALTERATION; i <= MAX_USUAL_ALTERATION; i++ {
 		usualAlterations = append(usualAlterations, i)
 	}
 
-	for i := MIN_ALTERATION; MAX_ALTERATION <= 1; i++ {
+	for i := MIN_ALTERATION; i <= MAX_ALTERATION; i++ {
 		alterations = append(alterations, i)
 	}
 
-	for i := MIN_STEP; MAX_STEP <= 1; i++ {
+	for i := MIN_STEP; i <= MAX_STEP; i++ {
 		steps = append(steps, i)
 	}
 }

@@ -1,5 +1,7 @@
 package libmus
 
+import "math/rand"
+
 func truncateRange(value, min, max int) int {
 	if value >= max {
 		return max
@@ -11,6 +13,6 @@ func truncateRange(value, min, max int) int {
 }
 
 func generateRandom[T any](items []T) T {
-	var t T
-	return t
+	idx := rand.Intn(len(items))
+	return items[idx]
 }
