@@ -3,10 +3,10 @@ package libmus
 var NAMES = []string{"C", "D", "E", "F", "G", "A", "B"}
 
 const (
-	FLAT_SYMBOL         = '1'
-	SHARP_SYMBOL        = '2'
-	DOUBLE_FLAT_SYMBOL  = '3'
-	DOUBLE_SHARP_SYMBOL = '4'
+	FLAT_SYMBOL         = '♭'
+	SHARP_SYMBOL        = '♯'
+	DOUBLE_FLAT_SYMBOL  = '𝄫'
+	DOUBLE_SHARP_SYMBOL = '𝄪'
 )
 
 var SUPERSCRIPT_OCTAVES = []string{

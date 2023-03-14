@@ -142,187 +142,204 @@ func Test_PitchClass_Random_Alterations_should_never_be_double(t *testing.T) {
 	}
 }
 
-// func Test_PitchClass_ExtendedRandom_Steps_should_have_a_good_distribution(t *testing.T) {
-//     steps := make(map[int]bool)
-//     for i := 1; i <= 7 * 5; i++ {
-//         pc := PitchClass::ExtendedRandom();
-//         steps[pc.GetStep()] = true;
-//     }
-//     for i := 1; i <= 7; i++ {
-//         pc := PitchClass::ExtendedRandom();
-//         assert.True(t, steps[i]);
-//     }
-// }
-// func Test_PitchClass_ExtendedRandom_Alterations_should_have_a_good_distribution(t *testing.T) {
-//     alterations := make(map[int]bool)
-//     for i := 1; i <= 5 * 5; i++ {
-//         pc := PitchClass::ExtendedRandom();
-//         alterations[pc.GetAlteration()] = true;
-//     }
-//     for i := -2; i <= 2; i++ {
-//         assert.True(t, alterations[i]);
-//     }
-// }
-// func Test_PitchClass_SimpleName_Without_alterations(t *testing.T) {
-//     var  pc PitchClass;
-//     pc.SetAlteration(0);
-//     vector<u32string> names = {U"C", U"D", U"E", U"F", U"G", U"A", U"B"};
-//     for i := 1; i <= 7; i++ {
-//         pc.SetStep(i);
-//         expected := names[i - 1];
-//         actual := pc.Name();
-//         assert.Equal(t, expected, actual);
-//     }
-// }
-// func Test_PitchClass_SimpleName_With_1_flat(t *testing.T) {
-//     var  pc PitchClass;
-//     pc.SetAlteration(-1);
-//     vector<u32string> names = {U"Cb", U"Db", U"Eb", U"Fb", U"Gb", U"Ab", U"Bb"};
-//     for i := 1; i <= 7; i++ {
-//         pc.SetStep(i);
-//         expected := names[i - 1];
-//         actual := pc.Name();
-//         assert.Equal(t, expected, actual);
-//     }
-// }
-// func Test_PitchClass_SimpleName_With_2_flats(t *testing.T) {
-//     var  pc PitchClass;
-//     pc.SetAlteration(-2);
-//     vector<u32string> names = {U"Cbb", U"Dbb", U"Ebb", U"Fbb", U"Gbb", U"Abb", U"Bbb"};
-//     for i := 1; i <= 7; i++ {
-//         pc.SetStep(i);
-//         expected := names[i - 1];
-//         actual := pc.Name();
-//         assert.Equal(t, expected, actual);
-//     }
-// }
-// func Test_PitchClass_SimpleName_With_1_sharp(t *testing.T) {
-//     var  pc PitchClass;
-//     pc.SetAlteration(1);
-//     vector<u32string> names = {U"C#", U"D#", U"E#", U"F#", U"G#", U"A#", U"B#"};
-//     for i := 1; i <= 7; i++ {
-//         pc.SetStep(i);
-//         expected := names[i - 1];
-//         actual := pc.Name();
-//         assert.Equal(t, expected, actual);
-//     }
-// }
-// func Test_PitchClass_SimpleName_With_2_sharps(t *testing.T) {
-//     var  pc PitchClass;
-//     pc.SetAlteration(2);
-//     vector<u32string> names = {U"C##", U"D##", U"E##", U"F##", U"G##", U"A##", U"B##"};
-//     for i := 1; i <= 7; i++ {
-//         pc.SetStep(i);
-//         expected := names[i - 1];
-//         actual := pc.Name();
-//         assert.Equal(t, expected, actual);
-//     }
-// }
-// func Test_PitchClass_PrettyName_Without_alterations(t *testing.T) {
-//     var  pc PitchClass;
-//     pc.SetAlteration(0);
-//     vector<u32string> names = {U"C", U"D", U"E", U"F", U"G", U"A", U"B"};
-//     for i := 1; i <= 7; i++ {
-//         pc.SetStep(i);
-//         expected := names[i - 1];
-//         actual := pc.PrettyName();
-//         assert.Equal(t, expected, actual);
-//     }
-// }
-// func Test_PitchClass_PrettyName_With_1_flat(t *testing.T) {
-//     var  pc PitchClass;
-//     pc.SetAlteration(-1);
-//     vector<u32string> names = {U"C♭", U"D♭", U"E♭", U"F♭", U"G♭", U"A♭", U"B♭"};
-//     for i := 1; i <= 7; i++ {
-//         pc.SetStep(i);
-//         expected := names[i - 1];
-//         actual := pc.PrettyName();
-//         assert.Equal(t, expected, actual);
-//     }
-// }
-// func Test_PitchClass_PrettyName_With_2_flats(t *testing.T) {
-//     var  pc PitchClass;
-//     pc.SetAlteration(-2);
-//     vector<u32string> names = {U"C𝄫", U"D𝄫", U"E𝄫", U"F𝄫", U"G𝄫", U"A𝄫", U"B𝄫"};
-//     for i := 1; i <= 7; i++ {
-//         pc.SetStep(i);
-//         expected := names[i - 1];
-//         actual := pc.PrettyName();
-//         assert.Equal(t, expected, actual);
-//     }
-// }
-// func Test_PitchClass_PrettyName_With_1_sharp(t *testing.T) {
-//     var  pc PitchClass;
-//     pc.SetAlteration(1);
-//     vector<u32string> names = {U"C♯", U"D♯", U"E♯", U"F♯", U"G♯", U"A♯", U"B♯"};
-//     for i := 1; i <= 7; i++ {
-//         pc.SetStep(i);
-//         expected := names[i - 1];
-//         actual := pc.PrettyName();
-//         assert.Equal(t, expected, actual);
-//     }
-// }
-// func Test_PitchClass_PrettyName_With_2_sharps(t *testing.T) {
-//     var  pc PitchClass;
-//     pc.SetAlteration(2);
-//     vector<u32string> names = {U"C𝄪", U"D𝄪", U"E𝄪", U"F𝄪", U"G𝄪", U"A𝄪", U"B𝄪"};
-//     for i := 1; i <= 7; i++ {
-//         pc.SetStep(i);
-//         expected := names[i - 1];
-//         actual := pc.PrettyName();
-//         assert.Equal(t, expected, actual);
-//     }
-// }
-// func Test_PitchClass_FullName_Without_alterations(t *testing.T) {
-//     var  pc PitchClass;
-//     pc.SetAlteration(0);
-//     vector<u32string> names = {U"C", U"D", U"E", U"F", U"G", U"A", U"B"};
-//     for i := 1; i <= 7; i++ {
-//         pc.SetStep(i);
-//         expected := names[i - 1];
-//         actual := pc.FullName();
-//         assert.Equal(t, expected, actual);
-//     }
-// }
-// func Test_PitchClass_FullName_With_1_flat(t *testing.T) {
-//     var  pc PitchClass;
-//     pc.SetAlteration(-1);
-//     vector<u32string> names = {U"C flat", U"D flat", U"E flat", U"F flat", U"G flat", U"A flat", U"B flat"};
-//     for i := 1; i <= 7; i++ {
-//         pc.SetStep(i);
-//         expected := names[i - 1];
-//         actual := pc.FullName();
-//         assert.Equal(t, expected, actual);
-//     }
-// }
-// func Test_PitchClass_FullName_With_2_flats(t *testing.T) {
-//     var  pc PitchClass;
-//     pc.SetAlteration(-2);
-//     vector<u32string> names = {U"C double flat", U"D double flat", U"E double flat", U"F double flat",
-//                                U"G double flat", U"A double flat", U"B double flat"};
-//     for i := 1; i <= 7; i++ {
-//         pc.SetStep(i);
-//         expected := names[i - 1];
-//         actual := pc.FullName();
-//         assert.Equal(t, expected, actual);
-//     }
-// }
-// func Test_PitchClass_FullName_With_1_sharp(t *testing.T) {
-//     var  pc PitchClass;
-//     pc.SetAlteration(1);
-//     vector<u32string> names = {U"C sharp", U"D sharp", U"E sharp", U"F sharp", U"G sharp", U"A sharp", U"B sharp"};
-//     for i := 1; i <= 7; i++ {
-//         pc.SetStep(i);
-//         expected := names[i - 1];
-//         actual := pc.FullName();
-//         assert.Equal(t, expected, actual);
-//     }
-// }
+func Test_PitchClass_ExtendedRandom_Steps_should_have_a_good_distribution(t *testing.T) {
+	steps := make(map[int]bool)
+	for i := 1; i <= 7*5; i++ {
+		pc := ExtendedRandomPitchClass()
+		steps[pc.GetStep()] = true
+	}
+	for i := 1; i <= 7; i++ {
+		assert.True(t, steps[i])
+	}
+}
+
+func Test_PitchClass_ExtendedRandom_Alterations_should_have_a_good_distribution(t *testing.T) {
+	alterations := make(map[int]bool)
+	for i := 1; i <= 5*5; i++ {
+		pc := ExtendedRandomPitchClass()
+		alterations[pc.GetAlteration()] = true
+	}
+	for i := -2; i <= 2; i++ {
+		assert.True(t, alterations[i])
+	}
+}
+
+func Test_PitchClass_SimpleName_Without_alterations(t *testing.T) {
+	var pc PitchClass
+	pc.SetAlteration(0)
+	names := []string{"C", "D", "E", "F", "G", "A", "B"}
+	for i := 1; i <= 7; i++ {
+		pc.SetStep(i)
+		expected := names[i-1]
+		actual := pc.Name()
+		assert.Equal(t, expected, actual)
+	}
+}
+
+func Test_PitchClass_SimpleName_With_1_flat(t *testing.T) {
+	var pc PitchClass
+	pc.SetAlteration(-1)
+	names := []string{"Cb", "Db", "Eb", "Fb", "Gb", "Ab", "Bb"}
+	for i := 1; i <= 7; i++ {
+		pc.SetStep(i)
+		expected := names[i-1]
+		actual := pc.Name()
+		assert.Equal(t, expected, actual)
+	}
+}
+
+func Test_PitchClass_SimpleName_With_2_flats(t *testing.T) {
+	var pc PitchClass
+	pc.SetAlteration(-2)
+	names := []string{"Cbb", "Dbb", "Ebb", "Fbb", "Gbb", "Abb", "Bbb"}
+	for i := 1; i <= 7; i++ {
+		pc.SetStep(i)
+		expected := names[i-1]
+		actual := pc.Name()
+		assert.Equal(t, expected, actual)
+	}
+}
+
+func Test_PitchClass_SimpleName_With_1_sharp(t *testing.T) {
+	var pc PitchClass
+	pc.SetAlteration(1)
+	names := []string{"C#", "D#", "E#", "F#", "G#", "A#", "B#"}
+	for i := 1; i <= 7; i++ {
+		pc.SetStep(i)
+		expected := names[i-1]
+		actual := pc.Name()
+		assert.Equal(t, expected, actual)
+	}
+}
+
+func Test_PitchClass_SimpleName_With_2_sharps(t *testing.T) {
+	var pc PitchClass
+	pc.SetAlteration(2)
+	names := []string{"C##", "D##", "E##", "F##", "G##", "A##", "B##"}
+	for i := 1; i <= 7; i++ {
+		pc.SetStep(i)
+		expected := names[i-1]
+		actual := pc.Name()
+		assert.Equal(t, expected, actual)
+	}
+}
+
+func Test_PitchClass_PrettyName_Without_alterations(t *testing.T) {
+	var pc PitchClass
+	pc.SetAlteration(0)
+	names := []string{"C", "D", "E", "F", "G", "A", "B"}
+	for i := 1; i <= 7; i++ {
+		pc.SetStep(i)
+		expected := names[i-1]
+		actual := pc.PrettyName()
+		assert.Equal(t, expected, actual)
+	}
+}
+
+func Test_PitchClass_PrettyName_With_1_flat(t *testing.T) {
+	var pc PitchClass
+	pc.SetAlteration(-1)
+	names := []string{"C♭", "D♭", "E♭", "F♭", "G♭", "A♭", "B♭"}
+	for i := 1; i <= 7; i++ {
+		pc.SetStep(i)
+		expected := names[i-1]
+		actual := pc.PrettyName()
+		assert.Equal(t, expected, actual)
+	}
+}
+
+func Test_PitchClass_PrettyName_With_2_flats(t *testing.T) {
+	var pc PitchClass
+	pc.SetAlteration(-2)
+	names := []string{"C𝄫", "D𝄫", "E𝄫", "F𝄫", "G𝄫", "A𝄫", "B𝄫"}
+	for i := 1; i <= 7; i++ {
+		pc.SetStep(i)
+		expected := names[i-1]
+		actual := pc.PrettyName()
+		assert.Equal(t, expected, actual)
+	}
+}
+
+func Test_PitchClass_PrettyName_With_1_sharp(t *testing.T) {
+	var pc PitchClass
+	pc.SetAlteration(1)
+	names := []string{"C♯", "D♯", "E♯", "F♯", "G♯", "A♯", "B♯"}
+	for i := 1; i <= 7; i++ {
+		pc.SetStep(i)
+		expected := names[i-1]
+		actual := pc.PrettyName()
+		assert.Equal(t, expected, actual)
+	}
+}
+
+func Test_PitchClass_PrettyName_With_2_sharps(t *testing.T) {
+	var pc PitchClass
+	pc.SetAlteration(2)
+	names := []string{"C𝄪", "D𝄪", "E𝄪", "F𝄪", "G𝄪", "A𝄪", "B𝄪"}
+	for i := 1; i <= 7; i++ {
+		pc.SetStep(i)
+		expected := names[i-1]
+		actual := pc.PrettyName()
+		assert.Equal(t, expected, actual)
+	}
+}
+
+func Test_PitchClass_FullName_Without_alterations(t *testing.T) {
+	var pc PitchClass
+	pc.SetAlteration(0)
+	names := []string{"C", "D", "E", "F", "G", "A", "B"}
+	for i := 1; i <= 7; i++ {
+		pc.SetStep(i)
+		expected := names[i-1]
+		actual := pc.FullName()
+		assert.Equal(t, expected, actual)
+	}
+}
+
+func Test_PitchClass_FullName_With_1_flat(t *testing.T) {
+	var pc PitchClass
+	pc.SetAlteration(-1)
+	names := []string{"C flat", "D flat", "E flat", "F flat", "G flat", "A flat", "B flat"}
+	for i := 1; i <= 7; i++ {
+		pc.SetStep(i)
+		expected := names[i-1]
+		actual := pc.FullName()
+		assert.Equal(t, expected, actual)
+	}
+}
+
+func Test_PitchClass_FullName_With_2_flats(t *testing.T) {
+	var pc PitchClass
+	pc.SetAlteration(-2)
+	names := []string{
+		"C double flat", "D double flat", "E double flat", "F double flat",
+		"G double flat", "A double flat", "B double flat",
+	}
+	for i := 1; i <= 7; i++ {
+		pc.SetStep(i)
+		expected := names[i-1]
+		actual := pc.FullName()
+		assert.Equal(t, expected, actual)
+	}
+}
+
+func Test_PitchClass_FullName_With_1_sharp(t *testing.T) {
+	var pc PitchClass
+	pc.SetAlteration(1)
+	names := []string{"C sharp", "D sharp", "E sharp", "F sharp", "G sharp", "A sharp", "B sharp"}
+	for i := 1; i <= 7; i++ {
+		pc.SetStep(i)
+		expected := names[i-1]
+		actual := pc.FullName()
+		assert.Equal(t, expected, actual)
+	}
+}
+
 // func Test_PitchClass_FullName_With_2_sharps(t *testing.T) {
 //     var  pc PitchClass;
 //     pc.SetAlteration(2);
-//     vector<u32string> names = {U"C double sharp", U"D double sharp", U"E double sharp", U"F double sharp",
-//                                U"G double sharp", U"A double sharp", U"B double sharp"};
+//     names := []string{"C double sharp", "D double sharp", "E double sharp", "F double sharp",
+//                                "G double sharp", "A double sharp", "B double sharp"};
 //     for i := 1; i <= 7; i++ {
 //         pc.SetStep(i);
 //         expected := names[i - 1];
@@ -331,8 +348,8 @@ func Test_PitchClass_Random_Alterations_should_never_be_double(t *testing.T) {
 //     }
 // }
 // func Test_PitchClass_Parse_Simple_name(t *testing.T) {
-//     vector<u32string> alterationTexts = {U"bb", U"b", U"", U"#", U"##"};
-//     vector<u32string> stepTexts = {U"C", U"D", U"E", U"F", U"G", U"A", U"B"};
+//     vector<u32string> alterationTexts = {"bb", "b", "", "#", "##"};
+//     vector<u32string> stepTexts = {"C", "D", "E", "F", "G", "A", "B"};
 
 //     for ialt := 0; ialt < alterationTexts.size(); ialt++ {
 //         alt := alterationTexts[ialt];
@@ -348,8 +365,8 @@ func Test_PitchClass_Random_Alterations_should_never_be_double(t *testing.T) {
 //         }
 //     }
 // }func Test_PitchClass_Parse_Pretty_name(t *testing.T) {
-//     vector<u32string> alterationTexts = {U"𝄫", U"♭", U"", U"♯", U"𝄪"};
-//     vector<u32string> stepTexts = {U"C", U"D", U"E", U"F", U"G", U"A", U"B"};
+//     vector<u32string> alterationTexts = {"𝄫", "♭", "", "♯", "𝄪"};
+//     vector<u32string> stepTexts = {"C", "D", "E", "F", "G", "A", "B"};
 
 //     for ialt := 0; ialt < alterationTexts.size(); ialt++ {
 //         alt := alterationTexts[ialt];
