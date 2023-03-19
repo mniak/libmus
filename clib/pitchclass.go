@@ -30,6 +30,5 @@ func PitchClass_New() C.PitchClass {
 //export PitchClass_PrettyName
 func PitchClass_PrettyName(ptr C.PitchClass) *C.char {
 	pc := PitchClass_FromPointer(ptr)
-	// unicode.con
 	return C.CString(pc.PrettyName())
 }
