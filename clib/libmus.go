@@ -10,3 +10,6 @@ func MyFunction(arg1, arg2 int, arg3 *C.char) int64 {
 }
 
 func main() {}
+
+//export PitchClass
+type PitchClass struct{}
