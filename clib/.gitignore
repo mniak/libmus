@@ -1,0 +1,6 @@
+libmus
+libmus.h
+
+**/*.a
+**/*.so
+**/*.out
