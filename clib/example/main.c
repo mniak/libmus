@@ -2,8 +2,7 @@
 #include <stdio.h>
 
 int main() {
-    printf("-- begin call --\n");
-    MyFunction(1,2,"test");
-    printf("-- end call --\n");
+    PitchClass pc = PitchClass_New();
+    PitchClass_PrintValue(pc);
     return 0;
 }
