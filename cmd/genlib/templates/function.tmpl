@@ -1,0 +1,5 @@
+//export {{ .StructName }}_{{ .FunctionName }}
+func {{ .StructName }}_{{ .FunctionName }}(h C.{{ .StructName }}) {{ .ReturnType.CType }} {
+	this := {{ .StructName }}_FromPointer(h)
+	return C.CString(this.{{ .FunctionName }}())
+}

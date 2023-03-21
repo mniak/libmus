@@ -1,15 +1,15 @@
 package main
 
-/*
-typedef void* PitchClass;
-*/
-import "C"
-
 import (
 	"runtime/cgo"
 
 	"github.com/mniak/libmus"
 )
+
+/*
+typedef void* PitchClass;
+*/
+import "C"
 
 func PitchClass_ToPointer(pc *libmus.PitchClass) C.PitchClass {
 	return C.PitchClass(cgo.NewHandle(pc))
