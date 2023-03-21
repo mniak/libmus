@@ -1,9 +1,10 @@
+//go:build clib
 package {{ .PackageName }}
 
 import (
 	"runtime/cgo"
 
-	{{ .LibraryPackage }}
+	{{ printf "%q" .LibraryPackage }}
 )
 
 // typedef void* {{ .Struct.Name }};

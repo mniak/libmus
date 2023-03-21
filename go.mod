@@ -3,6 +3,7 @@ module github.com/mniak/libmus
 go 1.20
 
 require (
+	github.com/iancoleman/strcase v0.2.0
 	github.com/magefile/mage v1.14.0
 	github.com/samber/lo v1.38.0
 	github.com/stretchr/testify v1.8.2

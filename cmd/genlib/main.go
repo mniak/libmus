@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"go/ast"
+	"os"
+	"path/filepath"
 
 	"github.com/mniak/libmus/cmd/models"
 	"github.com/samber/lo"
@@ -44,8 +46,10 @@ func main() {
 
 	files := lo.Must(GenerateBindings(pkg))
 	for fname, fcontent := range files {
-		fmt.Println("FILE:", fname)
-		fmt.Println(fcontent)
+		file := lo.Must(os.Create(filepath.Join("../../clib", fname)))
+		defer file.Close()
+
+		fmt.Fprintln(file, fcontent)
 	}
 	// yenc := yaml.NewEncoder(os.Stdout)
 	// defer yenc.Close()

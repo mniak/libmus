@@ -6,6 +6,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/iancoleman/strcase"
 	"github.com/mniak/libmus/cmd/models"
 	"github.com/samber/lo"
 )
@@ -28,7 +29,7 @@ func GenerateBindings(pkg *models.Package) (map[string]string, error) {
 		var sb strings.Builder
 		tmpl.ExecuteTemplate(&sb, "file.go.tmpl", O{
 			"PackageName":    packageName,
-			"LibraryPackage": "github.com/mniak/libmubs",
+			"LibraryPackage": "github.com/mniak/libmus",
 			"Struct":         st,
 			"Functions": lo.Map(st.Functions, func(fn models.Function, _ int) O {
 				return O{
@@ -38,7 +39,9 @@ func GenerateBindings(pkg *models.Package) (map[string]string, error) {
 				}
 			}),
 		})
-		result[fmt.Sprintf("%s.go", st.Name)] = sb.String()
+
+		filename := fmt.Sprintf("%s.go", snakify(st.Name))
+		result[filename] = sb.String()
 	}
 
 	return result, nil
@@ -54,4 +57,10 @@ func getReturnTypeForTemplate(returnType string) O {
 			"GoToC": "C.CString(%s)",
 		}
 	}
+}
+
+func snakify(str string) string {
+	str = strcase.ToSnake(str)
+	str = strings.ReplaceAll(str, "pitch_class", "pitchclass")
+	return str
 }
