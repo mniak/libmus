@@ -1,20 +1,33 @@
 {{ define "func_params" -}}
-{{ $paramsLen := len . -}}
-{{ range $idx, $param := . -}}
-{{ $param.Name }} {{ $param.Type.Name }} {{ if not (isLastIndex $paramsLen $idx) }}, {{ end -}}
-{{ end }}
+{{- $paramsLen := len .Parameters -}}
+{{- if not .Constructor -}}
+	h {{ .StructType.CType }}{{ if $paramsLen }}, {{ end -}}
+{{- end }}
+{{- range $idx, $param := .Parameters -}}
+	{{- $param.Name }} {{ $param.Type.CType }}{{ if not (isLastIndex $paramsLen $idx) -}}, {{ end -}}
 {{- end -}}
-{{ if .Constructor -}}
+{{- end -}}
+
+
+{{ define "func_args" -}}
+{{- $paramsLen := len .Parameters -}}
+{{- range $idx, $param := .Parameters -}}
+	{{- $param.Name }}{{ if not (isLastIndex $paramsLen $idx) -}}, {{ end -}}
+{{- end -}}
+{{- end -}}
+
+
+{{- if .Constructor -}}
 //export {{ .FunctionName }}
-func {{ .FunctionName }}({{ template "func_params" .Parameters }}) {{ .ReturnType.CType }} {
-	result := libmus.{{ .FunctionName }}()
+func {{ .FunctionName }}({{ template "func_params" . }}) {{ .ReturnType.CType }} {
+	result := libmus.{{ .FunctionName }}({{ template "func_args" . }})
 	return {{ printf .ReturnType.GoToC "result" }}
 }
 {{ else -}}
 //export {{ .StructType.Name }}_{{ .FunctionName }}
-func {{ .StructType.Name }}_{{ .FunctionName }}(h {{ .StructType.CType }}, {{ template "func_params" .Parameters }}) {{ .ReturnType.CType }} {
+func {{ .StructType.Name }}_{{ .FunctionName }}({{ template "func_params" . }}) {{ .ReturnType.CType }} {
 	this := {{ printf .StructType.CToGo "h" }}
-	result := this.{{ .FunctionName }}()
+	result := this.{{ .FunctionName }}({{ template "func_args" . }})
 	return {{ printf .ReturnType.GoToC "result" }}
 }
-{{ end }}
+{{ end -}}
