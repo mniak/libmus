@@ -1,12 +1,18 @@
+{{ define "func_params" -}}
+{{ $paramsLen := len . -}}
+{{ range $idx, $param := . -}}
+{{ $param.Name }} {{ $param.Type.Name }} {{ if not (isLastIndex $paramsLen $idx) }}, {{ end -}}
+{{ end }}
+{{- end -}}
 {{ if .Constructor -}}
 //export {{ .FunctionName }}
-func {{ .FunctionName }}() {{ .ReturnType.CType }} {
+func {{ .FunctionName }}({{ template "func_params" .Parameters }}) {{ .ReturnType.CType }} {
 	result := libmus.{{ .FunctionName }}()
 	return {{ printf .ReturnType.GoToC "result" }}
 }
 {{ else -}}
 //export {{ .StructType.Name }}_{{ .FunctionName }}
-func {{ .StructType.Name }}_{{ .FunctionName }}(h {{ .StructType.CType }}) {{ .ReturnType.CType }} {
+func {{ .StructType.Name }}_{{ .FunctionName }}(h {{ .StructType.CType }}, {{ template "func_params" .Parameters }}) {{ .ReturnType.CType }} {
 	this := {{ printf .StructType.CToGo "h" }}
 	result := this.{{ .FunctionName }}()
 	return {{ printf .ReturnType.GoToC "result" }}

@@ -9,6 +9,7 @@ func Build() error {
 	err := sh.RunV(
 		"go", "build",
 		"-buildmode=c-shared",
+		"-tags=clib",
 		"-o", "clib/libmus.a",
 		"./clib",
 	)

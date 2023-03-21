@@ -19,7 +19,11 @@ type O = map[string]any
 const packageName = "main"
 
 func GenerateBindings(pkg *models.Package) (map[string]string, error) {
-	tmpl, err := template.ParseFS(efs, "templates/*.tmpl")
+	tmpl, err := template.New("").Funcs(template.FuncMap{
+		"isLastIndex": func(length int, index int) bool {
+			return index+1 >= length
+		},
+	}).ParseFS(efs, "templates/*.tmpl")
 	if err != nil {
 		return nil, err
 	}
@@ -37,6 +41,12 @@ func GenerateBindings(pkg *models.Package) (map[string]string, error) {
 					"FunctionName": fn.Name,
 					"ReturnType":   getTypeForTemplate(fn.Return),
 					"Constructor":  fn.Constructor,
+					"Parameters": lo.Map(fn.Parameters, func(fn models.Parameter, _ int) O {
+						return O{
+							"Name": fn.Name,
+							"Type": getTypeForTemplate(fn.Type),
+						}
+					}),
 				}
 			}),
 		})
@@ -64,6 +74,7 @@ func getTypeForTemplate(t models.Type) O {
 	switch t.Name {
 	case "string":
 		return O{
+			"Name":  t.Name,
 			"CType": "*C.char",
 			"GoToC": "C.CString(%s)",
 			"CToGo": "%s %s",
