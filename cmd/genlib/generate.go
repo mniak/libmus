@@ -27,18 +27,22 @@ func GenerateBindings(pkg *models.Package) (map[string]string, error) {
 	result := make(map[string]string)
 	for _, st := range pkg.Structs {
 		var sb strings.Builder
-		tmpl.ExecuteTemplate(&sb, "file.go.tmpl", O{
+		err := tmpl.ExecuteTemplate(&sb, "file.go.tmpl", O{
 			"PackageName":    packageName,
 			"LibraryPackage": "github.com/mniak/libmus",
 			"Struct":         st,
 			"Functions": lo.Map(st.Functions, func(fn models.Function, _ int) O {
 				return O{
-					"StructName":   st.Name,
+					"StructType":   getTypeForTemplate(*fn.Struct),
 					"FunctionName": fn.Name,
-					"ReturnType":   getReturnTypeForTemplate(fn.ReturnType),
+					"ReturnType":   getTypeForTemplate(fn.Return),
+					"Constructor":  fn.Constructor,
 				}
 			}),
 		})
+		if err != nil {
+			return nil, err
+		}
 
 		filename := fmt.Sprintf("%s.go", snakify(st.Name))
 		result[filename] = sb.String()
@@ -47,14 +51,28 @@ func GenerateBindings(pkg *models.Package) (map[string]string, error) {
 	return result, nil
 }
 
-func getReturnTypeForTemplate(returnType string) O {
-	switch returnType {
+func getTypeForTemplate(t models.Type) O {
+	if t.IsStruct() {
+		return O{
+			"Name":  t.Name,
+			"CType": fmt.Sprintf("C.%s", t.Name),
+			"GoToC": fmt.Sprintf("C.%s(cgo.NewHandle(%%s))", t.Name),
+			"CToGo": fmt.Sprintf("cgo.Handle(%%s).Value().(*libmus.%s)", t.Name),
+		}
+	}
+
+	switch t.Name {
 	case "string":
-		fallthrough
-	default:
 		return O{
 			"CType": "*C.char",
 			"GoToC": "C.CString(%s)",
+			"CToGo": "%s %s",
+		}
+	default:
+		return O{
+			"CType": t.Name,
+			"GoToC": "%s",
+			"CToGo": "%s",
 		}
 	}
 }

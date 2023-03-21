@@ -1,5 +1,14 @@
-//export {{ .StructName }}_{{ .FunctionName }}
-func {{ .StructName }}_{{ .FunctionName }}(h C.{{ .StructName }}) {{ .ReturnType.CType }} {
-	this := {{ .StructName }}_FromHandle(h)
-	return C.CString(this.{{ .FunctionName }}())
+{{ if .Constructor -}}
+//export {{ .FunctionName }}
+func {{ .FunctionName }}() {{ .ReturnType.CType }} {
+	result := libmus.{{ .FunctionName }}()
+	return {{ printf .ReturnType.GoToC "result" }}
 }
+{{ else -}}
+//export {{ .StructType.Name }}_{{ .FunctionName }}
+func {{ .StructType.Name }}_{{ .FunctionName }}(h {{ .StructType.CType }}) {{ .ReturnType.CType }} {
+	this := {{ printf .StructType.CToGo "h" }}
+	result := this.{{ .FunctionName }}()
+	return {{ printf .ReturnType.GoToC "result" }}
+}
+{{ end }}

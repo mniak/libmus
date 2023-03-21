@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"go/ast"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -44,9 +45,15 @@ func visitPackage(pkgname string, fns VisitorFunctions) {
 func main() {
 	pkg := ConvertPackage("github.com/mniak/libmus")
 
-	files := lo.Must(GenerateBindings(pkg))
+	files, err := GenerateBindings(pkg)
+	if err != nil {
+		log.Fatalln(err)
+	}
 	for fname, fcontent := range files {
-		file := lo.Must(os.Create(filepath.Join("../../clib", fname)))
+		file, err := os.Create(filepath.Join("../../clib", fname))
+		if err != nil {
+			log.Fatalln(err)
+		}
 		defer file.Close()
 
 		fmt.Fprintln(file, fcontent)
@@ -68,8 +75,8 @@ func ConvertPackage(packageName string) *models.Package {
 			// },
 			OnFuncDecl: func(fd *ast.FuncDecl) {
 				fn := models.ParseFunction(fd)
-				if fn.Struct != "" {
-					pkg.Struct(fn.Struct).AppendMethod(fn)
+				if fn.Struct != nil {
+					pkg.Struct(fn.Struct.Name).AppendMethod(fn)
 				} else {
 					pkg.AppendFunction(fn)
 				}

@@ -22,19 +22,12 @@ func find[T any](a any) (val T, found bool) {
 	}
 
 	switch node := a.(type) {
-	// case *ast.FieldList:
-	// 	if node == nil {
-	// 		return
-	// 	}
-	// 	return find[T](node.List)
-	// case *ast.Field:
-	// 	if node == nil {
-	// 		return
-	// 	}
-	// 	return find[T](node.Type)
 	case *ast.StarExpr:
 		return find[T](node.X)
 	case *ast.Ident:
+		if node.Obj == nil {
+			return val, false
+		}
 		return find[T](node.Obj.Decl)
 	}
 	return
