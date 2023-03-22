@@ -50,7 +50,7 @@ func main() {
 		log.Fatalln(err)
 	}
 	for fname, fcontent := range files {
-		file, err := os.Create(filepath.Join("../../clib", fname))
+		file, err := os.Create(filepath.Join("clib", fname))
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -58,23 +58,17 @@ func main() {
 
 		fmt.Fprintln(file, fcontent)
 	}
-	// yenc := yaml.NewEncoder(os.Stdout)
-	// defer yenc.Close()
-	// yenc.SetIndent(2)
-	// lo.Must0(yenc.Encode(pkg))
 }
 
 func ConvertPackage(packageName string) *models.Package {
 	pkg := models.NewPackage()
 	visitPackage(packageName,
 		VisitorFunctions{
-			// OnTypeSpec: func(ts *ast.TypeSpec) {
-			// 	conv.Struct()
-			// 	fmt.Printf("typedef void* %s;\n", ts.Name)
-			// 	ast.Print(fset, ts)
-			// },
 			OnFuncDecl: func(fd *ast.FuncDecl) {
-				fn := models.ParseFunction(fd)
+				fn, err := models.ParseFunction(fd)
+				if err != nil {
+					log.Fatalln(err)
+				}
 				if fn.Struct != nil {
 					pkg.Struct(fn.Struct.Name).AppendMethod(fn)
 				} else {

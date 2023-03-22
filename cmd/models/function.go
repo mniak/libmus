@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"go/ast"
 	"strings"
 
@@ -20,7 +21,7 @@ type Parameter struct {
 	Name string
 }
 
-func ParseFunction(fd *ast.FuncDecl) Function {
+func ParseFunction(fd *ast.FuncDecl) (Function, error) {
 	fn := Function{
 		Name: fd.Name.Name,
 	}
@@ -37,7 +38,7 @@ func ParseFunction(fd *ast.FuncDecl) Function {
 			name = strcase.ToSnake(typ.Name)
 		}
 		if typ == nil {
-			panic("could not parse return type of function")
+			return Function{}, errors.New("could not parse return type of function")
 		}
 		fn.Parameters = append(fn.Parameters, Parameter{
 			Type: *typ,
@@ -45,12 +46,20 @@ func ParseFunction(fd *ast.FuncDecl) Function {
 		})
 	}
 	if fd.Type.Results == nil {
-		return fn
+		return fn, nil
 	}
 	switch len(fd.Type.Results.List) {
 	case 0:
 	case 1:
-		fn.Return = ParseType(fd.Type.Results.List[0].Type)
+		rettype := ParseType(fd.Type.Results.List[0].Type)
+		fn.Return = rettype
+		for rettype != nil {
+			r2 := rettype.PointedType()
+			if r2 == nil {
+				break
+			}
+			rettype = r2
+		}
 		if fn.Return.IsStruct() && strings.Contains(fn.Name, fn.Return.Name) {
 			fn.Struct = fn.Return
 			fn.Constructor = true
@@ -58,5 +67,5 @@ func ParseFunction(fd *ast.FuncDecl) Function {
 	default:
 		panic("functions returning more than one value are not supported")
 	}
-	return fn
+	return fn, nil
 }

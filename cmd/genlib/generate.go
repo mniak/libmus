@@ -208,10 +208,19 @@ type TypeInfo struct {
 }
 
 func getTypeInfo(t *models.Type) *TypeInfo {
-	switch {
-	case t == nil:
+	if t == nil {
 		return nil
-	case t.IsStruct():
+	}
+	p := t.PointedType()
+	if p != nil && p.IsStruct() {
+		pInfo := getTypeInfo(p)
+		return &TypeInfo{
+			CType: pInfo.CType,
+			CToGo: pInfo.CToGo,
+			GoToC: pInfo.GoToC,
+		}
+	}
+	if t.IsStruct() {
 		return &TypeInfo{
 			CType: fmt.Sprintf("C.%s", t.Name),
 			CToGo: func(e ast.Expr) ast.Expr {
@@ -238,7 +247,8 @@ func getTypeInfo(t *models.Type) *TypeInfo {
 				}
 			},
 		}
-	case t.Name == "string":
+	}
+	if t.Name == "string" {
 		return &TypeInfo{
 			CType: "*C.char",
 			CToGo: func(e ast.Expr) ast.Expr {
@@ -254,12 +264,11 @@ func getTypeInfo(t *models.Type) *TypeInfo {
 				}
 			},
 		}
-	default:
-		return &TypeInfo{
-			CType: t.Name,
-			CToGo: func(e ast.Expr) ast.Expr { return e },
-			GoToC: func(e ast.Expr) ast.Expr { return e },
-		}
+	}
+	return &TypeInfo{
+		CType: t.Name,
+		CToGo: func(e ast.Expr) ast.Expr { return e },
+		GoToC: func(e ast.Expr) ast.Expr { return e },
 	}
 }
 
