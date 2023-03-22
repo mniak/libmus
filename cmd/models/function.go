@@ -10,7 +10,7 @@ import (
 type Function struct {
 	Struct      *Type
 	Name        string
-	Return      Type
+	Return      *Type
 	Parameters  []Parameter
 	Constructor bool
 }
@@ -25,8 +25,7 @@ func ParseFunction(fd *ast.FuncDecl) Function {
 		Name: fd.Name.Name,
 	}
 	if fd.Recv != nil {
-		parsed := ParseType(fd.Recv.List[0].Type)
-		fn.Struct = &parsed
+		fn.Struct = ParseType(fd.Recv.List[0].Type)
 	}
 
 	for _, param := range fd.Type.Params.List {
@@ -37,8 +36,11 @@ func ParseFunction(fd *ast.FuncDecl) Function {
 		} else {
 			name = strcase.ToSnake(typ.Name)
 		}
+		if typ == nil {
+			panic("could not parse return type of function")
+		}
 		fn.Parameters = append(fn.Parameters, Parameter{
-			Type: typ,
+			Type: *typ,
 			Name: name,
 		})
 	}
@@ -50,7 +52,7 @@ func ParseFunction(fd *ast.FuncDecl) Function {
 	case 1:
 		fn.Return = ParseType(fd.Type.Results.List[0].Type)
 		if fn.Return.IsStruct() && strings.Contains(fn.Name, fn.Return.Name) {
-			fn.Struct = &fn.Return
+			fn.Struct = fn.Return
 			fn.Constructor = true
 		}
 	default:

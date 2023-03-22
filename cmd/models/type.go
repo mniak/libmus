@@ -7,23 +7,23 @@ type Type struct {
 	Name    string
 }
 
-func ParseType(n any) Type {
+func ParseType(n any) *Type {
 	switch node := n.(type) {
 	case *ast.Ident:
-		return Type{
+		return &Type{
 			astNode: node,
 			Name:    node.Name,
 		}
 	case *ast.StarExpr:
 		return ParseType(node.X)
 	case *ast.TypeSpec:
-		return Type{
+		return &Type{
 			astNode: node,
 			Name:    node.Name.Name,
 		}
 
 	default:
-		panic("could not parse type")
+		return nil
 	}
 }
 

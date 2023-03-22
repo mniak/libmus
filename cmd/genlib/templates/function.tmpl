@@ -17,17 +17,15 @@
 {{- end -}}
 
 
-{{- if .Constructor -}}
 //export {{ .FunctionName }}
-func {{ .FunctionName }}({{ template "func_params" . }}) {{ .ReturnType.CType }} {
-	result := libmus.{{ .FunctionName }}({{ template "func_args" . }})
-	return {{ printf .ReturnType.GoToC "result" }}
-}
-{{ else -}}
-//export {{ .StructType.Name }}_{{ .FunctionName }}
-func {{ .StructType.Name }}_{{ .FunctionName }}({{ template "func_params" . }}) {{ .ReturnType.CType }} {
+func {{ .FunctionName }}({{ template "func_params" . }})
+{{- if .ReturnType }} {{ .ReturnType.CType }} {{ end -}}
+{
+	{{ if not .Constructor -}}
 	this := {{ printf .StructType.CToGo "h" }}
-	result := this.{{ .FunctionName }}({{ template "func_args" . }})
-	return {{ printf .ReturnType.GoToC "result" }}
+	{{- end }}
+	{{ if .ReturnType }}result := {{ end -}}
+	{{- if .Constructor }}libmus{{ else }}this{{ end -}}
+	.{{ .FunctionName }}({{ template "func_args" . }})
+	{{ if .ReturnType }}return {{ printf .ReturnType.GoToC "result" }}{{ end }}
 }
-{{ end -}}

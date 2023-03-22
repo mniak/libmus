@@ -37,14 +37,14 @@ func GenerateBindings(pkg *models.Package) (map[string]string, error) {
 			"Struct":         st,
 			"Functions": lo.Map(st.Functions, func(fn models.Function, _ int) O {
 				return O{
-					"StructType":   getTypeForTemplate(*fn.Struct),
+					"StructType":   getTypeForTemplate(fn.Struct),
 					"FunctionName": fn.Name,
 					"ReturnType":   getTypeForTemplate(fn.Return),
 					"Constructor":  fn.Constructor,
-					"Parameters": lo.Map(fn.Parameters, func(fn models.Parameter, _ int) O {
+					"Parameters": lo.Map(fn.Parameters, func(p models.Parameter, _ int) O {
 						return O{
-							"Name": fn.Name,
-							"Type": getTypeForTemplate(fn.Type),
+							"Name": p.Name,
+							"Type": getTypeForTemplate(&p.Type),
 						}
 					}),
 				}
@@ -61,7 +61,11 @@ func GenerateBindings(pkg *models.Package) (map[string]string, error) {
 	return result, nil
 }
 
-func getTypeForTemplate(t models.Type) O {
+func getTypeForTemplate(t *models.Type) O {
+	if t == nil {
+		return nil
+	}
+
 	if t.IsStruct() {
 		return O{
 			"Name":  t.Name,
@@ -77,7 +81,7 @@ func getTypeForTemplate(t models.Type) O {
 			"Name":  t.Name,
 			"CType": "*C.char",
 			"GoToC": "C.CString(%s)",
-			"CToGo": "%s %s",
+			"CToGo": "<<%s %s>>",
 		}
 	default:
 		return O{
