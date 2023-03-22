@@ -30,35 +30,40 @@ func GenerateBindings(pkg *models.Package) (map[string]string, error) {
 
 	result := make(map[string]string)
 	for _, st := range pkg.Structs {
-		var sb strings.Builder
-		err := tmpl.ExecuteTemplate(&sb, "file.go.tmpl", O{
-			"PackageName":    packageName,
-			"LibraryPackage": "github.com/mniak/libmus",
-			"Struct":         st,
-			"Functions": lo.Map(st.Functions, func(fn models.Function, _ int) O {
-				return O{
-					"StructType":   getTypeForTemplate(fn.Struct),
-					"FunctionName": fn.Name,
-					"ReturnType":   getTypeForTemplate(fn.Return),
-					"Constructor":  fn.Constructor,
-					"Parameters": lo.Map(fn.Parameters, func(p models.Parameter, _ int) O {
-						return O{
-							"Name": p.Name,
-							"Type": getTypeForTemplate(&p.Type),
-						}
-					}),
-				}
-			}),
-		})
+		filename := fmt.Sprintf("%s.go", snakify(st.Name))
+		text, err := renderStruct(tmpl, st)
 		if err != nil {
 			return nil, err
 		}
 
-		filename := fmt.Sprintf("%s.go", snakify(st.Name))
-		result[filename] = sb.String()
+		result[filename] = text
 	}
 
 	return result, nil
+}
+
+func renderStruct(tmpl *template.Template, st *models.Struct) (string, error) {
+	var sb strings.Builder
+	err := tmpl.ExecuteTemplate(&sb, "file.go.tmpl", O{
+		"PackageName":    packageName,
+		"LibraryPackage": "github.com/mniak/libmus",
+		"Struct":         st,
+		"Functions": lo.Map(st.Functions, func(fn models.Function, _ int) O {
+			return O{
+				"StructType":   getTypeForTemplate(fn.Struct),
+				"FunctionName": fn.Name,
+				"ReturnType":   getTypeForTemplate(fn.Return),
+				"Constructor":  fn.Constructor,
+				"Parameters": lo.Map(fn.Parameters, func(p models.Parameter, _ int) O {
+					return O{
+						"Name": p.Name,
+						"Type": getTypeForTemplate(&p.Type),
+					}
+				}),
+			}
+		}),
+	})
+	return sb.String(), err
 }
 
 func getTypeForTemplate(t *models.Type) O {
