@@ -139,6 +139,18 @@ func genASTMethods(st *models.Struct) []ast.Decl {
 				},
 			})
 		}
+
+		fd.Type.Params.List = append(fd.Type.Params.List, lo.Map(fn.Parameters, func(param models.Parameter, _ int) *ast.Field {
+			paramTypeInfo := getTypeInfo(&param.Type)
+
+			return &ast.Field{
+				Names: []*ast.Ident{
+					ast.NewIdent(param.Name),
+				},
+				Type: ast.NewIdent(paramTypeInfo.CType),
+			}
+		})...)
+
 		fd.Doc = &ast.CommentGroup{
 			List: []*ast.Comment{
 				{
@@ -149,6 +161,10 @@ func genASTMethods(st *models.Struct) []ast.Decl {
 
 		fnCall := &ast.CallExpr{
 			Fun: ast.NewIdent(fmt.Sprintf("%s.%s", innerFuncPrefix, fn.Name)),
+			Args: lo.Map(fn.Parameters, func(param models.Parameter, _ int) ast.Expr {
+				paramTypeInfo := getTypeInfo(&param.Type)
+				return paramTypeInfo.CToGo(ast.NewIdent(param.Name))
+			}),
 		}
 
 		if returnTypeInfo != nil {
@@ -198,12 +214,27 @@ func getTypeInfo(t *models.Type) *TypeInfo {
 					Type: ast.NewIdent(fmt.Sprintf("*%s.%s", libName, t.Name)),
 				}
 			},
-			GoToC: func(e ast.Expr) ast.Expr { return e },
+			GoToC: func(e ast.Expr) ast.Expr {
+				return &ast.CallExpr{
+					Fun: ast.NewIdent(fmt.Sprintf("C.%s", t.Name)),
+					Args: []ast.Expr{
+						&ast.CallExpr{
+							Fun:  ast.NewIdent("cgo.NewHandle"),
+							Args: []ast.Expr{e},
+						},
+					},
+				}
+			},
 		}
 	case t.Name == "string":
 		return &TypeInfo{
 			CType: "*C.char",
-			CToGo: func(e ast.Expr) ast.Expr { return e },
+			CToGo: func(e ast.Expr) ast.Expr {
+				return &ast.CallExpr{
+					Fun:  ast.NewIdent("C.GoString"),
+					Args: []ast.Expr{e},
+				}
+			},
 			GoToC: func(e ast.Expr) ast.Expr {
 				return &ast.CallExpr{
 					Fun:  ast.NewIdent("C.CString"),

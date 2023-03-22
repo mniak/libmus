@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 int main() {
-    PitchClass pc = PitchClass_New();
+    PitchClass pc = NewPitchClass();
 
     char* fullName = PitchClass_PrettyName(pc);
     printf("The full name of the pitch class is %s", fullName);
