@@ -156,6 +156,15 @@ func genASTMethods(st *models.Struct) []ast.Decl {
 				Type: ast.NewIdent(returnTypeInfo.CType),
 			})
 
+			fd.Body.List = append(fd.Body.List,
+				&ast.ReturnStmt{
+					Results: []ast.Expr{
+						returnTypeInfo.GoToC(fnCall),
+					},
+				},
+			)
+
+		} else {
 			fd.Body.List = append(fd.Body.List, &ast.ExprStmt{
 				X: fnCall,
 			})
@@ -167,6 +176,7 @@ func genASTMethods(st *models.Struct) []ast.Decl {
 type TypeInfo struct {
 	CType string
 	CToGo func(ast.Expr) ast.Expr
+	GoToC func(ast.Expr) ast.Expr
 }
 
 func getTypeInfo(t *models.Type) *TypeInfo {
@@ -188,11 +198,24 @@ func getTypeInfo(t *models.Type) *TypeInfo {
 					Type: ast.NewIdent(fmt.Sprintf("*%s.%s", libName, t.Name)),
 				}
 			},
+			GoToC: func(e ast.Expr) ast.Expr { return e },
+		}
+	case t.Name == "string":
+		return &TypeInfo{
+			CType: "*C.char",
+			CToGo: func(e ast.Expr) ast.Expr { return e },
+			GoToC: func(e ast.Expr) ast.Expr {
+				return &ast.CallExpr{
+					Fun:  ast.NewIdent("C.CString"),
+					Args: []ast.Expr{e},
+				}
+			},
 		}
 	default:
 		return &TypeInfo{
 			CType: t.Name,
 			CToGo: func(e ast.Expr) ast.Expr { return e },
+			GoToC: func(e ast.Expr) ast.Expr { return e },
 		}
 	}
 }
