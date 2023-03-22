@@ -173,9 +173,21 @@ func genASTMethods(st *models.Struct) []ast.Decl {
 			})
 
 			fd.Body.List = append(fd.Body.List,
+				&ast.AssignStmt{
+					Lhs: []ast.Expr{
+						ast.NewIdent("result"),
+					},
+					Tok: token.DEFINE,
+					Rhs: []ast.Expr{
+						returnTypeInfo.GoToC(fnCall),
+					},
+				},
+			)
+
+			fd.Body.List = append(fd.Body.List,
 				&ast.ReturnStmt{
 					Results: []ast.Expr{
-						returnTypeInfo.GoToC(fnCall),
+						ast.NewIdent("result"),
 					},
 				},
 			)

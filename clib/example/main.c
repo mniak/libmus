@@ -6,7 +6,10 @@ int main() {
     PitchClass pc = NewPitchClass();
 
     char* fullName = PitchClass_PrettyName(pc);
-    printf("The full name of the pitch class is %s", fullName);
+    printf("Name %s <- default value\n", fullName);
+
+    PitchClass_SetStep(pc, 2);
+    printf("Name %s <- after change\n", fullName);
     free(fullName);
     return 0;
 }
