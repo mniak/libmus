@@ -1,3 +1,5 @@
+//go:build clib
+
 package main
 
 import (
@@ -6,29 +8,76 @@ import (
 	"github.com/mniak/libmus"
 )
 
-/*
-typedef void* PitchClass;
-*/
+// typedef void* PitchClass;
 import "C"
 
-func PitchClass_ToPointer(pc *libmus.PitchClass) C.PitchClass {
-	return C.PitchClass(cgo.NewHandle(pc))
+//export NewPitchClass
+func NewPitchClass() C.PitchClass {
+	result := libmus.NewPitchClass()
+	return C.PitchClass(cgo.NewHandle(result))
 }
 
-func PitchClass_FromPointer(ptr C.PitchClass) *libmus.PitchClass {
-	return cgo.Handle(ptr).Value().(*libmus.PitchClass)
+//export GetStep
+func GetStep(h C.PitchClass) int {
+	this := cgo.Handle(h).Value().(*libmus.PitchClass)
+	result := this.GetStep()
+	return result
 }
 
-//export PitchClass_New
-func PitchClass_New() C.PitchClass {
-	pc := libmus.PitchClass{}
-	pc.SetStep(7)
-	pc.SetAlteration(1)
-	return PitchClass_ToPointer(&pc)
+//export SetStep
+func SetStep(h C.PitchClass, value int) {
+	this := cgo.Handle(h).Value().(*libmus.PitchClass)
+	this.SetStep(value)
 }
 
-//export PitchClass_PrettyName
-func PitchClass_PrettyName(ptr C.PitchClass) *C.char {
-	pc := PitchClass_FromPointer(ptr)
-	return C.CString(pc.PrettyName())
+//export GetAlteration
+func GetAlteration(h C.PitchClass) int {
+	this := cgo.Handle(h).Value().(*libmus.PitchClass)
+	result := this.GetAlteration()
+	return result
+}
+
+//export SetAlteration
+func SetAlteration(h C.PitchClass, value int) {
+	this := cgo.Handle(h).Value().(*libmus.PitchClass)
+	this.SetAlteration(value)
+}
+
+//export RandomPitchClass
+func RandomPitchClass() C.PitchClass {
+	result := libmus.RandomPitchClass()
+	return C.PitchClass(cgo.NewHandle(result))
+}
+
+//export ExtendedRandomPitchClass
+func ExtendedRandomPitchClass() C.PitchClass {
+	result := libmus.ExtendedRandomPitchClass()
+	return C.PitchClass(cgo.NewHandle(result))
+}
+
+//export ParsePitchClass
+func ParsePitchClass(text *C.char) C.PitchClass {
+	result := libmus.ParsePitchClass(text)
+	return C.PitchClass(cgo.NewHandle(result))
+}
+
+//export Name
+func Name(h C.PitchClass) *C.char {
+	this := cgo.Handle(h).Value().(*libmus.PitchClass)
+	result := this.Name()
+	return C.CString(result)
+}
+
+//export PrettyName
+func PrettyName(h C.PitchClass) *C.char {
+	this := cgo.Handle(h).Value().(*libmus.PitchClass)
+	result := this.PrettyName()
+	return C.CString(result)
+}
+
+//export FullName
+func FullName(h C.PitchClass) *C.char {
+	this := cgo.Handle(h).Value().(*libmus.PitchClass)
+	result := this.FullName()
+	return C.CString(result)
 }
