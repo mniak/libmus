@@ -1,10 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"embed"
 	"fmt"
+	"go/ast"
+	"go/format"
+	"go/token"
 	"strings"
-	"text/template"
 
 	"github.com/iancoleman/strcase"
 	"github.com/mniak/libmus/cmd/models"
@@ -14,24 +17,17 @@ import (
 //go:embed templates/*.tmpl
 var efs embed.FS
 
-type O = map[string]any
-
-const packageName = "main"
+const (
+	packageName = "main"
+	libPackage  = "github.com/mniak/libmus"
+	libName     = "libmus"
+)
 
 func GenerateBindings(pkg *models.Package) (map[string]string, error) {
-	tmpl, err := template.New("").Funcs(template.FuncMap{
-		"isLastIndex": func(length int, index int) bool {
-			return index+1 >= length
-		},
-	}).ParseFS(efs, "templates/*.tmpl")
-	if err != nil {
-		return nil, err
-	}
-
 	result := make(map[string]string)
 	for _, st := range pkg.Structs {
 		filename := fmt.Sprintf("%s.go", snakify(st.Name))
-		text, err := renderStruct(tmpl, st)
+		text, err := renderStruct(st)
 		if err != nil {
 			return nil, err
 		}
@@ -42,57 +38,161 @@ func GenerateBindings(pkg *models.Package) (map[string]string, error) {
 	return result, nil
 }
 
-func renderStruct(tmpl *template.Template, st *models.Struct) (string, error) {
-	var sb strings.Builder
-	err := tmpl.ExecuteTemplate(&sb, "file.go.tmpl", O{
-		"PackageName":    packageName,
-		"LibraryPackage": "github.com/mniak/libmus",
-		"Struct":         st,
-		"Functions": lo.Map(st.Functions, func(fn models.Function, _ int) O {
-			return O{
-				"StructType":   getTypeForTemplate(fn.Struct),
-				"FunctionName": fn.Name,
-				"ReturnType":   getTypeForTemplate(fn.Return),
-				"Constructor":  fn.Constructor,
-				"Parameters": lo.Map(fn.Parameters, func(p models.Parameter, _ int) O {
-					return O{
-						"Name": p.Name,
-						"Type": getTypeForTemplate(&p.Type),
-					}
-				}),
-			}
-		}),
-	})
+func renderStruct(st *models.Struct) (string, error) {
+	var sb bytes.Buffer
+	fset := token.NewFileSet()
+
+	file := &ast.File{
+		Doc: &ast.CommentGroup{
+			List: []*ast.Comment{
+				{
+					Text: "//go:build clib",
+				},
+			},
+		},
+		Name: ast.NewIdent(" " + packageName),
+		Decls: append([]ast.Decl{
+			&ast.GenDecl{
+				Tok: token.IMPORT,
+				Specs: []ast.Spec{
+					&ast.ImportSpec{
+						Path: &ast.BasicLit{
+							Kind:  token.STRING,
+							Value: fmt.Sprintf("%q", "runtime/cgo"),
+						},
+					},
+					&ast.ImportSpec{
+						Path: &ast.BasicLit{
+							Kind:  token.STRING,
+							Value: fmt.Sprintf("%q", libPackage),
+						},
+					},
+				},
+			},
+			&ast.GenDecl{
+				Doc: &ast.CommentGroup{
+					List: []*ast.Comment{
+						{
+							Text: fmt.Sprintf("// typedef void* %s;", st.Name),
+						},
+					},
+				},
+				Tok: token.IMPORT,
+				Specs: []ast.Spec{
+					&ast.ImportSpec{
+						Path: &ast.BasicLit{
+							Kind:  token.STRING,
+							Value: fmt.Sprintf("%q", "C"),
+						},
+					},
+				},
+			},
+		}, genASTMethods(st)...),
+		Scope: &ast.Scope{
+			Objects: map[string]*ast.Object{},
+		},
+	}
+
+	err := format.Node(&sb, fset, file)
 	return sb.String(), err
 }
 
-func getTypeForTemplate(t *models.Type) O {
-	if t == nil {
-		return nil
-	}
+func genASTMethods(st *models.Struct) []ast.Decl {
+	return lo.Map(st.Functions, func(fn models.Function, _ int) ast.Decl {
+		structTypeInfo := getTypeInfo(fn.Struct)
+		returnTypeInfo := getTypeInfo(fn.Return)
 
-	if t.IsStruct() {
-		return O{
-			"Name":  t.Name,
-			"CType": fmt.Sprintf("C.%s", t.Name),
-			"GoToC": fmt.Sprintf("C.%s(cgo.NewHandle(%%s))", t.Name),
-			"CToGo": fmt.Sprintf("cgo.Handle(%%s).Value().(*libmus.%s)", t.Name),
+		fd := &ast.FuncDecl{}
+		fd.Type = &ast.FuncType{
+			Params: &ast.FieldList{
+				List: []*ast.Field{},
+			},
+			Results: &ast.FieldList{
+				List: []*ast.Field{},
+			},
 		}
-	}
+		fd.Body = &ast.BlockStmt{
+			List: []ast.Stmt{},
+		}
 
-	switch t.Name {
-	case "string":
-		return O{
-			"Name":  t.Name,
-			"CType": "*C.char",
-			"GoToC": "C.CString(%s)",
-			"CToGo": "<<%s %s>>",
+		var innerFuncPrefix string
+		if fn.Constructor {
+			fd.Name = ast.NewIdent(fn.Name)
+			innerFuncPrefix = libName
+		} else {
+			fd.Name = ast.NewIdent(fmt.Sprintf("%s_%s", st.Name, fn.Name))
+
+			fd.Type.Params.List = append(fd.Type.Params.List, &ast.Field{
+				Names: []*ast.Ident{
+					ast.NewIdent("h"),
+				},
+				Type: ast.NewIdent(structTypeInfo.CType),
+			})
+			innerFuncPrefix = "this"
+			fd.Body.List = append(fd.Body.List, &ast.AssignStmt{
+				Lhs: []ast.Expr{
+					ast.NewIdent("this"),
+				},
+				Tok: token.DEFINE,
+				Rhs: []ast.Expr{
+					structTypeInfo.CToGo(ast.NewIdent("h")),
+				},
+			})
+		}
+		fd.Doc = &ast.CommentGroup{
+			List: []*ast.Comment{
+				{
+					Text: fmt.Sprintf("//export %s", fd.Name),
+				},
+			},
+		}
+
+		fnCall := &ast.CallExpr{
+			Fun: ast.NewIdent(fmt.Sprintf("%s.%s", innerFuncPrefix, fn.Name)),
+		}
+
+		if returnTypeInfo != nil {
+			fd.Type.Results.List = append(fd.Type.Results.List, &ast.Field{
+				Type: ast.NewIdent(returnTypeInfo.CType),
+			})
+
+			fd.Body.List = append(fd.Body.List, &ast.ExprStmt{
+				X: fnCall,
+			})
+		}
+		return fd
+	})
+}
+
+type TypeInfo struct {
+	CType string
+	CToGo func(ast.Expr) ast.Expr
+}
+
+func getTypeInfo(t *models.Type) *TypeInfo {
+	switch {
+	case t == nil:
+		return nil
+	case t.IsStruct():
+		return &TypeInfo{
+			CType: fmt.Sprintf("C.%s", t.Name),
+			CToGo: func(e ast.Expr) ast.Expr {
+				return &ast.TypeAssertExpr{
+					X: &ast.SelectorExpr{
+						X: &ast.CallExpr{
+							Fun:  ast.NewIdent("cgo.Handle"),
+							Args: []ast.Expr{e},
+						},
+						Sel: ast.NewIdent("Value()"),
+					},
+					Type: ast.NewIdent(fmt.Sprintf("*%s.%s", libName, t.Name)),
+				}
+			},
 		}
 	default:
-		return O{
-			"CType": t.Name,
-			"GoToC": "%s",
-			"CToGo": "%s",
+		return &TypeInfo{
+			CType: t.Name,
+			CToGo: func(e ast.Expr) ast.Expr { return e },
 		}
 	}
 }
