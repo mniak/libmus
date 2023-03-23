@@ -123,7 +123,7 @@ func genMethods(st *models.Struct) []ast.Decl {
 			fd.Name = ast.NewIdent(fmt.Sprintf("%s_%s", st.Name, fn.Name))
 			fd.Type.Params.List = append(fd.Type.Params.List, &ast.Field{
 				Names: []*ast.Ident{
-					ast.NewIdent(g.nextVar()),
+					ast.NewIdent(g.nextVar("handle")),
 				},
 				Type: ast.NewIdent(g.structTypeInfo.CType),
 			})
@@ -193,22 +193,12 @@ func (g *FuncGenerator) lastVar() string {
 	return g.vars[len(g.vars)-1]
 }
 
-func (g *FuncGenerator) nextVar() string {
-	const initialVarFallback = "h"
-	if len(g.vars) == 0 {
-		if g.initialVar == "" {
-			g.vars = append(g.vars, initialVarFallback)
-		} else {
-			g.vars = append(g.vars, g.initialVar)
-		}
-	} else {
-		g.vars = append(g.vars, g.lastVar()+"a")
-	}
-
-	return g.lastVar()
+func (g *FuncGenerator) nextVar(namehint string) string {
+	g.vars = append(g.vars, namehint)
+	return namehint
 }
 
-func (g *FuncGenerator) addConversion(conv Conversion) {
+func (g *FuncGenerator) addConversion(conv Conversion, varNameHint string) {
 	if conv.IsTrivial {
 		return
 	}
@@ -218,7 +208,7 @@ func (g *FuncGenerator) addConversion(conv Conversion) {
 			conv.Convert(ast.NewIdent(g.lastVar())),
 		},
 		Lhs: []ast.Expr{
-			ast.NewIdent(g.nextVar()),
+			ast.NewIdent(g.nextVar(varNameHint)),
 		},
 	})
 }
@@ -226,16 +216,16 @@ func (g *FuncGenerator) addConversion(conv Conversion) {
 func (g *FuncGenerator) addFunctionCall() {
 	fnCall := g.genFunctionCall()
 	if g.returnTypeInfo != nil {
-		g.addAssignment(fnCall)
+		g.addAssignment(fnCall, "result")
 		return
 	}
 	g.statements = append(g.statements, &ast.ExprStmt{fnCall})
 }
 
-func (g *FuncGenerator) addAssignment(expr ast.Expr) {
+func (g *FuncGenerator) addAssignment(expr ast.Expr, varNameHint string) {
 	g.statements = append(g.statements,
 		&ast.AssignStmt{
-			Lhs: []ast.Expr{ast.NewIdent(g.nextVar())},
+			Lhs: []ast.Expr{ast.NewIdent(g.nextVar(varNameHint))},
 			Tok: token.DEFINE,
 			Rhs: []ast.Expr{expr},
 		},
@@ -247,10 +237,7 @@ func (g *FuncGenerator) addReturn() {
 		return
 	}
 	goToC := g.returnTypeInfo.GoToC
-	// if g.function.Constructor && !g.function.Return.IsPointer() {
-	// 	goToC = goToC.Wrap(ToPointer())
-	// }
-	g.addConversion(goToC)
+	g.addConversion(goToC, "resultC")
 	g.statements = append(g.statements,
 		&ast.ReturnStmt{
 			Results: []ast.Expr{
@@ -262,7 +249,7 @@ func (g *FuncGenerator) addReturn() {
 
 func (g *FuncGenerator) genMethodBody() *ast.BlockStmt {
 	if !g.function.Constructor {
-		g.addConversion(g.structTypeInfo.CToGo)
+		g.addConversion(g.structTypeInfo.CToGo, "this")
 	}
 	g.addFunctionCall()
 	g.addReturn()
