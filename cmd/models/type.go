@@ -2,30 +2,19 @@ package models
 
 import "go/ast"
 
-type Type struct {
+type parsedType struct {
 	astNode any
-	Name    string
 }
 
-func ParseType(n any) *Type {
-	switch node := n.(type) {
-	case *ast.Ident:
-		return &Type{
-			astNode: node,
-			Name:    node.Name,
-		}
-	case *ast.TypeSpec:
-		return &Type{
-			astNode: node,
-			Name:    node.Name.Name,
-		}
-	case *ast.StarExpr:
-		return &Type{
-			astNode: node,
-			Name:    ParseType(node.X).Name,
-		}
-	default:
-		return nil
+type Type interface {
+	Name() string
+	IsStruct() bool
+	PointedType() Type
+}
+
+func ParseType(n any) Type {
+	return &parsedType{
+		astNode: n,
 	}
 }
 
@@ -51,11 +40,24 @@ func isStruct(n any) bool {
 	}
 }
 
-func (t *Type) IsStruct() bool {
+func (t *parsedType) IsStruct() bool {
 	return isStruct(t.astNode)
 }
 
-func (t *Type) PointedType() *Type {
+func (t *parsedType) Name() string {
+	switch node := t.astNode.(type) {
+	case *ast.Ident:
+		return node.Name
+	case *ast.TypeSpec:
+		return node.Name.Name
+	case *ast.StarExpr:
+		return ParseType(node.X).Name()
+	default:
+		return ""
+	}
+}
+
+func (t *parsedType) PointedType() Type {
 	if t.astNode == nil {
 		return nil
 	}

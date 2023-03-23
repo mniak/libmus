@@ -87,7 +87,7 @@ func renderStruct(st *models.Struct) (string, error) {
 					},
 				},
 			},
-		}, genASTMethods(st)...),
+		}, genMethods(st)...),
 		Scope: &ast.Scope{
 			Objects: map[string]*ast.Object{},
 		},
@@ -97,11 +97,8 @@ func renderStruct(st *models.Struct) (string, error) {
 	return sb.String(), err
 }
 
-func genASTMethods(st *models.Struct) []ast.Decl {
+func genMethods(st *models.Struct) []ast.Decl {
 	return lo.Map(st.Functions, func(fn models.Function, _ int) ast.Decl {
-		structTypeInfo := getTypeInfo(fn.Struct)
-		returnTypeInfo := getTypeInfo(fn.Return)
-
 		fd := &ast.FuncDecl{}
 		fd.Type = &ast.FuncType{
 			Params: &ast.FieldList{
@@ -111,45 +108,25 @@ func genASTMethods(st *models.Struct) []ast.Decl {
 				List: []*ast.Field{},
 			},
 		}
-		fd.Body = &ast.BlockStmt{
-			List: []ast.Stmt{},
-		}
 
-		var innerFuncPrefix string
+		g := FuncGenerator{
+			initialVar:     "a",
+			statements:     []ast.Stmt{},
+			function:       fn,
+			structTypeInfo: getTypeInfo(fn.Struct),
+			returnTypeInfo: getTypeInfo(fn.Return),
+		}
 		if fn.Constructor {
 			fd.Name = ast.NewIdent(fn.Name)
-			innerFuncPrefix = libName
 		} else {
 			fd.Name = ast.NewIdent(fmt.Sprintf("%s_%s", st.Name, fn.Name))
-
 			fd.Type.Params.List = append(fd.Type.Params.List, &ast.Field{
 				Names: []*ast.Ident{
-					ast.NewIdent("h"),
+					ast.NewIdent(g.nextVar()),
 				},
-				Type: ast.NewIdent(structTypeInfo.CType),
-			})
-			innerFuncPrefix = "this"
-			fd.Body.List = append(fd.Body.List, &ast.AssignStmt{
-				Lhs: []ast.Expr{
-					ast.NewIdent("this"),
-				},
-				Tok: token.DEFINE,
-				Rhs: []ast.Expr{
-					structTypeInfo.CToGo(ast.NewIdent("h")),
-				},
+				Type: ast.NewIdent(g.structTypeInfo.CType),
 			})
 		}
-
-		fd.Type.Params.List = append(fd.Type.Params.List, lo.Map(fn.Parameters, func(param models.Parameter, _ int) *ast.Field {
-			paramTypeInfo := getTypeInfo(&param.Type)
-
-			return &ast.Field{
-				Names: []*ast.Ident{
-					ast.NewIdent(param.Name),
-				},
-				Type: ast.NewIdent(paramTypeInfo.CType),
-			}
-		})...)
 
 		fd.Doc = &ast.CommentGroup{
 			List: []*ast.Comment{
@@ -159,116 +136,134 @@ func genASTMethods(st *models.Struct) []ast.Decl {
 			},
 		}
 
-		fnCall := &ast.CallExpr{
-			Fun: ast.NewIdent(fmt.Sprintf("%s.%s", innerFuncPrefix, fn.Name)),
-			Args: lo.Map(fn.Parameters, func(param models.Parameter, _ int) ast.Expr {
-				paramTypeInfo := getTypeInfo(&param.Type)
-				return paramTypeInfo.CToGo(ast.NewIdent(param.Name))
-			}),
-		}
+		fd.Body = g.genMethodBody()
 
-		if returnTypeInfo != nil {
+		fd.Type.Params.List = append(fd.Type.Params.List, lo.Map(fn.Parameters, func(param models.Parameter, _ int) *ast.Field {
+			paramTypeInfo := getTypeInfo(param.Type)
+
+			return &ast.Field{
+				Names: []*ast.Ident{
+					ast.NewIdent(param.Name),
+				},
+				Type: ast.NewIdent(paramTypeInfo.CType),
+			}
+		})...)
+
+		if g.returnTypeInfo != nil {
 			fd.Type.Results.List = append(fd.Type.Results.List, &ast.Field{
-				Type: ast.NewIdent(returnTypeInfo.CType),
-			})
-
-			fd.Body.List = append(fd.Body.List,
-				&ast.AssignStmt{
-					Lhs: []ast.Expr{
-						ast.NewIdent("result"),
-					},
-					Tok: token.DEFINE,
-					Rhs: []ast.Expr{
-						returnTypeInfo.GoToC(fnCall),
-					},
-				},
-			)
-
-			fd.Body.List = append(fd.Body.List,
-				&ast.ReturnStmt{
-					Results: []ast.Expr{
-						ast.NewIdent("result"),
-					},
-				},
-			)
-
-		} else {
-			fd.Body.List = append(fd.Body.List, &ast.ExprStmt{
-				X: fnCall,
+				Type: ast.NewIdent(g.returnTypeInfo.CType),
 			})
 		}
 		return fd
 	})
 }
 
-type TypeInfo struct {
-	CType string
-	CToGo func(ast.Expr) ast.Expr
-	GoToC func(ast.Expr) ast.Expr
+func (g *FuncGenerator) genFunctionCall() ast.Expr {
+	sel := ast.SelectorExpr{
+		Sel: ast.NewIdent(g.function.Name),
+	}
+
+	if g.function.Constructor {
+		sel.X = ast.NewIdent(libName)
+	} else {
+		sel.X = ast.NewIdent(g.lastVar())
+	}
+
+	fnCall := ast.CallExpr{
+		Fun: &sel,
+		Args: lo.Map(g.function.Parameters, func(param models.Parameter, _ int) ast.Expr {
+			paramTypeInfo := getTypeInfo(param.Type)
+			return paramTypeInfo.CToGo.Convert(ast.NewIdent(param.Name))
+		}),
+	}
+	return &fnCall
 }
 
-func getTypeInfo(t *models.Type) *TypeInfo {
-	if t == nil {
-		return nil
-	}
-	p := t.PointedType()
-	if p != nil && p.IsStruct() {
-		pInfo := getTypeInfo(p)
-		return &TypeInfo{
-			CType: pInfo.CType,
-			CToGo: pInfo.CToGo,
-			GoToC: pInfo.GoToC,
+type FuncGenerator struct {
+	initialVar     string
+	vars           []string
+	statements     []ast.Stmt
+	function       models.Function
+	structTypeInfo *TypeInfo
+	returnTypeInfo *TypeInfo
+}
+
+func (g *FuncGenerator) lastVar() string {
+	return g.vars[len(g.vars)-1]
+}
+
+func (g *FuncGenerator) nextVar() string {
+	const initialVarFallback = "h"
+	if len(g.vars) == 0 {
+		if g.initialVar == "" {
+			g.vars = append(g.vars, initialVarFallback)
+		} else {
+			g.vars = append(g.vars, g.initialVar)
 		}
+	} else {
+		g.vars = append(g.vars, g.lastVar()+"a")
 	}
-	if t.IsStruct() {
-		return &TypeInfo{
-			CType: fmt.Sprintf("C.%s", t.Name),
-			CToGo: func(e ast.Expr) ast.Expr {
-				return &ast.TypeAssertExpr{
-					X: &ast.SelectorExpr{
-						X: &ast.CallExpr{
-							Fun:  ast.NewIdent("cgo.Handle"),
-							Args: []ast.Expr{e},
-						},
-						Sel: ast.NewIdent("Value()"),
-					},
-					Type: ast.NewIdent(fmt.Sprintf("*%s.%s", libName, t.Name)),
-				}
-			},
-			GoToC: func(e ast.Expr) ast.Expr {
-				return &ast.CallExpr{
-					Fun: ast.NewIdent(fmt.Sprintf("C.%s", t.Name)),
-					Args: []ast.Expr{
-						&ast.CallExpr{
-							Fun:  ast.NewIdent("cgo.NewHandle"),
-							Args: []ast.Expr{e},
-						},
-					},
-				}
-			},
-		}
+
+	return g.lastVar()
+}
+
+func (g *FuncGenerator) addConversion(conv Conversion) {
+	if conv.IsTrivial {
+		return
 	}
-	if t.Name == "string" {
-		return &TypeInfo{
-			CType: "*C.char",
-			CToGo: func(e ast.Expr) ast.Expr {
-				return &ast.CallExpr{
-					Fun:  ast.NewIdent("C.GoString"),
-					Args: []ast.Expr{e},
-				}
-			},
-			GoToC: func(e ast.Expr) ast.Expr {
-				return &ast.CallExpr{
-					Fun:  ast.NewIdent("C.CString"),
-					Args: []ast.Expr{e},
-				}
-			},
-		}
+	g.statements = append(g.statements, &ast.AssignStmt{
+		Tok: token.DEFINE,
+		Rhs: []ast.Expr{
+			conv.Convert(ast.NewIdent(g.lastVar())),
+		},
+		Lhs: []ast.Expr{
+			ast.NewIdent(g.nextVar()),
+		},
+	})
+}
+
+func (g *FuncGenerator) addFunctionCall() {
+	fnCall := g.genFunctionCall()
+	if g.returnTypeInfo != nil {
+		g.addAssignment(fnCall)
+		return
 	}
-	return &TypeInfo{
-		CType: t.Name,
-		CToGo: func(e ast.Expr) ast.Expr { return e },
-		GoToC: func(e ast.Expr) ast.Expr { return e },
+	g.statements = append(g.statements, &ast.ExprStmt{fnCall})
+}
+
+func (g *FuncGenerator) addAssignment(expr ast.Expr) {
+	g.statements = append(g.statements,
+		&ast.AssignStmt{
+			Lhs: []ast.Expr{ast.NewIdent(g.nextVar())},
+			Tok: token.DEFINE,
+			Rhs: []ast.Expr{expr},
+		},
+	)
+}
+
+func (g *FuncGenerator) addReturn() {
+	if g.returnTypeInfo == nil {
+		return
+	}
+	g.addConversion(g.returnTypeInfo.GoToC)
+	g.statements = append(g.statements,
+		&ast.ReturnStmt{
+			Results: []ast.Expr{
+				ast.NewIdent(g.lastVar()),
+			},
+		},
+	)
+}
+
+func (g *FuncGenerator) genMethodBody() *ast.BlockStmt {
+	if !g.function.Constructor {
+		g.addConversion(g.structTypeInfo.CToGo)
+	}
+	g.addFunctionCall()
+	g.addReturn()
+
+	return &ast.BlockStmt{
+		List: g.statements,
 	}
 }
 

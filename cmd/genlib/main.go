@@ -70,7 +70,7 @@ func ConvertPackage(packageName string) *models.Package {
 					log.Fatalln(err)
 				}
 				if fn.Struct != nil {
-					pkg.Struct(fn.Struct.Name).AppendMethod(fn)
+					pkg.Struct(fn.Struct.Name()).AppendMethod(fn)
 				} else {
 					pkg.AppendFunction(fn)
 				}
