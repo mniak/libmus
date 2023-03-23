@@ -1,6 +1,8 @@
 package models
 
-import "go/ast"
+import (
+	"go/ast"
+)
 
 type parsedType struct {
 	astNode any
@@ -9,7 +11,9 @@ type parsedType struct {
 type Type interface {
 	Name() string
 	IsStruct() bool
-	PointedType() Type
+	IsPointer() bool
+	AsPointed() Type
+	AsPointer() Type
 }
 
 func ParseType(n any) Type {
@@ -33,6 +37,8 @@ func isStruct(n any) bool {
 			return isStruct(v.Decl)
 		}
 		return false
+	case *ast.StarExpr:
+		return isStruct(v.X)
 	case *ast.TypeSpec:
 		return true
 	default:
@@ -57,13 +63,53 @@ func (t *parsedType) Name() string {
 	}
 }
 
-func (t *parsedType) PointedType() Type {
+func (t *parsedType) IsPointer() bool {
+	_, is := t.astNode.(*ast.StarExpr)
+	return is
+}
+
+func (t *parsedType) AsPointed() Type {
+	starType, is := t.astNode.(*ast.StarExpr)
+	if is {
+		return ParseType(starType.X)
+	}
+	return t
+}
+
+func (t *parsedType) AsPointer() Type {
 	if t.astNode == nil {
 		return nil
 	}
-	pointer, is := t.astNode.(*ast.StarExpr)
-	if !is {
-		return nil
+	_, isPointer := t.astNode.(*ast.StarExpr)
+	if isPointer {
+		return t
 	}
-	return ParseType(pointer.X)
+
+	return &pointerType{
+		inner: t,
+	}
+}
+
+type pointerType struct {
+	inner Type
+}
+
+func (t *pointerType) IsStruct() bool {
+	return t.inner.IsStruct()
+}
+
+func (t *pointerType) Name() string {
+	return "*" + t.Name()
+}
+
+func (t *pointerType) IsPointer() bool {
+	return true
+}
+
+func (t *pointerType) AsPointed() Type {
+	return t.inner
+}
+
+func (t *pointerType) AsPointer() Type {
+	return t
 }

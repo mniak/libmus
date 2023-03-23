@@ -116,6 +116,7 @@ func genMethods(st *models.Struct) []ast.Decl {
 			structTypeInfo: getTypeInfo(fn.Struct),
 			returnTypeInfo: getTypeInfo(fn.Return),
 		}
+
 		if fn.Constructor {
 			fd.Name = ast.NewIdent(fn.Name)
 		} else {
@@ -245,7 +246,11 @@ func (g *FuncGenerator) addReturn() {
 	if g.returnTypeInfo == nil {
 		return
 	}
-	g.addConversion(g.returnTypeInfo.GoToC)
+	goToC := g.returnTypeInfo.GoToC
+	// if g.function.Constructor && !g.function.Return.IsPointer() {
+	// 	goToC = goToC.Wrap(ToPointer())
+	// }
+	g.addConversion(goToC)
 	g.statements = append(g.statements,
 		&ast.ReturnStmt{
 			Results: []ast.Expr{

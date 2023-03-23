@@ -51,16 +51,8 @@ func ParseFunction(fd *ast.FuncDecl) (Function, error) {
 	switch len(fd.Type.Results.List) {
 	case 0:
 	case 1:
-		rettype := ParseType(fd.Type.Results.List[0].Type)
-		fn.Return = rettype
-		for rettype != nil {
-			r2 := rettype.PointedType()
-			if r2 == nil {
-				break
-			}
-			rettype = r2
-		}
-		if fn.Return.IsStruct() && strings.Contains(fn.Name, fn.Return.Name()) {
+		fn.Return = ParseType(fd.Type.Results.List[0].Type)
+		if fn.Return.AsPointed().IsStruct() && strings.Contains(fn.Name, fn.Return.Name()) {
 			fn.Struct = fn.Return
 			fn.Constructor = true
 		}
