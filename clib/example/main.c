@@ -15,5 +15,10 @@ int main()
     printf("Name %s <- after change\n", fullName);
     free(fullName);
 
+    pc = ParsePitchClass("G sharp");
+    fullName = PitchClass_PrettyName(pc);
+    printf("Name %s <- parsed\n", fullName);
+    free(fullName);
+
     return 0;
 }

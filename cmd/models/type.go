@@ -99,7 +99,7 @@ func (t *pointerType) IsStruct() bool {
 }
 
 func (t *pointerType) Name() string {
-	return "*" + t.Name()
+	return "*" + t.inner.Name()
 }
 
 func (t *pointerType) IsPointer() bool {

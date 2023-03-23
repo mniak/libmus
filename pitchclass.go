@@ -1,5 +1,11 @@
 ﻿package libmus
 
+import (
+	"fmt"
+	"regexp"
+	"strings"
+)
+
 const (
 	MIN_STEP             = 1
 	MAX_STEP             = 7
@@ -75,6 +81,11 @@ func ExtendedRandomPitchClass() PitchClass {
 	return pc
 }
 
+var regexParsePitchClass = regexp.MustCompile(fmt.Sprintf(
+	`(?i)^ ?(double flat|bb|%c|flat|b|%c|natural|%c|sharp|#|%c|double sharp|##|%c)$`,
+	DOUBLE_FLAT_SYMBOL, FLAT_SYMBOL, NATURAL_SYMBOL, SHARP_SYMBOL, DOUBLE_SHARP_SYMBOL,
+))
+
 func ParsePitchClass(text string) PitchClass {
 	var newpc PitchClass
 	head := text[0:1]
@@ -87,23 +98,29 @@ func ParsePitchClass(text string) PitchClass {
 		}
 	}
 
-	for _, ch := range tail {
-		switch ch {
-		case 'b':
-			fallthrough
-		case FLAT_SYMBOL:
-			newpc.alteration = newpc.alteration - 1
-		case '#':
-			fallthrough
-		case SHARP_SYMBOL:
-			newpc.alteration = newpc.alteration + 1
-		case DOUBLE_FLAT_SYMBOL:
-			newpc.alteration = newpc.alteration - 2
-		case DOUBLE_SHARP_SYMBOL:
-			newpc.alteration = newpc.alteration + 2
-		default:
-			return newpc
-		}
+	isMatch := regexParsePitchClass.MatchString(tail)
+	if !isMatch {
+		return newpc
+	}
+	match := strings.ToLower(regexParsePitchClass.FindStringSubmatch(tail)[1])
+
+	switch match {
+	case "flat", string(FLAT_SYMBOL), string('b'):
+		newpc.alteration = newpc.alteration - 1
+
+	case "sharp", string(SHARP_SYMBOL), string('#'):
+		newpc.alteration = newpc.alteration + 1
+
+	case "double flat", string(DOUBLE_FLAT_SYMBOL), "bb":
+		newpc.alteration = newpc.alteration - 2
+
+	case "double sharp", string(DOUBLE_SHARP_SYMBOL), "##":
+		newpc.alteration = newpc.alteration + 2
+
+	default:
+		fallthrough
+	case "", "natural", string(NATURAL_SYMBOL):
+		return newpc
 	}
 	return newpc
 }

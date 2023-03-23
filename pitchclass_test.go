@@ -1,6 +1,7 @@
 ﻿package libmus
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -350,40 +351,53 @@ func Test_PitchClass_FullName_With_2_sharps(t *testing.T) {
 	}
 }
 
-func Test_PitchClass_Parse_Simple_name(t *testing.T) {
-	alterationTexts := []string{"bb", "b", "", "#", "##"}
-	stepTexts := []string{"C", "D", "E", "F", "G", "A", "B"}
+func TestPitchClass_Parse(t *testing.T) {
+	t.Run("Simple name", func(t *testing.T) {
+		alterationTexts := []string{"bb", "b", "", "#", "##"}
+		stepTexts := []string{"C", "D", "E", "F", "G", "A", "B"}
 
-	for ialt := 0; ialt < len(alterationTexts); ialt++ {
-		alt := alterationTexts[ialt]
+		for ialt, alt := range alterationTexts {
+			for istep, step := range stepTexts {
+				text := step + alt
+				t.Run(text, func(t *testing.T) {
+					parsed := ParsePitchClass(text)
 
-		for istep := 0; istep < len(stepTexts); istep++ {
-			step := stepTexts[istep]
-
-			text := step + alt
-			parsed := ParsePitchClass(text)
-
-			assert.Equal(t, istep+1, parsed.GetStep())
-			assert.Equal(t, ialt-2, parsed.GetAlteration())
+					assert.Equal(t, istep+1, parsed.GetStep())
+					assert.Equal(t, ialt-2, parsed.GetAlteration())
+				})
+			}
 		}
-	}
-}
+	})
+	t.Run("Pretty name", func(t *testing.T) {
+		alterationTexts := []string{"𝄫", "♭", "♮", "♯", "𝄪"}
+		stepTexts := []string{"C", "D", "E", "F", "G", "A", "B"}
 
-func Test_PitchClass_Parse_Pretty_name(t *testing.T) {
-	alterationTexts := []string{"𝄫", "♭", "", "♯", "𝄪"}
-	stepTexts := []string{"C", "D", "E", "F", "G", "A", "B"}
+		for ialt, alt := range alterationTexts {
+			for istep, step := range stepTexts {
+				text := step + alt
+				t.Run(text, func(t *testing.T) {
+					parsed := ParsePitchClass(text)
 
-	for ialt := 0; ialt < len(alterationTexts); ialt++ {
-		alt := alterationTexts[ialt]
-
-		for istep := 0; istep < len(stepTexts); istep++ {
-			step := stepTexts[istep]
-
-			text := step + alt
-			parsed := ParsePitchClass(text)
-
-			assert.Equal(t, istep+1, parsed.GetStep())
-			assert.Equal(t, ialt-2, parsed.GetAlteration())
+					assert.Equal(t, istep+1, parsed.GetStep())
+					assert.Equal(t, ialt-2, parsed.GetAlteration())
+				})
+			}
 		}
-	}
+	})
+	t.Run("Full name", func(t *testing.T) {
+		alterationTexts := []string{"Double Flat", "Flat", "Natural", "Sharp", "Double Sharp"}
+		stepTexts := []string{"C", "D", "E", "F", "G", "A", "B"}
+
+		for ialt, alt := range alterationTexts {
+			for istep, step := range stepTexts {
+				text := fmt.Sprintf("%s %s", step, alt)
+				t.Run(text, func(t *testing.T) {
+					parsed := ParsePitchClass(text)
+
+					assert.Equal(t, istep+1, parsed.GetStep())
+					assert.Equal(t, ialt-2, parsed.GetAlteration())
+				})
+			}
+		}
+	})
 }

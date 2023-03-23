@@ -219,7 +219,9 @@ func (g *FuncGenerator) addFunctionCall() {
 		g.addAssignment(fnCall, "result")
 		return
 	}
-	g.statements = append(g.statements, &ast.ExprStmt{fnCall})
+	g.statements = append(g.statements, &ast.ExprStmt{
+		X: fnCall,
+	})
 }
 
 func (g *FuncGenerator) addAssignment(expr ast.Expr, varNameHint string) {
