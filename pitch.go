@@ -31,9 +31,8 @@ func NewPitch() Pitch {
 }
 
 func ParsePitch(text string) Pitch {
-	pitch := Pitch{}
-	head := rune(text[0])
-	tail := text[1:]
+	pitch := NewPitch()
+	head := text[0]
 
 	for iname, name := range NAMES {
 		if name == string(head) {
@@ -41,18 +40,17 @@ func ParsePitch(text string) Pitch {
 			break
 		}
 	}
-	for {
-		pitch.octave, _ = strconv.Atoi(tail)
-
-		head = rune(tail[0])
-		tail = tail[1:]
+	for i, head := range text[1:] {
+		tail := text[i+1:]
+		oct, err := strconv.Atoi(tail)
+		if err == nil {
+			pitch.octave = oct
+		}
 
 		switch head {
-		case 'b':
-		case FLAT_SYMBOL:
+		case 'b', FLAT_SYMBOL:
 			pitch.SetAlteration(pitch.GetAlteration() - 1)
-		case '#':
-		case SHARP_SYMBOL:
+		case '#', SHARP_SYMBOL:
 			pitch.SetAlteration(pitch.GetAlteration() + 1)
 		case DOUBLE_FLAT_SYMBOL:
 			pitch.SetAlteration(pitch.GetAlteration() - 2)
@@ -62,6 +60,7 @@ func ParsePitch(text string) Pitch {
 			return pitch
 		}
 	}
+	return pitch
 }
 
 func RandomPitch() Pitch {

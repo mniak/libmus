@@ -192,7 +192,9 @@ func TestPitch_ExtendedRandom_Steps_should_have_a_good_distribution(t *testing.T
 		steps[pitch.GetStep()] = true
 	}
 	for i := 1; i <= 7; i++ {
-		assert.True(t, steps[i])
+		t.Run(fmt.Sprint(i), func(t *testing.T) {
+			assert.True(t, steps[i])
+		})
 	}
 }
 
@@ -451,11 +453,13 @@ func TestPitch_Parse_without_octave_Simple_name_without_octave(t *testing.T) {
 		for istep, step := range stepTexts {
 
 			text := step + alt
-			parsed := ParsePitch(text)
+			t.Run(text, func(t *testing.T) {
+				parsed := ParsePitch(text)
 
-			assert.Equal(t, istep+1, parsed.GetStep())
-			assert.Equal(t, ialt-2, parsed.GetAlteration())
-			assert.Equal(t, 4, parsed.GetOctave())
+				assert.Equal(t, istep+1, parsed.GetStep())
+				assert.Equal(t, ialt-2, parsed.GetAlteration())
+				assert.Equal(t, 4, parsed.GetOctave())
+			})
 		}
 	}
 }
@@ -468,11 +472,13 @@ func TestPitch_Parse_without_octave_Pretty_name(t *testing.T) {
 		for istep, step := range stepTexts {
 
 			text := step + alt
-			parsed := ParsePitch(text)
+			t.Run(text, func(t *testing.T) {
+				parsed := ParsePitch(text)
 
-			assert.Equal(t, istep+1, parsed.GetStep())
-			assert.Equal(t, ialt-2, parsed.GetAlteration())
-			assert.Equal(t, 4, parsed.GetOctave())
+				assert.Equal(t, istep+1, parsed.GetStep())
+				assert.Equal(t, ialt-2, parsed.GetAlteration())
+				assert.Equal(t, 4, parsed.GetOctave())
+			})
 		}
 	}
 }
@@ -487,11 +493,13 @@ func TestPitch_Parse_with_octave_Simple_name(t *testing.T) {
 
 				octaveString := fmt.Sprint(oct)
 				text := step + alt + octaveString
-				parsed := ParsePitch(text)
+				t.Run(text, func(t *testing.T) {
+					parsed := ParsePitch(text)
 
-				assert.Equal(t, istep+1, parsed.GetStep())
-				assert.Equal(t, ialt-2, parsed.GetAlteration())
-				assert.Equal(t, oct, parsed.GetOctave())
+					assert.Equal(t, istep+1, parsed.GetStep())
+					assert.Equal(t, ialt-2, parsed.GetAlteration())
+					assert.Equal(t, oct, parsed.GetOctave())
+				})
 			}
 		}
 	}
@@ -507,11 +515,13 @@ func TestPitch_Parse_with_octave_Pretty_name(t *testing.T) {
 
 				octaveString := fmt.Sprint(oct)
 				text := step + alt + octaveString
-				parsed := ParsePitch(text)
+				t.Run(text, func(t *testing.T) {
+					parsed := ParsePitch(text)
 
-				assert.Equal(t, istep+1, parsed.GetStep())
-				assert.Equal(t, ialt-2, parsed.GetAlteration())
-				assert.Equal(t, oct, parsed.GetOctave())
+					assert.Equal(t, istep+1, parsed.GetStep())
+					assert.Equal(t, ialt-2, parsed.GetAlteration())
+					assert.Equal(t, oct, parsed.GetOctave())
+				})
 			}
 		}
 	}
