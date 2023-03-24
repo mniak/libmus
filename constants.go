@@ -10,8 +10,4 @@ const (
 	DOUBLE_SHARP_SYMBOL = '𝄪'
 )
 
-var SUPERSCRIPT_OCTAVES = []string{
-	"\x2070", "\x00B9", "\x00B2", "\x00B3",
-	"\x2074", "\x2075", "\x2076", "\x2077",
-	"\x2078", "\x2079", "\x00B9\x2070",
-}
+var SUPERSCRIPT_OCTAVES = []string{"⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹", "¹⁰"}
