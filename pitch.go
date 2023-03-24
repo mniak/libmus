@@ -10,11 +10,11 @@ const (
 	MAX_OCTAVE = 10
 )
 
-var octaveDistribution []int
+var octaves []int
 
 func init() {
 	for i := MIN_OCTAVE; i <= MAX_OCTAVE; i++ {
-		octaveDistribution = append(octaveDistribution, i)
+		octaves = append(octaves, i)
 	}
 }
 
@@ -67,14 +67,14 @@ func ParsePitch(text string) Pitch {
 func RandomPitch() Pitch {
 	pitch := Pitch{}
 	pitch.pitchClass = RandomPitchClass()
-	pitch.octave = generateRandom(octaveDistribution)
+	pitch.octave = generateRandom(octaves)
 	return pitch
 }
 
 func ExtendedRandomPitch() Pitch {
 	pitch := Pitch{}
 	pitch.pitchClass = ExtendedRandomPitchClass()
-	pitch.octave = generateRandom(octaveDistribution)
+	pitch.octave = generateRandom(octaves)
 	return pitch
 }
 

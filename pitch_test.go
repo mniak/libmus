@@ -9,7 +9,7 @@ import (
 )
 
 func TestPitch_Assert_initial_values_from_constructor_are_being_set(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 
 	assert.Equal(t, 1, pitch.GetStep())
 	assert.Equal(t, 0, pitch.GetAlteration())
@@ -17,7 +17,7 @@ func TestPitch_Assert_initial_values_from_constructor_are_being_set(t *testing.T
 }
 
 func TestPitch_Step_Normal_values_should_work(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 
 	pitch.SetStep(1)
 	assert.Equal(t, 1, pitch.GetStep())
@@ -42,7 +42,7 @@ func TestPitch_Step_Normal_values_should_work(t *testing.T) {
 }
 
 func TestPitch_Step_Bigger_values_should_be_normalized(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 
 	pitch.SetStep(8)
 	assert.Equal(t, 1, pitch.GetStep())
@@ -70,7 +70,7 @@ func TestPitch_Step_Bigger_values_should_be_normalized(t *testing.T) {
 }
 
 func TestPitch_Step_Zero_or_negative_values_should_do_nothing(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 
 	for goodValue := 1; goodValue <= 6; goodValue++ {
 		for badValue := -1; badValue >= -20; badValue-- {
@@ -82,7 +82,7 @@ func TestPitch_Step_Zero_or_negative_values_should_do_nothing(t *testing.T) {
 }
 
 func TestPitch_Alteration_When_value_is_in_range_store_the_same(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 
 	pitch.SetAlteration(-2)
 	assert.Equal(t, -2, pitch.GetAlteration())
@@ -101,7 +101,7 @@ func TestPitch_Alteration_When_value_is_in_range_store_the_same(t *testing.T) {
 }
 
 func TestPitch_Alteration_When_value_is_smaller_than_limit_keep_min_value(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 
 	for v := -12; v <= -2; v++ {
 		pitch.SetAlteration(0)
@@ -111,7 +111,7 @@ func TestPitch_Alteration_When_value_is_smaller_than_limit_keep_min_value(t *tes
 }
 
 func TestPitch_Alteration_When_value_is_greater_than_limit_keep_max_value(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 
 	for v := 2; v <= 12; v++ {
 		pitch.SetAlteration(0)
@@ -121,7 +121,7 @@ func TestPitch_Alteration_When_value_is_greater_than_limit_keep_max_value(t *tes
 }
 
 func TestPitch_Octave_When_value_is_in_range_store_the_same(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 	for v := 0; v <= 10; v++ {
 		pitch.SetOctave(v)
 		assert.Equal(t, v, pitch.GetOctave())
@@ -129,7 +129,7 @@ func TestPitch_Octave_When_value_is_in_range_store_the_same(t *testing.T) {
 }
 
 func TestPitch_Octave_When_value_is_smaller_than_limit_keep_min_value(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 
 	for v := -12; v <= 0; v++ {
 		pitch.SetOctave(0)
@@ -139,7 +139,7 @@ func TestPitch_Octave_When_value_is_smaller_than_limit_keep_min_value(t *testing
 }
 
 func TestPitch_Octave_When_value_is_greater_than_limit_keep_max_value(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 
 	for v := 10; v <= 25; v++ {
 		pitch.SetOctave(0)
@@ -168,7 +168,8 @@ func TestPitch_Random_Alterations_should_never_be_double(t *testing.T) {
 	for i := -1; i <= 1; i++ {
 		assert.True(t, alterations[i])
 	}
-	for v := range []int{-2, 2} {
+	fmt.Println(alterations)
+	for _, v := range []int{-2, 2} {
 		assert.False(t, alterations[v])
 	}
 }
@@ -218,7 +219,7 @@ func TestPitch_ExtendedRandom_Octaves_should_have_a_good_distribution(t *testing
 }
 
 func TestPitch_SimpleName_Without_alterations(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 	pitch.SetAlteration(0)
 	names := []string{"C?", "D?", "E?", "F?", "G?", "A?", "B?"}
 	for o := 0; o <= 10; o++ {
@@ -233,7 +234,7 @@ func TestPitch_SimpleName_Without_alterations(t *testing.T) {
 }
 
 func TestPitch_SimpleName_With_1_flat(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 	pitch.SetAlteration(-1)
 	names := []string{"Cb?", "Db?", "Eb?", "Fb?", "Gb?", "Ab?", "Bb?"}
 	for o := 0; o <= 10; o++ {
@@ -248,7 +249,7 @@ func TestPitch_SimpleName_With_1_flat(t *testing.T) {
 }
 
 func TestPitch_SimpleName_With_2_flats(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 	pitch.SetAlteration(-2)
 	names := []string{"Cbb?", "Dbb?", "Ebb?", "Fbb?", "Gbb?", "Abb?", "Bbb?"}
 	for o := 0; o <= 10; o++ {
@@ -263,7 +264,7 @@ func TestPitch_SimpleName_With_2_flats(t *testing.T) {
 }
 
 func TestPitch_SimpleName_With_1_sharp(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 	pitch.SetAlteration(1)
 	names := []string{"C#?", "D#?", "E#?", "F#?", "G#?", "A#?", "B#?"}
 	for o := 0; o <= 10; o++ {
@@ -278,7 +279,7 @@ func TestPitch_SimpleName_With_1_sharp(t *testing.T) {
 }
 
 func TestPitch_SimpleName_With_2_sharps(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 	pitch.SetAlteration(2)
 	names := []string{"C##?", "D##?", "E##?", "F##?", "G##?", "A##?", "B##?"}
 	for o := 0; o <= 10; o++ {
@@ -295,7 +296,7 @@ func TestPitch_SimpleName_With_2_sharps(t *testing.T) {
 var superscripts = []string{"⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹", "¹⁰"}
 
 func TestPitch_PrettyName_Without_alterations(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 	pitch.SetAlteration(0)
 	names := []string{"C?", "D?", "E?", "F?", "G?", "A?", "B?"}
 	for o := 0; o <= 10; o++ {
@@ -310,7 +311,7 @@ func TestPitch_PrettyName_Without_alterations(t *testing.T) {
 }
 
 func TestPitch_PrettyName_With_1_flat(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 	pitch.SetAlteration(-1)
 	names := []string{"C♭?", "D♭?", "E♭?", "F♭?", "G♭?", "A♭?", "B♭?"}
 	for o := 0; o <= 10; o++ {
@@ -325,7 +326,7 @@ func TestPitch_PrettyName_With_1_flat(t *testing.T) {
 }
 
 func TestPitch_PrettyName_With_2_flats(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 	pitch.SetAlteration(-2)
 	names := []string{"C𝄫?", "D𝄫?", "E𝄫?", "F𝄫?", "G𝄫?", "A𝄫?", "B𝄫?"}
 	for o := 0; o <= 10; o++ {
@@ -340,7 +341,7 @@ func TestPitch_PrettyName_With_2_flats(t *testing.T) {
 }
 
 func TestPitch_PrettyName_With_1_sharp(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 	pitch.SetAlteration(1)
 	names := []string{"C♯?", "D♯?", "E♯?", "F♯?", "G♯?", "A♯?", "B♯?"}
 	for o := 0; o <= 10; o++ {
@@ -355,7 +356,7 @@ func TestPitch_PrettyName_With_1_sharp(t *testing.T) {
 }
 
 func TestPitch_PrettyName_With_2_sharps(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 	pitch.SetAlteration(2)
 	names := []string{"C𝄪?", "D𝄪?", "E𝄪?", "F𝄪?", "G𝄪?", "A𝄪?", "B𝄪?"}
 	for o := 0; o <= 10; o++ {
@@ -370,7 +371,7 @@ func TestPitch_PrettyName_With_2_sharps(t *testing.T) {
 }
 
 func TestPitch_FullName_Without_alterations(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 	pitch.SetAlteration(0)
 	names := []string{"C ?", "D ?", "E ?", "F ?", "G ?", "A ?", "B ?"}
 	for i := 1; i <= 7; i++ {
@@ -382,7 +383,7 @@ func TestPitch_FullName_Without_alterations(t *testing.T) {
 }
 
 func TestPitch_FullName_With_1_flat(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 	pitch.SetAlteration(-1)
 	names := []string{
 		"C flat ?", "D flat ?", "E flat ?", "F flat ?",
@@ -397,7 +398,7 @@ func TestPitch_FullName_With_1_flat(t *testing.T) {
 }
 
 func TestPitch_FullName_With_2_flats(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 	pitch.SetAlteration(-2)
 	names := []string{
 		"C double flat ?", "D double flat ?", "E double flat ?", "F double flat ?",
@@ -412,7 +413,7 @@ func TestPitch_FullName_With_2_flats(t *testing.T) {
 }
 
 func TestPitch_FullName_With_1_sharp(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 	pitch.SetAlteration(1)
 	names := []string{
 		"C sharp ?", "D sharp ?", "E sharp ?", "F sharp ?",
@@ -427,7 +428,7 @@ func TestPitch_FullName_With_1_sharp(t *testing.T) {
 }
 
 func TestPitch_FullName_With_2_sharps(t *testing.T) {
-	pitch := Pitch{}
+	pitch := NewPitch()
 	pitch.SetAlteration(2)
 	names := []string{
 		"C double sharp ?", "D double sharp ?", "E double sharp ?", "F double sharp ?",
