@@ -28,24 +28,9 @@ const (
 	AlterationDoubleSharp Alteration = 2
 )
 
-const (
-	MIN_STEP             = StepC
-	MAX_STEP             = StepB
-	MIN_USUAL_ALTERATION = AlterationFlat
-	MAX_USUAL_ALTERATION = AlterationSharp
-	MIN_ALTERATION       = AlterationDoubleFlat
-	MAX_ALTERATION       = AlterationDoubleSharp
-)
-
 type PitchClass struct {
 	step       Step
 	alteration Alteration
-}
-
-func PitchClassC() PitchClass {
-	return PitchClass{
-		step: StepC,
-	}
 }
 
 func NewPitchClass() PitchClass {
@@ -55,58 +40,24 @@ func NewPitchClass() PitchClass {
 	}
 }
 
-func (pc *PitchClass) GetStep() Step {
+func (pc PitchClass) GetStep() Step {
 	return pc.step
 }
 
 func (pc *PitchClass) SetStep(value Step) {
-	if value < MIN_STEP {
+	if value < StepC {
 		return
 	}
 
-	pc.step = (value-MIN_STEP)%(MAX_STEP-MIN_STEP+1) + MIN_STEP
+	pc.step = (value-StepC)%(StepB-StepC+1) + StepC
 }
 
-func (pc *PitchClass) GetAlteration() Alteration {
+func (pc PitchClass) GetAlteration() Alteration {
 	return pc.alteration
 }
 
 func (pc *PitchClass) SetAlteration(value Alteration) {
-	pc.alteration = Alteration(truncateRange(int(value), int(MIN_ALTERATION), int(MAX_ALTERATION)))
-}
-
-var (
-	usualAlterations []Alteration
-	alterations      []Alteration
-	steps            []Step
-)
-
-func init() {
-	for i := MIN_USUAL_ALTERATION; i <= MAX_USUAL_ALTERATION; i++ {
-		usualAlterations = append(usualAlterations, i)
-	}
-
-	for i := MIN_ALTERATION; i <= MAX_ALTERATION; i++ {
-		alterations = append(alterations, i)
-	}
-
-	for i := MIN_STEP; i <= MAX_STEP; i++ {
-		steps = append(steps, i)
-	}
-}
-
-func RandomPitchClass() PitchClass {
-	var pc PitchClass
-	pc.SetStep(generateRandom(steps))
-	pc.SetAlteration(generateRandom(usualAlterations))
-	return pc
-}
-
-func ExtendedRandomPitchClass() PitchClass {
-	var pc PitchClass
-	pc.SetStep(generateRandom(steps))
-	pc.SetAlteration(generateRandom(alterations))
-	return pc
+	pc.alteration = Alteration(truncateRange(value, AlterationDoubleFlat, AlterationDoubleSharp))
 }
 
 var regexParsePitchClass = regexp.MustCompile(fmt.Sprintf(
@@ -153,7 +104,7 @@ func ParsePitchClass(text string) PitchClass {
 	return newpc
 }
 
-func (pc *PitchClass) Name() string {
+func (pc PitchClass) Name() string {
 	result := NAMES[pc.step-1]
 	for i := AlterationSharp; i <= pc.alteration; i++ {
 		result = result + "#"
@@ -164,7 +115,7 @@ func (pc *PitchClass) Name() string {
 	return result
 }
 
-func (pc *PitchClass) PrettyName() string {
+func (pc PitchClass) PrettyName() string {
 	result := NAMES[pc.step-1]
 	switch pc.alteration {
 	case -2:
@@ -179,7 +130,7 @@ func (pc *PitchClass) PrettyName() string {
 	return result
 }
 
-func (pc *PitchClass) FullName() string {
+func (pc PitchClass) FullName() string {
 	name := NAMES[pc.step-1]
 	switch pc.alteration {
 	case -2:
@@ -192,5 +143,33 @@ func (pc *PitchClass) FullName() string {
 		return name + " double sharp"
 	default:
 		return name
+	}
+}
+
+func (pc PitchClass) OnOctave(octave int) Pitch {
+	return Pitch{
+		pitchClass: pc,
+		octave:     octave,
+	}
+}
+
+func (pc PitchClass) Number() int {
+	switch pc.step {
+	default:
+		fallthrough
+	case StepC:
+		return 0
+	case StepD:
+		return 2
+	case StepE:
+		return 4
+	case StepF:
+		return 5
+	case StepG:
+		return 7
+	case StepA:
+		return 9
+	case StepB:
+		return 11
 	}
 }

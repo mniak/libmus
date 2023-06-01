@@ -2,7 +2,7 @@ package libmus
 
 import "math/rand"
 
-func truncateRange(value, min, max int) int {
+func truncateRange[T ~int](value, min, max T) T {
 	if value >= max {
 		return max
 	}
