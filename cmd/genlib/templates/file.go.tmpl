@@ -1,0 +1,15 @@
+//go:build clib
+package {{ .PackageName }}
+
+import (
+	"runtime/cgo"
+
+	{{ printf "%q" .LibraryPackage }}
+)
+
+// typedef void* {{ .Struct.Name }};
+import "C"
+
+{{ range .Functions -}}
+{{ template "function.tmpl" . }}
+{{ end -}}
