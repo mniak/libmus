@@ -36,7 +36,7 @@ func ParsePitch(text string) Pitch {
 
 	for iname, name := range NAMES {
 		if name == string(head) {
-			pitch.pitchClass.SetStep(iname + 1)
+			pitch.pitchClass.SetStep(Step(iname + 1))
 			break
 		}
 	}
@@ -77,19 +77,19 @@ func ExtendedRandomPitch() Pitch {
 	return pitch
 }
 
-func (p *Pitch) GetStep() int {
+func (p *Pitch) GetStep() Step {
 	return p.pitchClass.GetStep()
 }
 
-func (p *Pitch) SetStep(value int) {
+func (p *Pitch) SetStep(value Step) {
 	p.pitchClass.SetStep(value)
 }
 
-func (p *Pitch) GetAlteration() int {
+func (p *Pitch) GetAlteration() Alteration {
 	return p.pitchClass.GetAlteration()
 }
 
-func (p *Pitch) SetAlteration(value int) {
+func (p *Pitch) SetAlteration(value Alteration) {
 	p.pitchClass.SetAlteration(value)
 }
 

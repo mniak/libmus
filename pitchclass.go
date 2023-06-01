@@ -6,32 +6,60 @@ import (
 	"strings"
 )
 
+type Step int
+
 const (
-	MIN_STEP             = 1
-	MAX_STEP             = 7
-	MIN_USUAL_ALTERATION = -1
-	MAX_USUAL_ALTERATION = 1
-	MIN_ALTERATION       = -2
-	MAX_ALTERATION       = 2
+	StepC Step = 1
+	StepD Step = 2
+	StepE Step = 3
+	StepF Step = 4
+	StepG Step = 5
+	StepA Step = 6
+	StepB Step = 7
+)
+
+type Alteration int
+
+const (
+	AlterationDoubleFlat  Alteration = -2
+	AlterationFlat        Alteration = -1
+	AlterationNatural     Alteration = 0
+	AlterationSharp       Alteration = 1
+	AlterationDoubleSharp Alteration = 2
+)
+
+const (
+	MIN_STEP             = StepC
+	MAX_STEP             = StepB
+	MIN_USUAL_ALTERATION = AlterationFlat
+	MAX_USUAL_ALTERATION = AlterationSharp
+	MIN_ALTERATION       = AlterationDoubleFlat
+	MAX_ALTERATION       = AlterationDoubleSharp
 )
 
 type PitchClass struct {
-	step       int
-	alteration int
+	step       Step
+	alteration Alteration
+}
+
+func PitchClassC() PitchClass {
+	return PitchClass{
+		step: StepC,
+	}
 }
 
 func NewPitchClass() PitchClass {
 	return PitchClass{
-		step:       1,
-		alteration: 0,
+		step:       StepC,
+		alteration: AlterationNatural,
 	}
 }
 
-func (pc *PitchClass) GetStep() int {
+func (pc *PitchClass) GetStep() Step {
 	return pc.step
 }
 
-func (pc *PitchClass) SetStep(value int) {
+func (pc *PitchClass) SetStep(value Step) {
 	if value < MIN_STEP {
 		return
 	}
@@ -39,18 +67,18 @@ func (pc *PitchClass) SetStep(value int) {
 	pc.step = (value-MIN_STEP)%(MAX_STEP-MIN_STEP+1) + MIN_STEP
 }
 
-func (pc *PitchClass) GetAlteration() int {
+func (pc *PitchClass) GetAlteration() Alteration {
 	return pc.alteration
 }
 
-func (pc *PitchClass) SetAlteration(value int) {
-	pc.alteration = truncateRange(value, MIN_ALTERATION, MAX_ALTERATION)
+func (pc *PitchClass) SetAlteration(value Alteration) {
+	pc.alteration = Alteration(truncateRange(int(value), int(MIN_ALTERATION), int(MAX_ALTERATION)))
 }
 
 var (
-	usualAlterations []int
-	alterations      []int
-	steps            []int
+	usualAlterations []Alteration
+	alterations      []Alteration
+	steps            []Step
 )
 
 func init() {
@@ -93,7 +121,7 @@ func ParsePitchClass(text string) PitchClass {
 
 	for iname, name := range NAMES {
 		if name == head {
-			newpc.step = iname + 1
+			newpc.step = Step(iname + 1)
 			break
 		}
 	}
@@ -127,10 +155,10 @@ func ParsePitchClass(text string) PitchClass {
 
 func (pc *PitchClass) Name() string {
 	result := NAMES[pc.step-1]
-	for i := 1; i <= pc.alteration; i++ {
+	for i := AlterationSharp; i <= pc.alteration; i++ {
 		result = result + "#"
 	}
-	for i := -1; i >= pc.alteration; i-- {
+	for i := AlterationFlat; i >= pc.alteration; i-- {
 		result = result + "b"
 	}
 	return result
