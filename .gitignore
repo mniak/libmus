@@ -1,1 +1,5 @@
-__debug_bin
+/target
+
+**/.vs/
+extern/c/libmus.h
+extern/cpp/libmus.hpp
