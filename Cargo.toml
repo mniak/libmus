@@ -1,3 +1,12 @@
-[workspace]
+[package]
+name = "libmus"
+version = "0.1.0"
+edition = "2021"
 
-members = ["libmus", "libmusc"]
+[build-dependencies]
+cbindgen = "0.24.0"
+
+[lib]
+crate-type = ["staticlib"]
+
+[dependencies]
