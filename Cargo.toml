@@ -7,6 +7,6 @@ edition = "2021"
 cbindgen = "0.24.0"
 
 [lib]
-crate-type = ["staticlib"]
+crate-type = ["dylib"]
 
 [dependencies]
