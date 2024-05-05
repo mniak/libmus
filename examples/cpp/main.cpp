@@ -5,9 +5,9 @@ using namespace std;
 
 int main()
 {
-    int a = 3;
-    int b = 5;
-    int c = add(a, b);
-    cout << "Math: " << a << " + " << b << " = " << c << endl;
+    auto p = PitchStep::C;
+    auto pname = PitchStep_ToString(p);
+    auto pnum = int(PitchStep_ToNumber(p));
+    cout << "The pitch " << pname << " has value " << pnum << endl;
     return 0;
 }

@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "*.pd_lua": "lua",
+        "dot_bashrc": "shellscript",
+        "iostream": "cpp",
+        "ostream": "cpp",
+        "stdarg.h": "c"
+    }
+}

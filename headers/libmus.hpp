@@ -16,10 +16,6 @@ enum class PitchStep {
 
 extern "C" {
 
-uintptr_t add(uintptr_t left, uintptr_t right);
-
-uintptr_t add9(uintptr_t left, uintptr_t right);
-
 uint8_t PitchStep_ToNumber(PitchStep step);
 
 const char *PitchStep_ToString(PitchStep step);

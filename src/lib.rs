@@ -1,20 +1,8 @@
-fn add(left: usize, right: usize) -> usize {
-    left + right
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+#![allow(dead_code)]
+pub mod libmusc;
 
 #[repr(C)]
-enum PitchStep {
+pub enum PitchStep {
     C,
     D,
     E,
@@ -49,30 +37,116 @@ impl PitchStep {
     }
 }
 
-mod libmusc {
+#[repr(C)]
+pub enum Alteration {
+    DoubleFlat,
+    Flat,
+    Natural,
+    Sharp,
+    DoubleSharp,
+}
 
-    use crate::*;
-    use std::ffi::{c_char, CString};
+#[repr(C)]
+pub struct PitchClass {
+    step: PitchStep,
+    alteration: Alteration,
+}
 
-    #[no_mangle]
-    pub extern "C" fn add(left: usize, right: usize) -> usize {
-        left + right
+#[repr(C)]
+pub struct Pitch {
+    class: PitchClass,
+    octave: u8,
+}
+
+#[repr(C)]
+pub enum PerfectableIntervalSize {
+    Unison,
+    Fourth,
+    Fifth,
+    Octave,
+}
+impl PerfectableIntervalSize {
+    fn invert(&self) -> PerfectableIntervalSize {
+        match self {
+            Self::Unison => Self::Octave,
+            Self::Fourth => Self::Fifth,
+            Self::Fifth => Self::Fourth,
+            Self::Octave => Self::Unison,
+        }
     }
+}
 
-    #[no_mangle]
-    pub extern "C" fn add9(left: usize, right: usize) -> usize {
-        left + right
+#[repr(C)]
+pub enum MajorableIntervalSize {
+    Second,
+    Third,
+    Sixth,
+    Seventh,
+}
+impl MajorableIntervalSize {
+    fn invert(&self) -> MajorableIntervalSize {
+        match self {
+            Self::Second => Self::Seventh,
+            Self::Third => Self::Sixth,
+            Self::Sixth => Self::Third,
+            Self::Seventh => Self::Second,
+        }
     }
+}
 
-    #[no_mangle]
-    pub extern "C" fn PitchStep_ToNumber(step: PitchStep) -> u8 {
-        return step.to_number();
+#[repr(C)]
+pub enum PerfectableIntervalQuality {
+    Diminished,
+    Perfect,
+    Augmented,
+}
+impl PerfectableIntervalQuality {
+    fn invert(&self) -> PerfectableIntervalQuality {
+        match self {
+            Self::Augmented => Self::Diminished,
+            Self::Diminished => Self::Augmented,
+            Self::Perfect => Self::Perfect,
+        }
     }
+}
 
-    #[no_mangle]
-    pub extern "C" fn PitchStep_ToString(step: PitchStep) -> *const c_char{
-        let s1 = step.to_string();
-        let s2 = CString::new(s1).unwrap();
-        return s2.into_raw();
+#[repr(C)]
+pub enum MajorableIntervalQuality {
+    Major,
+    Minor,
+}
+impl MajorableIntervalQuality {
+    fn invert(&self) -> MajorableIntervalQuality {
+        match self {
+            Self::Major => Self::Minor,
+            Self::Minor => Self::Major,
+        }
+    }
+}
+
+#[repr(C)]
+pub enum Interval {
+    Perfectable {
+        size: PerfectableIntervalSize,
+        quality: PerfectableIntervalQuality,
+    },
+    Majorable {
+        size: MajorableIntervalSize,
+        quality: MajorableIntervalQuality,
+    },
+}
+
+impl Interval {
+    fn invert(&self) -> Interval {
+        match self {
+            Self::Perfectable { size, quality } => Self::Perfectable {
+                size: size.invert(),
+                quality: quality.invert(),
+            },
+            Self::Majorable { size, quality } => Self::Majorable {
+                size: size.invert(),
+                quality: quality.invert(),
+            },
+        }
     }
 }

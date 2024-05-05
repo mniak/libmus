@@ -1,5 +1,9 @@
 @echo off
 
 REM Compile and Link
-REM You need to compile the libmusc using 'cargo build --release' first
-cl main.c /I../../headers /link /LIBPATH:../../target/release libmusc.lib
+REM You need to compile the libmus using 'cargo build --release' first
+SET NATIVE_STATIC_LIBS=advapi32.lib bcrypt.lib kernel32.lib msvcrt.lib ntdll.lib userenv.lib ws2_32.lib
+cl main.c libmus.lib ^
+   /MD ^
+   /I../../headers ^
+   /link /LIBPATH:../../target/release %NATIVE_STATIC_LIBS%
