@@ -77,7 +77,11 @@ func ExtendedRandomPitch() Pitch {
 	return pitch
 }
 
-func (p Pitch) GetStep() Step {
+func (p Pitch) String() string {
+	return p.Name()
+}
+
+func (p *Pitch) GetStep() Step {
 	return p.pitchClass.GetStep()
 }
 
@@ -85,7 +89,7 @@ func (p *Pitch) SetStep(value Step) {
 	p.pitchClass.SetStep(value)
 }
 
-func (p Pitch) GetAlteration() Alteration {
+func (p *Pitch) GetAlteration() Alteration {
 	return p.pitchClass.GetAlteration()
 }
 
@@ -93,7 +97,7 @@ func (p *Pitch) SetAlteration(value Alteration) {
 	p.pitchClass.SetAlteration(value)
 }
 
-func (p Pitch) GetOctave() int {
+func (p *Pitch) GetOctave() int {
 	return p.octave
 }
 
@@ -101,22 +105,26 @@ func (p *Pitch) SetOctave(value int) {
 	p.octave = truncateRange(value, MIN_OCTAVE, MAX_OCTAVE)
 }
 
-func (p Pitch) Name() string {
+func (p *Pitch) Name() string {
 	octaveString := fmt.Sprint(p.octave)
 	return p.pitchClass.Name() + octaveString
 }
 
-func (p Pitch) PrettyName() string {
+func (p *Pitch) PrettyName() string {
 	oct := SUPERSCRIPT_OCTAVES[p.octave]
 	return p.pitchClass.PrettyName() + oct
 }
 
-func (p Pitch) FullName() string {
+func (p *Pitch) FullName() string {
 	octaveString := fmt.Sprint(p.octave)
 	return p.pitchClass.FullName() + " " + octaveString
 }
 
-func (p Pitch) MIDINote() int {
+func (p *Pitch) MIDINote() int {
 	note := p.pitchClass.Number() + 12*p.octave
 	return note
+}
+
+func (p *Pitch) Class() PitchClass {
+	return p.pitchClass
 }

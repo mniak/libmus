@@ -6,18 +6,6 @@ import (
 	"strings"
 )
 
-type Step int
-
-const (
-	StepC Step = 1
-	StepD Step = 2
-	StepE Step = 3
-	StepF Step = 4
-	StepG Step = 5
-	StepA Step = 6
-	StepB Step = 7
-)
-
 type Alteration int
 
 const (
@@ -40,7 +28,7 @@ func NewPitchClass() PitchClass {
 	}
 }
 
-func (pc PitchClass) GetStep() Step {
+func (pc *PitchClass) GetStep() Step {
 	return pc.step
 }
 
@@ -52,7 +40,7 @@ func (pc *PitchClass) SetStep(value Step) {
 	pc.step = (value-StepC)%(StepB-StepC+1) + StepC
 }
 
-func (pc PitchClass) GetAlteration() Alteration {
+func (pc *PitchClass) GetAlteration() Alteration {
 	return pc.alteration
 }
 
@@ -104,8 +92,12 @@ func ParsePitchClass(text string) PitchClass {
 	return newpc
 }
 
-func (pc PitchClass) Name() string {
-	result := NAMES[pc.step-1]
+func (pc PitchClass) String() string {
+	return pc.Name()
+}
+
+func (pc *PitchClass) Name() string {
+	result := NAMES[pc.step]
 	for i := AlterationSharp; i <= pc.alteration; i++ {
 		result = result + "#"
 	}
@@ -115,8 +107,8 @@ func (pc PitchClass) Name() string {
 	return result
 }
 
-func (pc PitchClass) PrettyName() string {
-	result := NAMES[pc.step-1]
+func (pc *PitchClass) PrettyName() string {
+	result := NAMES[pc.step]
 	switch pc.alteration {
 	case -2:
 		return result + string(DOUBLE_FLAT_SYMBOL)
@@ -130,8 +122,8 @@ func (pc PitchClass) PrettyName() string {
 	return result
 }
 
-func (pc PitchClass) FullName() string {
-	name := NAMES[pc.step-1]
+func (pc *PitchClass) FullName() string {
+	name := NAMES[pc.step]
 	switch pc.alteration {
 	case -2:
 		return name + " double flat"
@@ -146,14 +138,14 @@ func (pc PitchClass) FullName() string {
 	}
 }
 
-func (pc PitchClass) OnOctave(octave int) Pitch {
+func (pc *PitchClass) OnOctave(octave int) Pitch {
 	return Pitch{
-		pitchClass: pc,
+		pitchClass: *pc,
 		octave:     octave,
 	}
 }
 
-func (pc PitchClass) Number() int {
+func (pc *PitchClass) Number() int {
 	switch pc.step {
 	default:
 		fallthrough
@@ -172,4 +164,24 @@ func (pc PitchClass) Number() int {
 	case StepB:
 		return 11
 	}
+}
+
+func (pc PitchClass) Next() PitchClass {
+	if pc.alteration < 0 {
+		pc.alteration++
+		return pc
+	}
+	if pc.step == StepB || pc.step == StepE {
+		pc.step = pc.step.Next()
+		return pc
+	}
+	if pc.alteration == 0 {
+		pc.alteration++
+		return pc
+	}
+	if pc.alteration > 0 {
+		pc.step = pc.step.Next()
+		pc.alteration--
+	}
+	return pc
 }

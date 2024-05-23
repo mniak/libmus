@@ -1,8 +1,29 @@
 package libmus
 
+func PitchClassCFlat() PitchClass {
+	return PitchClass{
+		step:       StepC,
+		alteration: AlterationFlat,
+	}
+}
+
 func PitchClassC() PitchClass {
 	return PitchClass{
 		step: StepC,
+	}
+}
+
+func PitchClassCSharp() PitchClass {
+	return PitchClass{
+		step:       StepC,
+		alteration: AlterationSharp,
+	}
+}
+
+func PitchClassDFlat() PitchClass {
+	return PitchClass{
+		step:       StepD,
+		alteration: AlterationFlat,
 	}
 }
 
@@ -12,9 +33,37 @@ func PitchClassD() PitchClass {
 	}
 }
 
+func PitchClassDSharp() PitchClass {
+	return PitchClass{
+		step:       StepD,
+		alteration: AlterationSharp,
+	}
+}
+
+func PitchClassEFlat() PitchClass {
+	return PitchClass{
+		step:       StepE,
+		alteration: AlterationFlat,
+	}
+}
+
 func PitchClassE() PitchClass {
 	return PitchClass{
 		step: StepE,
+	}
+}
+
+func PitchClassESharp() PitchClass {
+	return PitchClass{
+		step:       StepE,
+		alteration: AlterationSharp,
+	}
+}
+
+func PitchClassFFlat() PitchClass {
+	return PitchClass{
+		step:       StepF,
+		alteration: AlterationFlat,
 	}
 }
 
@@ -24,9 +73,37 @@ func PitchClassF() PitchClass {
 	}
 }
 
+func PitchClassFSharp() PitchClass {
+	return PitchClass{
+		step:       StepF,
+		alteration: AlterationSharp,
+	}
+}
+
+func PitchClassGFlat() PitchClass {
+	return PitchClass{
+		step:       StepG,
+		alteration: AlterationFlat,
+	}
+}
+
 func PitchClassG() PitchClass {
 	return PitchClass{
 		step: StepG,
+	}
+}
+
+func PitchClassGSharp() PitchClass {
+	return PitchClass{
+		step:       StepG,
+		alteration: AlterationSharp,
+	}
+}
+
+func PitchClassAFlat() PitchClass {
+	return PitchClass{
+		step:       StepA,
+		alteration: AlterationFlat,
 	}
 }
 
@@ -36,9 +113,30 @@ func PitchClassA() PitchClass {
 	}
 }
 
+func PitchClassASharp() PitchClass {
+	return PitchClass{
+		step:       StepA,
+		alteration: AlterationSharp,
+	}
+}
+
+func PitchClassBFlat() PitchClass {
+	return PitchClass{
+		step:       StepB,
+		alteration: AlterationFlat,
+	}
+}
+
 func PitchClassB() PitchClass {
 	return PitchClass{
 		step: StepB,
+	}
+}
+
+func PitchClassBSharp() PitchClass {
+	return PitchClass{
+		step:       StepB,
+		alteration: AlterationSharp,
 	}
 }
 

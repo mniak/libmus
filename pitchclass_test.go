@@ -401,3 +401,73 @@ func TestPitchClass_Parse(t *testing.T) {
 		}
 	})
 }
+
+func TestPitchClass_Next(t *testing.T) {
+	testCases := []struct {
+		pitchClass PitchClass
+		next       PitchClass
+	}{
+		{
+			pitchClass: PitchClassC(),
+			next:       PitchClassCSharp(),
+		},
+		{
+			pitchClass: PitchClassCSharp(),
+			next:       PitchClassD(),
+		},
+		{
+			pitchClass: PitchClassD(),
+			next:       PitchClassDSharp(),
+		},
+		{
+			pitchClass: PitchClassDSharp(),
+			next:       PitchClassE(),
+		},
+		{
+			pitchClass: PitchClassE(),
+			next:       PitchClassF(),
+		},
+		{
+			pitchClass: PitchClassESharp(),
+			next:       PitchClassFSharp(),
+		},
+		{
+			pitchClass: PitchClassF(),
+			next:       PitchClassFSharp(),
+		},
+		{
+			pitchClass: PitchClassFSharp(),
+			next:       PitchClassG(),
+		},
+		{
+			pitchClass: PitchClassG(),
+			next:       PitchClassGSharp(),
+		},
+		{
+			pitchClass: PitchClassGSharp(),
+			next:       PitchClassA(),
+		},
+		{
+			pitchClass: PitchClassA(),
+			next:       PitchClassASharp(),
+		},
+		{
+			pitchClass: PitchClassASharp(),
+			next:       PitchClassB(),
+		},
+		{
+			pitchClass: PitchClassB(),
+			next:       PitchClassC(),
+		},
+		{
+			pitchClass: PitchClassBSharp(),
+			next:       PitchClassCSharp(),
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(fmt.Sprintf("%s->%s", tc.pitchClass, tc.next), func(t *testing.T) {
+			next := tc.pitchClass.Next()
+			assert.Equal(t, tc.next.Name(), next.Name())
+		})
+	}
+}
