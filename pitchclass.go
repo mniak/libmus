@@ -58,7 +58,7 @@ func ParsePitchClass(text string) PitchClass {
 	head := text[0:1]
 	tail := text[1:]
 
-	for iname, name := range NAMES {
+	for iname, name := range STEP_NAMES {
 		if name == head {
 			newpc.step = Step(iname + 1)
 			break
@@ -97,7 +97,7 @@ func (pc PitchClass) String() string {
 }
 
 func (pc *PitchClass) Name() string {
-	result := NAMES[pc.step]
+	result := pc.step.Name()
 	for i := AlterationSharp; i <= pc.alteration; i++ {
 		result = result + "#"
 	}
@@ -108,7 +108,7 @@ func (pc *PitchClass) Name() string {
 }
 
 func (pc *PitchClass) PrettyName() string {
-	result := NAMES[pc.step]
+	result := pc.step.Name()
 	switch pc.alteration {
 	case -2:
 		return result + string(DOUBLE_FLAT_SYMBOL)
@@ -123,7 +123,7 @@ func (pc *PitchClass) PrettyName() string {
 }
 
 func (pc *PitchClass) FullName() string {
-	name := NAMES[pc.step]
+	name := pc.step.Name()
 	switch pc.alteration {
 	case -2:
 		return name + " double flat"
@@ -182,6 +182,26 @@ func (pc PitchClass) Next() PitchClass {
 	if pc.alteration > 0 {
 		pc.step = pc.step.Next()
 		pc.alteration--
+	}
+	return pc
+}
+
+func (pc PitchClass) Previous() PitchClass {
+	if pc.alteration > 0 {
+		pc.alteration--
+		return pc
+	}
+	if pc.step == StepC || pc.step == StepF {
+		pc.step = pc.step.Previous()
+		return pc
+	}
+	if pc.alteration == 0 {
+		pc.alteration--
+		return pc
+	}
+	if pc.alteration < 0 {
+		pc.step = pc.step.Previous()
+		pc.alteration++
 	}
 	return pc
 }

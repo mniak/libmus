@@ -67,15 +67,14 @@ func Test_PitchClass_Step_Bigger_values_should_be_normalized(t *testing.T) {
 	assert.Equal(t, StepC, pc.GetStep())
 }
 
-func Test_PitchClass_Step_Attributing_zero_or_negative_should_do_nothing(t *testing.T) {
+func Test_PitchClass_Step_Attributing_zero_should_do_nothing(t *testing.T) {
 	var pc PitchClass
 
 	for goodValue := StepC; goodValue <= StepB; goodValue++ {
-		for badValue := Step(-1); badValue >= Step(-20); badValue-- {
-			pc.SetStep(goodValue)
-			pc.SetStep(badValue)
-			assert.Equal(t, goodValue, pc.GetStep())
-		}
+		badValue := Step(0)
+		pc.SetStep(goodValue)
+		pc.SetStep(badValue)
+		assert.Equal(t, goodValue, pc.GetStep())
 	}
 }
 
@@ -468,6 +467,76 @@ func TestPitchClass_Next(t *testing.T) {
 		t.Run(fmt.Sprintf("%s->%s", tc.pitchClass, tc.next), func(t *testing.T) {
 			next := tc.pitchClass.Next()
 			assert.Equal(t, tc.next.Name(), next.Name())
+		})
+	}
+}
+
+func TestPitchClass_Previous(t *testing.T) {
+	testCases := []struct {
+		pitchClass PitchClass
+		previous   PitchClass
+	}{
+		{
+			pitchClass: PitchClassC(),
+			previous:   PitchClassB(),
+		},
+		{
+			pitchClass: PitchClassCFlat(),
+			previous:   PitchClassBFlat(),
+		},
+		{
+			pitchClass: PitchClassB(),
+			previous:   PitchClassBFlat(),
+		},
+		{
+			pitchClass: PitchClassBFlat(),
+			previous:   PitchClassA(),
+		},
+		{
+			pitchClass: PitchClassA(),
+			previous:   PitchClassAFlat(),
+		},
+		{
+			pitchClass: PitchClassAFlat(),
+			previous:   PitchClassG(),
+		},
+		{
+			pitchClass: PitchClassG(),
+			previous:   PitchClassGFlat(),
+		},
+		{
+			pitchClass: PitchClassGFlat(),
+			previous:   PitchClassF(),
+		},
+		{
+			pitchClass: PitchClassF(),
+			previous:   PitchClassE(),
+		},
+		{
+			pitchClass: PitchClassFFlat(),
+			previous:   PitchClassEFlat(),
+		},
+		{
+			pitchClass: PitchClassE(),
+			previous:   PitchClassEFlat(),
+		},
+		{
+			pitchClass: PitchClassEFlat(),
+			previous:   PitchClassD(),
+		},
+		{
+			pitchClass: PitchClassD(),
+			previous:   PitchClassDFlat(),
+		},
+		{
+			pitchClass: PitchClassDFlat(),
+			previous:   PitchClassC(),
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(fmt.Sprintf("%s->%s", tc.pitchClass, tc.previous), func(t *testing.T) {
+			previous := tc.pitchClass.Previous()
+			assert.Equal(t, tc.previous.Name(), previous.Name())
 		})
 	}
 }

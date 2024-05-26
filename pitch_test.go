@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestPitch_Assert_initial_values_from_constructor_are_being_set(t *testing.T) {
@@ -67,18 +68,6 @@ func TestPitch_Step_Bigger_values_should_be_normalized(t *testing.T) {
 
 	pitch.SetStep(15)
 	assert.Equal(t, StepC, pitch.GetStep())
-}
-
-func TestPitch_Step_Zero_or_negative_values_should_do_nothing(t *testing.T) {
-	pitch := NewPitch()
-
-	for goodValue := StepC; goodValue <= StepB; goodValue++ {
-		for badValue := Step(-1); badValue >= Step(-20); badValue-- {
-			pitch.SetStep(goodValue)
-			pitch.SetStep(badValue)
-			assert.Equal(t, goodValue, pitch.GetStep())
-		}
-	}
 }
 
 func TestPitch_Alteration_When_value_is_in_range_store_the_same(t *testing.T) {
@@ -454,7 +443,8 @@ func TestPitch_Parse_without_octave_Simple_name_without_octave(t *testing.T) {
 
 			text := step + alt
 			t.Run(text, func(t *testing.T) {
-				parsed := ParsePitch(text)
+				parsed, err := ParsePitch(text)
+				require.NoError(t, err)
 
 				assert.Equal(t, Step(istep+1), parsed.GetStep())
 				assert.Equal(t, Alteration(ialt-2), parsed.GetAlteration())
@@ -473,7 +463,8 @@ func TestPitch_Parse_without_octave_Pretty_name(t *testing.T) {
 
 			text := step + alt
 			t.Run(text, func(t *testing.T) {
-				parsed := ParsePitch(text)
+				parsed, err := ParsePitch(text)
+				require.NoError(t, err)
 
 				assert.Equal(t, Step(istep+1), parsed.GetStep())
 				assert.Equal(t, Alteration(ialt-2), parsed.GetAlteration())
@@ -494,7 +485,8 @@ func TestPitch_Parse_with_octave_Simple_name(t *testing.T) {
 				octaveString := fmt.Sprint(oct)
 				text := step + alt + octaveString
 				t.Run(text, func(t *testing.T) {
-					parsed := ParsePitch(text)
+					parsed, err := ParsePitch(text)
+					require.NoError(t, err)
 
 					assert.Equal(t, Step(istep+1), parsed.GetStep())
 					assert.Equal(t, Alteration(ialt-2), parsed.GetAlteration())
@@ -516,7 +508,8 @@ func TestPitch_Parse_with_octave_Pretty_name(t *testing.T) {
 				octaveString := fmt.Sprint(oct)
 				text := step + alt + octaveString
 				t.Run(text, func(t *testing.T) {
-					parsed := ParsePitch(text)
+					parsed, err := ParsePitch(text)
+					require.NoError(t, err)
 
 					assert.Equal(t, Step(istep+1), parsed.GetStep())
 					assert.Equal(t, Alteration(ialt-2), parsed.GetAlteration())

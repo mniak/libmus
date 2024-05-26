@@ -30,16 +30,16 @@ func NewPitch() Pitch {
 	}
 }
 
-func ParsePitch(text string) Pitch {
+func ParsePitch(text string) (Pitch, error) {
 	pitch := NewPitch()
 	head := text[0]
 
-	for iname, name := range NAMES {
-		if name == string(head) {
-			pitch.pitchClass.SetStep(Step(iname + 1))
-			break
-		}
+	step, err := ParseStep(rune(head))
+	if err != nil {
+		return Pitch{}, err
 	}
+	pitch.pitchClass.step = step
+
 	for i, head := range text[1:] {
 		tail := text[i+1:]
 		oct, err := strconv.Atoi(tail)
@@ -57,10 +57,10 @@ func ParsePitch(text string) Pitch {
 		case DOUBLE_SHARP_SYMBOL:
 			pitch.SetAlteration(pitch.GetAlteration() + 2)
 		default:
-			return pitch
+			return pitch, nil
 		}
 	}
-	return pitch
+	return pitch, nil
 }
 
 func RandomPitch() Pitch {

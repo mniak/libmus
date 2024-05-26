@@ -1,7 +1,5 @@
 package libmus
 
-var NAMES = []string{"C", "D", "E", "F", "G", "A", "B"}
-
 const (
 	FLAT_SYMBOL         = '♭'
 	SHARP_SYMBOL        = '♯'
