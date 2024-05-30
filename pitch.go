@@ -23,44 +23,36 @@ type Pitch struct {
 	octave     int
 }
 
-func NewPitch() Pitch {
-	return Pitch{
-		octave:     4,
-		pitchClass: NewPitchClass(),
-	}
-}
+func ParsePitch(text string) (pitch Pitch, err error) {
+	pitch.octave = 4
 
-func ParsePitch(text string) (Pitch, error) {
-	pitch := NewPitch()
 	head := text[0]
 
-	step, err := ParseStep(rune(head))
+	pitch.pitchClass.step, err = ParseStep(rune(head))
 	if err != nil {
-		return Pitch{}, err
+		return
 	}
-	pitch.pitchClass.step = step
-
 	for i, head := range text[1:] {
 		tail := text[i+1:]
-		oct, err := strconv.Atoi(tail)
-		if err == nil {
-			pitch.octave = oct
-		}
 
 		switch head {
 		case 'b', FLAT_SYMBOL:
-			pitch.SetAlteration(pitch.GetAlteration() - 1)
+			pitch.pitchClass.alteration -= 1
 		case '#', SHARP_SYMBOL:
-			pitch.SetAlteration(pitch.GetAlteration() + 1)
+			pitch.pitchClass.alteration += 1
 		case DOUBLE_FLAT_SYMBOL:
-			pitch.SetAlteration(pitch.GetAlteration() - 2)
+			pitch.pitchClass.alteration -= 2
 		case DOUBLE_SHARP_SYMBOL:
-			pitch.SetAlteration(pitch.GetAlteration() + 2)
+			pitch.pitchClass.alteration += 2
 		default:
-			return pitch, nil
+			pitch.octave, err = strconv.Atoi(tail)
+			if err != nil {
+				return
+			}
 		}
 	}
-	return pitch, nil
+	pitch.octave = trunc(pitch.octave, 1, 9)
+	return
 }
 
 func RandomPitch() Pitch {

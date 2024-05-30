@@ -7,13 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_PitchClass_Step_Constructor_should_set_initial_values(t *testing.T) {
-	pc := NewPitchClass()
-
-	assert.Equal(t, StepC, pc.GetStep())
-	assert.Equal(t, AlterationNatural, pc.GetAlteration())
-}
-
 func Test_PitchClass_Step_Normal_values_should_work(t *testing.T) {
 	var pc PitchClass
 

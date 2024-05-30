@@ -21,13 +21,6 @@ type PitchClass struct {
 	alteration Alteration
 }
 
-func NewPitchClass() PitchClass {
-	return PitchClass{
-		step:       StepC,
-		alteration: AlterationNatural,
-	}
-}
-
 func (pc *PitchClass) GetStep() Step {
 	return pc.step
 }
