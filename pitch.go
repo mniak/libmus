@@ -127,3 +127,11 @@ func (p Pitch) Normalized() Pitch {
 	}
 	return p
 }
+
+func (p Pitch) ApplyInterval(i Interval) Pitch {
+	numBefore := p.Number()
+	p.step += Step(i.Degree)
+	numberDiff := p.Number() - numBefore
+	p.alteration = Alteration(i.Semitones() - numberDiff)
+	return p.Normalized()
+}

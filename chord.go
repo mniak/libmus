@@ -1,18 +1,5 @@
 package libmus
 
-type (
-	QualityM string
-	QualityP string
-)
-
-const (
-	Augmented  QualityP = "augmented"
-	Major      QualityM = "major"
-	Perfect    QualityP = "perfect"
-	Minor      QualityM = "minor"
-	Diminished QualityP = "diminished"
-)
-
 // type Chord interface {
 // 	Name() string
 // 	Pitches() []Pitch
@@ -20,15 +7,15 @@ const (
 
 type Triad struct {
 	Root  PitchClass
-	Third QualityM
-	Fifth QualityP
+	Third Quality
+	Fifth Quality
 }
 
 func (t Triad) ToConcreteSimple(octave int) []Pitch {
 	root := t.Root.OnOctave(octave)
 	scale := CMajorScale()
-	third := scale.Transpose(root, Interval{Number: 3})
-	fifth := scale.Transpose(root, Interval{Number: 5})
+	third := scale.Transpose(root, Interval{Degree: 3})
+	fifth := scale.Transpose(root, Interval{Degree: 5})
 	return []Pitch{root, third, fifth}
 }
 

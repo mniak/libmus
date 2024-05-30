@@ -26,15 +26,16 @@ func mod[T ~int](value, divisor T) T {
 // rmod: Range modulo operation
 // Keep the value in the range [min,max].
 // The value "rotates" if greater than `max` or if smaller than `min`.
-// Examples
 //
-//	`max + 1` =  `min`
-//	`max + 2` =  `min + 1`
-//	`max + 3` =  `min + 2`
+// Examples:
 //
-//	`min - 1` =  `max`
-//	`min - 2` =  `max - 1`
-//	`min - 3` =  `max - 2`
+//	max + 1 =  min
+//	max + 2 =  min + 1
+//	max + 3 =  min + 2
+//
+//	min - 1 =  max
+//	min - 2 =  max - 1
+//	min - 3 =  max - 2
 //
 // rmod(n, 0, b) is equivalent to mod(n, b+1)
 func rmod[T ~int](n, min, max T) T {
