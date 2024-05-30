@@ -45,7 +45,7 @@ func (pc *PitchClass) GetAlteration() Alteration {
 }
 
 func (pc *PitchClass) SetAlteration(value Alteration) {
-	pc.alteration = Alteration(truncateRange(value, AlterationDoubleFlat, AlterationDoubleSharp))
+	pc.alteration = Alteration(trunc(value, AlterationDoubleFlat, AlterationDoubleSharp))
 }
 
 var regexParsePitchClass = regexp.MustCompile(fmt.Sprintf(
@@ -146,24 +146,27 @@ func (pc *PitchClass) OnOctave(octave int) Pitch {
 }
 
 func (pc *PitchClass) Number() int {
+	var num int
 	switch pc.step {
 	default:
 		fallthrough
 	case StepC:
-		return 0
+		num = 0
 	case StepD:
-		return 2
+		num = 2
 	case StepE:
-		return 4
+		num = 4
 	case StepF:
-		return 5
+		num = 5
 	case StepG:
-		return 7
+		num = 7
 	case StepA:
-		return 9
+		num = 9
 	case StepB:
-		return 11
+		num = 11
 	}
+	result := num + int(pc.alteration)
+	return result
 }
 
 func (pc PitchClass) Next() PitchClass {

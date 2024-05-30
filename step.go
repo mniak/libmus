@@ -37,12 +37,7 @@ func (s Step) Previous() Step {
 }
 
 func (s Step) normalized() Step {
-	i := s - 1
-	i %= 7
-	if i < 0 {
-		i += 7
-	}
-	return i + 1
+	return trunc(s, StepC, StepB)
 }
 
 func (s Step) Name() string {

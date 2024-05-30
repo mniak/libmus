@@ -162,14 +162,14 @@ func init() {
 
 func RandomPitchClass() PitchClass {
 	var pc PitchClass
-	pc.SetStep(generateRandom(steps))
-	pc.SetAlteration(generateRandom(usualAlterations))
+	pc.SetStep(pickRandom(steps))
+	pc.SetAlteration(pickRandom(usualAlterations))
 	return pc
 }
 
 func ExtendedRandomPitchClass() PitchClass {
 	var pc PitchClass
-	pc.SetStep(generateRandom(steps))
-	pc.SetAlteration(generateRandom(alterations))
+	pc.SetStep(pickRandom(steps))
+	pc.SetAlteration(pickRandom(alterations))
 	return pc
 }

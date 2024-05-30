@@ -66,14 +66,14 @@ func ParsePitch(text string) (Pitch, error) {
 func RandomPitch() Pitch {
 	pitch := Pitch{}
 	pitch.pitchClass = RandomPitchClass()
-	pitch.octave = generateRandom(octaves)
+	pitch.octave = pickRandom(octaves)
 	return pitch
 }
 
 func ExtendedRandomPitch() Pitch {
 	pitch := Pitch{}
 	pitch.pitchClass = ExtendedRandomPitchClass()
-	pitch.octave = generateRandom(octaves)
+	pitch.octave = pickRandom(octaves)
 	return pitch
 }
 
@@ -102,7 +102,7 @@ func (p *Pitch) GetOctave() int {
 }
 
 func (p *Pitch) SetOctave(value int) {
-	p.octave = truncateRange(value, MIN_OCTAVE, MAX_OCTAVE)
+	p.octave = trunc(value, MIN_OCTAVE, MAX_OCTAVE)
 }
 
 func (p *Pitch) Name() string {
