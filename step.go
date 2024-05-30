@@ -37,7 +37,7 @@ func (s Step) Previous() Step {
 }
 
 func (s Step) normalized() Step {
-	return trunc(s, StepC, StepB)
+	return rmod(s, StepC, StepB)
 }
 
 func (s Step) Name() string {
