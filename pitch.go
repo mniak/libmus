@@ -19,16 +19,14 @@ func init() {
 }
 
 type Pitch struct {
-	pitchClass PitchClass
-	octave     int
+	PitchClass
+	Octave int
 }
 
 func ParsePitch(text string) (pitch Pitch, err error) {
-	pitch.octave = 4
-
 	head := text[0]
 
-	pitch.pitchClass.step, err = ParseStep(rune(head))
+	pitch.PitchClass.step, err = ParseStep(rune(head))
 	if err != nil {
 		return
 	}
@@ -37,35 +35,34 @@ func ParsePitch(text string) (pitch Pitch, err error) {
 
 		switch head {
 		case 'b', FLAT_SYMBOL:
-			pitch.pitchClass.alteration -= 1
+			pitch.PitchClass.alteration -= 1
 		case '#', SHARP_SYMBOL:
-			pitch.pitchClass.alteration += 1
+			pitch.PitchClass.alteration += 1
 		case DOUBLE_FLAT_SYMBOL:
-			pitch.pitchClass.alteration -= 2
+			pitch.PitchClass.alteration -= 2
 		case DOUBLE_SHARP_SYMBOL:
-			pitch.pitchClass.alteration += 2
+			pitch.PitchClass.alteration += 2
 		default:
-			pitch.octave, err = strconv.Atoi(tail)
+			pitch.Octave, err = strconv.Atoi(tail)
 			if err != nil {
 				return
 			}
 		}
 	}
-	pitch.octave = trunc(pitch.octave, 1, 9)
-	return
+	return pitch.Normalized(), nil
 }
 
 func RandomPitch() Pitch {
 	pitch := Pitch{}
-	pitch.pitchClass = RandomPitchClass()
-	pitch.octave = pickRandom(octaves)
+	pitch.PitchClass = RandomPitchClass()
+	pitch.Octave = pickRandom(octaves)
 	return pitch
 }
 
 func ExtendedRandomPitch() Pitch {
 	pitch := Pitch{}
-	pitch.pitchClass = ExtendedRandomPitchClass()
-	pitch.octave = pickRandom(octaves)
+	pitch.PitchClass = ExtendedRandomPitchClass()
+	pitch.Octave = pickRandom(octaves)
 	return pitch
 }
 
@@ -74,49 +71,59 @@ func (p Pitch) String() string {
 }
 
 func (p *Pitch) GetStep() Step {
-	return p.pitchClass.GetStep()
+	return p.PitchClass.GetStep()
 }
 
 func (p *Pitch) SetStep(value Step) {
-	p.pitchClass.SetStep(value)
+	p.PitchClass.SetStep(value)
 }
 
 func (p *Pitch) GetAlteration() Alteration {
-	return p.pitchClass.GetAlteration()
+	return p.PitchClass.GetAlteration()
 }
 
 func (p *Pitch) SetAlteration(value Alteration) {
-	p.pitchClass.SetAlteration(value)
+	p.PitchClass.SetAlteration(value)
 }
 
 func (p *Pitch) GetOctave() int {
-	return p.octave
+	return p.Octave
 }
 
 func (p *Pitch) SetOctave(value int) {
-	p.octave = trunc(value, MIN_OCTAVE, MAX_OCTAVE)
+	p.Octave = trunc(value, MIN_OCTAVE, MAX_OCTAVE)
 }
 
 func (p *Pitch) Name() string {
-	octaveString := fmt.Sprint(p.octave)
-	return p.pitchClass.Name() + octaveString
+	octaveString := fmt.Sprint(p.Octave)
+	return p.PitchClass.Name() + octaveString
 }
 
 func (p *Pitch) PrettyName() string {
-	oct := SUPERSCRIPT_OCTAVES[p.octave]
-	return p.pitchClass.PrettyName() + oct
+	oct := SUPERSCRIPT_OCTAVES[p.Octave]
+	return p.PitchClass.PrettyName() + oct
 }
 
 func (p *Pitch) FullName() string {
-	octaveString := fmt.Sprint(p.octave)
-	return p.pitchClass.FullName() + " " + octaveString
+	octaveString := fmt.Sprint(p.Octave)
+	return p.PitchClass.FullName() + " " + octaveString
 }
 
 func (p *Pitch) MIDINote() int {
-	note := p.pitchClass.Number() + 12*p.octave
+	note := p.PitchClass.Number() + 12*p.Octave
 	return note
 }
 
 func (p *Pitch) Class() PitchClass {
-	return p.pitchClass
+	return p.PitchClass
+}
+
+func (p Pitch) Normalized() Pitch {
+	p.PitchClass = p.PitchClass.Normalized()
+	if p.Octave == 0 {
+		p.Octave = 4
+	} else {
+		p.Octave = trunc(p.Octave, 1, 9)
+	}
+	return p
 }

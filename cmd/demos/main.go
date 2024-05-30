@@ -1,9 +1,15 @@
 package main
 
+import (
+	"fmt"
+
+	"github.com/mniak/libmus"
+)
+
 func main() {
-	// cmd := cobra.Command{
-	// 	Use: "demos",
-	// }
-	// cmd.AddCommand()
-	// cmd.Execute()
+	p := libmus.Pitch{
+		PitchClass: libmus.PitchClassC(),
+		Octave:     4,
+	}
+	fmt.Println(p)
 }

@@ -6,16 +6,6 @@ import (
 	"strings"
 )
 
-type Alteration int
-
-const (
-	AlterationDoubleFlat  Alteration = -2
-	AlterationFlat        Alteration = -1
-	AlterationNatural     Alteration = 0
-	AlterationSharp       Alteration = 1
-	AlterationDoubleSharp Alteration = 2
-)
-
 type PitchClass struct {
 	step       Step
 	alteration Alteration
@@ -92,10 +82,10 @@ func (pc PitchClass) String() string {
 func (pc *PitchClass) Name() string {
 	result := pc.step.Name()
 	for i := AlterationSharp; i <= pc.alteration; i++ {
-		result = result + "#"
+		result += "#"
 	}
 	for i := AlterationFlat; i >= pc.alteration; i-- {
-		result = result + "b"
+		result += "b"
 	}
 	return result
 }
@@ -133,8 +123,8 @@ func (pc *PitchClass) FullName() string {
 
 func (pc *PitchClass) OnOctave(octave int) Pitch {
 	return Pitch{
-		pitchClass: *pc,
-		octave:     octave,
+		PitchClass: *pc,
+		Octave:     octave,
 	}
 }
 
@@ -199,5 +189,11 @@ func (pc PitchClass) Previous() PitchClass {
 		pc.step = pc.step.Previous()
 		pc.alteration++
 	}
+	return pc
+}
+
+func (pc PitchClass) Normalized() PitchClass {
+	pc.step = pc.step.Normalized()
+	pc.alteration = pc.alteration.Normalized()
 	return pc
 }

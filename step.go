@@ -22,26 +22,26 @@ const (
 func ParseStep(r rune) (Step, error) {
 	for iname, name := range STEP_NAMES {
 		if name == string(r) {
-			return Step(iname + 1), nil
+			return Step(iname + 1).Normalized(), nil
 		}
 	}
 	return StepC, ErrInvalidPitchStep
 }
 
 func (s Step) Next() Step {
-	return (s + 1).normalized()
+	return (s + 1).Normalized()
 }
 
 func (s Step) Previous() Step {
-	return (s - 1).normalized()
+	return (s - 1).Normalized()
 }
 
-func (s Step) normalized() Step {
+func (s Step) Normalized() Step {
 	return rmod(s, StepC, StepB)
 }
 
 func (s Step) Name() string {
-	return STEP_NAMES[s.normalized()-1]
+	return STEP_NAMES[s.Normalized()-1]
 }
 
 func (s Step) String() string {

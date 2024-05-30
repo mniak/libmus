@@ -7,8 +7,8 @@ func CMajorScale() cMajorScale {
 }
 
 func (s cMajorScale) Transpose(p Pitch, i Interval) Pitch {
-	step := p.pitchClass.GetStep()
-	p.pitchClass.SetStep(step + Step(i.Number-1))
+	step := p.PitchClass.GetStep()
+	p.PitchClass.SetStep(step + Step(i.Number-1))
 	// p.octave += (i.Number - 1) % 7
 	return p
 }
