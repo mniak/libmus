@@ -110,7 +110,7 @@ func (p *Pitch) FullName() string {
 }
 
 func (p *Pitch) MIDINote() int {
-	note := p.PitchClass.Number() + 12*p.Octave
+	note := p.PitchClass.number() + 12*(p.Octave+1)
 	return note
 }
 
@@ -128,10 +128,13 @@ func (p Pitch) Normalized() Pitch {
 	return p
 }
 
-func (p Pitch) ApplyInterval(i Interval) Pitch {
-	numBefore := p.Number()
-	p.step += Step(i.Degree)
-	numberDiff := p.Number() - numBefore
+func (p Pitch) Transpose(i Interval) Pitch {
+	numBefore := p.MIDINote()
+	p.step += Step(i.Degree - 1)
+	if i.Degree < 0 {
+		p.step += 2
+	}
+	numberDiff := p.MIDINote() - numBefore
 	p.alteration = Alteration(i.Semitones() - numberDiff)
 	return p.Normalized()
 }

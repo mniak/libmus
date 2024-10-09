@@ -11,7 +11,7 @@ type PitchClass struct {
 	alteration Alteration
 }
 
-func (pc *PitchClass) GetStep() Step {
+func (pc PitchClass) GetStep() Step {
 	return pc.step
 }
 
@@ -23,7 +23,7 @@ func (pc *PitchClass) SetStep(value Step) {
 	pc.step = (value-StepC)%(StepB-StepC+1) + StepC
 }
 
-func (pc *PitchClass) GetAlteration() Alteration {
+func (pc PitchClass) GetAlteration() Alteration {
 	return pc.alteration
 }
 
@@ -79,7 +79,7 @@ func (pc PitchClass) String() string {
 	return pc.Name()
 }
 
-func (pc *PitchClass) Name() string {
+func (pc PitchClass) Name() string {
 	result := pc.step.Name()
 	for i := AlterationSharp; i <= pc.alteration; i++ {
 		result += "#"
@@ -90,7 +90,7 @@ func (pc *PitchClass) Name() string {
 	return result
 }
 
-func (pc *PitchClass) PrettyName() string {
+func (pc PitchClass) PrettyName() string {
 	result := pc.step.Name()
 	switch pc.alteration {
 	case -2:
@@ -105,7 +105,7 @@ func (pc *PitchClass) PrettyName() string {
 	return result
 }
 
-func (pc *PitchClass) FullName() string {
+func (pc PitchClass) FullName() string {
 	name := pc.step.Name()
 	switch pc.alteration {
 	case -2:
@@ -121,16 +121,16 @@ func (pc *PitchClass) FullName() string {
 	}
 }
 
-func (pc *PitchClass) OnOctave(octave int) Pitch {
+func (pc PitchClass) OnOctave(octave int) Pitch {
 	return Pitch{
-		PitchClass: *pc,
+		PitchClass: pc,
 		Octave:     octave,
 	}
 }
 
-func (pc *PitchClass) Number() int {
+func (pc PitchClass) number() int {
 	var num int
-	switch pc.step {
+	switch pc.step.Normalized() {
 	default:
 		fallthrough
 	case StepC:

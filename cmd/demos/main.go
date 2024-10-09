@@ -14,6 +14,6 @@ func main() {
 	fmt.Println(p)
 
 	i := libmus.MajorThird()
-	p2 := p.ApplyInterval(i)
+	p2 := p.Transpose(i)
 	fmt.Println(p2)
 }

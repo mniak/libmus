@@ -7,12 +7,34 @@ import (
 )
 
 func TestInterval_Semitones(t *testing.T) {
-	P1 := Unison()
-	assert.Equal(t, 0, P1.Semitones())
+	testCases := []struct {
+		name     string
+		interval Interval
+		expected int
+	}{
+		{
+			name:     "Unison",
+			interval: Unison(),
+			expected: 0,
+		},
+		{
+			name:     "Major third",
+			interval: MajorThird(),
+			expected: 4,
+		},
+		{
+			name:     "Octave",
+			interval: Octave(),
+			expected: 12,
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			result := tc.interval.Semitones()
+			assert.Equal(t, tc.expected, result)
 
-	M3 := MajorThird()
-	assert.Equal(t, 4, M3.Semitones())
-
-	P8 := Octave()
-	assert.Equal(t, 12, P8.Semitones())
+			descendingSemitones := tc.interval.Descending().Semitones()
+			assert.Equal(t, -tc.expected, descendingSemitones)
+		})
+	}
 }

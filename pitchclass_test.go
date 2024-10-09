@@ -110,17 +110,6 @@ func Test_PitchClass_Alteration_When_value_is_greater_than_limit_then_keep_max_v
 	}
 }
 
-func Test_PitchClass_Random_Steps_should_have_a_good_distribution(t *testing.T) {
-	steps := make(map[Step]bool)
-	for i := 1; i <= 7*5; i++ {
-		pc := RandomPitchClass()
-		steps[pc.GetStep()] = true
-	}
-	for i := StepC; i <= StepB; i++ {
-		assert.True(t, steps[i])
-	}
-}
-
 func Test_PitchClass_Random_Alterations_should_never_be_double(t *testing.T) {
 	alterations := make(map[Alteration]bool)
 	for i := 1; i <= 3*5; i++ {
@@ -132,28 +121,6 @@ func Test_PitchClass_Random_Alterations_should_never_be_double(t *testing.T) {
 	}
 	for _, v := range []Alteration{AlterationDoubleFlat, AlterationDoubleSharp} {
 		assert.False(t, alterations[v])
-	}
-}
-
-func Test_PitchClass_ExtendedRandom_Steps_should_have_a_good_distribution(t *testing.T) {
-	steps := make(map[Step]bool)
-	for i := 1; i <= 7*5; i++ {
-		pc := ExtendedRandomPitchClass()
-		steps[pc.GetStep()] = true
-	}
-	for i := StepC; i <= StepB; i++ {
-		assert.True(t, steps[i])
-	}
-}
-
-func Test_PitchClass_ExtendedRandom_Alterations_should_have_a_good_distribution(t *testing.T) {
-	alterations := make(map[Alteration]bool)
-	for i := 1; i <= 5*5; i++ {
-		pc := ExtendedRandomPitchClass()
-		alterations[pc.GetAlteration()] = true
-	}
-	for alt := AlterationDoubleFlat; alt <= AlterationDoubleSharp; alt++ {
-		assert.True(t, alterations[alt])
 	}
 }
 

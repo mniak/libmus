@@ -62,7 +62,13 @@ func (d Degree) Perfectable() bool {
 }
 
 func (d Degree) singleOctave() Degree {
-	return rmod(d, 1, 7)
+	if d == 0 {
+		return 1
+	} else if d > 0 {
+		return rmod(d, 1, 7)
+	} else {
+		return rmod(d, 7, -1)
+	}
 }
 
 func (d Degree) singleOctaveSemitones() int {
@@ -104,7 +110,20 @@ type Interval struct {
 }
 
 func (i Interval) Semitones() int {
+	// isDescending := i.Degree < 0
+	// if isDescending {
+	// 	i.Degree *= -1
+	// }
 	s := i.Degree.semitones()
 	off := i.Quality.Offset(i.Degree)
-	return s + off
+	result := s + off
+	// if isDescending {
+	// 	result *= -1
+	// }
+	return result
+}
+
+func (i Interval) Descending() Interval {
+	i.Degree *= -1
+	return i
 }

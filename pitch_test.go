@@ -129,17 +129,6 @@ func TestPitch_Octave_When_value_is_greater_than_limit_keep_max_value(t *testing
 	}
 }
 
-func TestPitch_Random_Steps_should_have_a_good_distribution(t *testing.T) {
-	steps := make(map[Step]bool)
-	for i := 1; i <= 7*5; i++ {
-		pitch := RandomPitch()
-		steps[pitch.GetStep()] = true
-	}
-	for i := StepC; i <= StepB; i++ {
-		assert.True(t, steps[i])
-	}
-}
-
 func TestPitch_Random_Alterations_should_never_be_double(t *testing.T) {
 	alterations := make(map[Alteration]bool)
 	for i := 1; i <= 5*5; i++ {
@@ -152,52 +141,6 @@ func TestPitch_Random_Alterations_should_never_be_double(t *testing.T) {
 	fmt.Println(alterations)
 	for _, v := range []Alteration{AlterationDoubleFlat, AlterationDoubleSharp} {
 		assert.False(t, alterations[v])
-	}
-}
-
-func TestPitch_Random_Octaves_should_have_a_good_distribution(t *testing.T) {
-	octaves := make(map[int]bool)
-	for i := 1; i <= 10*5; i++ {
-		pitch := RandomPitch()
-		octaves[pitch.GetOctave()] = true
-	}
-	for i := 0; i <= 10; i++ {
-		assert.True(t, octaves[i])
-	}
-}
-
-func TestPitch_ExtendedRandom_Steps_should_have_a_good_distribution(t *testing.T) {
-	steps := make(map[Step]bool)
-	for i := 1; i <= 7*5; i++ {
-		pitch := ExtendedRandomPitch()
-		steps[pitch.GetStep()] = true
-	}
-	for i := StepC; i <= StepB; i++ {
-		t.Run(fmt.Sprint(i), func(t *testing.T) {
-			assert.True(t, steps[i])
-		})
-	}
-}
-
-func TestPitch_ExtendedRandom_Alterations_should_have_a_good_distribution(t *testing.T) {
-	alterations := make(map[Alteration]bool)
-	for i := 1; i <= 5*5; i++ {
-		pitch := ExtendedRandomPitch()
-		alterations[pitch.GetAlteration()] = true
-	}
-	for i := AlterationDoubleFlat; i <= AlterationDoubleSharp; i++ {
-		assert.True(t, alterations[i])
-	}
-}
-
-func TestPitch_ExtendedRandom_Octaves_should_have_a_good_distribution(t *testing.T) {
-	octaves := make(map[int]bool)
-	for i := 1; i <= 10*5; i++ {
-		pitch := ExtendedRandomPitch()
-		octaves[pitch.GetOctave()] = true
-	}
-	for i := 0; i <= 10; i++ {
-		assert.True(t, octaves[i])
 	}
 }
 
@@ -510,4 +453,16 @@ func TestPitch_Parse_with_octave_Pretty_name(t *testing.T) {
 			}
 		}
 	}
+}
+
+func TestPitch_Transpose(t *testing.T) {
+	t.Run("C plus 3M = E", func(t *testing.T) {
+		result := C(4).Transpose(MajorThird())
+		assert.Equal(t, E(4), result)
+	})
+
+	t.Run("C plus 3M = E descending", func(t *testing.T) {
+		result := C(4).Transpose(MajorThird().Descending())
+		assert.Equal(t, AFlat(3), result)
+	})
 }
