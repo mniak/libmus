@@ -1,14 +1,13 @@
 ﻿package libmus
 
-import (
-	"fmt"
-	"regexp"
-)
+import "errors"
 
 type PitchClass struct {
 	step       Step
 	alteration Alteration
 }
+
+var ErrInvalidPitchClass = errors.New("invalid pitch class")
 
 func (pc PitchClass) GetStep() Step {
 	return pc.step
@@ -30,16 +29,11 @@ func (pc *PitchClass) SetAlteration(value Alteration) {
 	pc.alteration = Alteration(trunc(value, AlterationDoubleFlat, AlterationDoubleSharp))
 }
 
-var regexParsePitchClass = regexp.MustCompile(fmt.Sprintf(
-	`(?i)^ ?(double flat|bb|%c|flat|b|%c|natural|%c|sharp|#|%c|double sharp|##|%c)$`,
-	DOUBLE_FLAT_SYMBOL, FLAT_SYMBOL, NATURAL_SYMBOL, SHARP_SYMBOL, DOUBLE_SHARP_SYMBOL,
-))
-
 func ParsePitchClass(text string) (PitchClass, error) {
 	var result PitchClass
 	var err error
 	if len(text) == 0 {
-		return result, ErrInvalidPitchStep
+		return result, ErrInvalidPitchClass
 	}
 	result.step, err = ParseStep(rune(text[0]))
 	if err != nil {

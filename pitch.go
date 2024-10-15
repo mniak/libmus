@@ -1,6 +1,7 @@
 package libmus
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 )
@@ -8,6 +9,11 @@ import (
 const (
 	MIN_OCTAVE = 0
 	MAX_OCTAVE = 10
+)
+
+var (
+	ErrInvalidPitch       = errors.New("invalid pitch")
+	ErrInvalidPitchOctave = errors.New("invalid pitch octave")
 )
 
 var octaves []int
@@ -23,33 +29,26 @@ type Pitch struct {
 	Octave int
 }
 
-func ParsePitch(text string) (pitch Pitch, err error) {
-	head := text[0]
+func ParsePitch(text string) (Pitch, error) {
+	var pitch Pitch
+	var err error
 
-	pitch.PitchClass.step, err = ParseStep(rune(head))
+	if len(text) == 0 {
+		return pitch, ErrInvalidPitch
+	}
+
+	lastDigit := text[len(text)-1:]
+	pitch.Octave, err = strconv.Atoi(lastDigit)
+	if err != nil || pitch.Octave == 0 {
+		return pitch, ErrInvalidPitchOctave
+	}
+
+	pitchClassString := text[:len(text)-2]
+	pitch.PitchClass, err = ParsePitchClass(pitchClassString)
 	if err != nil {
-		return
+		return pitch, err
 	}
-	for i, head := range text[1:] {
-		tail := text[i+1:]
-
-		switch head {
-		case 'b', FLAT_SYMBOL:
-			pitch.PitchClass.alteration -= 1
-		case '#', SHARP_SYMBOL:
-			pitch.PitchClass.alteration += 1
-		case DOUBLE_FLAT_SYMBOL:
-			pitch.PitchClass.alteration -= 2
-		case DOUBLE_SHARP_SYMBOL:
-			pitch.PitchClass.alteration += 2
-		default:
-			pitch.Octave, err = strconv.Atoi(tail)
-			if err != nil {
-				return
-			}
-		}
-	}
-	return pitch.Normalized(), nil
+	return pitch, nil
 }
 
 func RandomPitch() Pitch {
@@ -120,11 +119,11 @@ func (p *Pitch) Class() PitchClass {
 
 func (p Pitch) normalized() Pitch {
 	p.PitchClass = p.PitchClass.normalized()
-	if p.Octave == 0 {
-		p.Octave = 4
-	} else {
-		p.Octave = trunc(p.Octave, 1, 9)
-	}
+	// if p.Octave == 0 {
+	// 	p.Octave = 4
+	// } else {
+	p.Octave = trunc(p.Octave, 1, 9)
+	// }
 	return p
 }
 
