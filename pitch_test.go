@@ -468,6 +468,6 @@ func TestPitch_Transpose(t *testing.T) {
 
 	t.Run("C4 + 8 = C5", func(t *testing.T) {
 		result := C(4).Transpose(Octave())
-		assert.Equal(t, C(4), result)
+		assert.Equal(t, C(5), result)
 	})
 }
