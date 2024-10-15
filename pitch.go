@@ -118,6 +118,11 @@ func (p *Pitch) Class() PitchClass {
 }
 
 func (p Pitch) normalized() Pitch {
+	o, s := rdivmod(p.step, StepC, StepB)
+	p.step = s
+	p.alteration = p.alteration.normalized()
+	p.Octave += o
+
 	p.PitchClass = p.PitchClass.normalized()
 	// if p.Octave == 0 {
 	// 	p.Octave = 4
@@ -129,10 +134,12 @@ func (p Pitch) normalized() Pitch {
 
 func (p Pitch) Transpose(i Interval) Pitch {
 	numBefore := p.MIDINote()
-	p.step += Step(i.Degree - 1)
-	if i.Degree < 0 {
-		p.step += 2
+	if i.Direction == Ascending {
+		p.step += Step(i.Degree - 1)
+	} else {
+		p.step -= Step(i.Degree - 1)
 	}
+	p = p.normalized()
 	numberDiff := p.MIDINote() - numBefore
 	p.alteration = Alteration(i.Semitones() - numberDiff)
 	return p.normalized()

@@ -57,11 +57,11 @@ func (q Quality) Offset(degree Degree) int {
 type Degree int
 
 func (d Degree) Perfectable() bool {
-	deg7 := d.singleOctave()
+	deg7 := d.asSingleOctave()
 	return deg7 == 1 || deg7 == 4 || deg7 == 5
 }
 
-func (d Degree) singleOctave() Degree {
+func (d Degree) asSingleOctave() Degree {
 	if d == 0 {
 		return 1
 	} else if d > 0 {
@@ -72,7 +72,7 @@ func (d Degree) singleOctave() Degree {
 }
 
 func (d Degree) singleOctaveSemitones() int {
-	deg7 := d.singleOctave()
+	deg7 := d.asSingleOctave()
 	switch deg7 {
 	default:
 		fallthrough
@@ -93,13 +93,13 @@ func (d Degree) singleOctaveSemitones() int {
 	}
 }
 
-func (d Degree) Octaves() int {
+func (d Degree) octaveSpan() int {
 	return int(d-1) / 7
 }
 
 func (d Degree) semitones() int {
 	s := d.singleOctaveSemitones()
-	os := d.Octaves()
+	os := d.octaveSpan()
 	result := s + (os * 12)
 	return result
 }

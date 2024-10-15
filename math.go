@@ -23,6 +23,27 @@ func mod[T ~int](value, divisor T) T {
 	return value
 }
 
+// mod: Division/Modulo operation
+// Returns the quotient and the remainder of the division of `value` by `divisor`.
+// The quotient might be negative.
+// The remainder will always be positive.
+func divmod[T ~int](value, divisor T) (int, T) {
+	quot := int(value / divisor)
+	value = value % divisor
+	if value < 0 {
+		value += divisor
+		quot -= 1
+	}
+	return quot, value
+}
+
+func rdivmod[T ~int](n, min, max T) (int, T) {
+	n -= min
+	d, n := divmod(n, max-min+1)
+	n += min
+	return d, n
+}
+
 // rmod: Range modulo operation
 // Keep the value in the range [min,max].
 // The value "rotates" if greater than `max` or if smaller than `min`.
