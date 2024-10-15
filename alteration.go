@@ -1,6 +1,9 @@
 package libmus
 
-import "errors"
+import (
+	"errors"
+	"strings"
+)
 
 type Alteration int
 
@@ -19,22 +22,22 @@ func (a Alteration) normalized() Alteration {
 }
 
 func ParseAlteration(text string) (Alteration, error) {
-	switch text {
-	case "flat", string(FLAT_SYMBOL), string('b'):
+	switch strings.ToLower(text) {
+	case " flat", string(FLAT_SYMBOL), string('b'):
 		return AlterationFlat, nil
 
-	case "sharp", string(SHARP_SYMBOL), string('#'):
+	case " sharp", string(SHARP_SYMBOL), string('#'):
 		return AlterationSharp, nil
 
-	case "double flat", string(DOUBLE_FLAT_SYMBOL), "bb":
+	case " double flat", string(DOUBLE_FLAT_SYMBOL), "bb":
 		return AlterationDoubleFlat, nil
 
-	case "double sharp", string(DOUBLE_SHARP_SYMBOL), "##":
+	case " double sharp", string(DOUBLE_SHARP_SYMBOL), "##":
 		return AlterationDoubleSharp, nil
 
-	case "", "natural", string(NATURAL_SYMBOL):
+	case "", " natural", string(NATURAL_SYMBOL):
 		return AlterationNatural, nil
 	default:
-		return 0, ErrInvalidPitchAlteration
+		return 0, errorWithDetails(ErrInvalidPitchAlteration, text)
 	}
 }
