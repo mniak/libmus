@@ -14,6 +14,13 @@ func MajorThird() Interval {
 	}
 }
 
+func Fifth() Interval {
+	return Interval{
+		Degree:  5,
+		Quality: Perfect,
+	}
+}
+
 func Octave() Interval {
 	return Interval{
 		Degree:  8,

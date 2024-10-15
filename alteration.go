@@ -1,5 +1,7 @@
 package libmus
 
+import "errors"
+
 type Alteration int
 
 const (
@@ -10,6 +12,29 @@ const (
 	AlterationDoubleSharp Alteration = 2
 )
 
-func (a Alteration) Normalized() Alteration {
+var ErrInvalidPitchAlteration = errors.New("invalid pitch alteration")
+
+func (a Alteration) normalized() Alteration {
 	return trunc(a, AlterationDoubleFlat, AlterationDoubleSharp)
+}
+
+func ParseAlteration(text string) (Alteration, error) {
+	switch text {
+	case "flat", string(FLAT_SYMBOL), string('b'):
+		return AlterationFlat, nil
+
+	case "sharp", string(SHARP_SYMBOL), string('#'):
+		return AlterationSharp, nil
+
+	case "double flat", string(DOUBLE_FLAT_SYMBOL), "bb":
+		return AlterationDoubleFlat, nil
+
+	case "double sharp", string(DOUBLE_SHARP_SYMBOL), "##":
+		return AlterationDoubleSharp, nil
+
+	case "", "natural", string(NATURAL_SYMBOL):
+		return AlterationNatural, nil
+	default:
+		return 0, ErrInvalidPitchAlteration
+	}
 }

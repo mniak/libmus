@@ -118,8 +118,8 @@ func (p *Pitch) Class() PitchClass {
 	return p.PitchClass
 }
 
-func (p Pitch) Normalized() Pitch {
-	p.PitchClass = p.PitchClass.Normalized()
+func (p Pitch) normalized() Pitch {
+	p.PitchClass = p.PitchClass.normalized()
 	if p.Octave == 0 {
 		p.Octave = 4
 	} else {
@@ -136,5 +136,5 @@ func (p Pitch) Transpose(i Interval) Pitch {
 	}
 	numberDiff := p.MIDINote() - numBefore
 	p.alteration = Alteration(i.Semitones() - numberDiff)
-	return p.Normalized()
+	return p.normalized()
 }

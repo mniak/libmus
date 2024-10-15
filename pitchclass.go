@@ -3,7 +3,6 @@
 import (
 	"fmt"
 	"regexp"
-	"strings"
 )
 
 type PitchClass struct {
@@ -36,43 +35,18 @@ var regexParsePitchClass = regexp.MustCompile(fmt.Sprintf(
 	DOUBLE_FLAT_SYMBOL, FLAT_SYMBOL, NATURAL_SYMBOL, SHARP_SYMBOL, DOUBLE_SHARP_SYMBOL,
 ))
 
-func ParsePitchClass(text string) PitchClass {
-	var newpc PitchClass
-	head := text[0:1]
-	tail := text[1:]
-
-	for iname, name := range STEP_NAMES {
-		if name == head {
-			newpc.step = Step(iname + 1)
-			break
-		}
+func ParsePitchClass(text string) (PitchClass, error) {
+	var result PitchClass
+	var err error
+	if len(text) == 0 {
+		return result, ErrInvalidPitchStep
 	}
-
-	isMatch := regexParsePitchClass.MatchString(tail)
-	if !isMatch {
-		return newpc
+	result.step, err = ParseStep(rune(text[0]))
+	if err != nil {
+		return result, err
 	}
-	match := strings.ToLower(regexParsePitchClass.FindStringSubmatch(tail)[1])
-
-	switch match {
-	case "flat", string(FLAT_SYMBOL), string('b'):
-		newpc.alteration = newpc.alteration - 1
-
-	case "sharp", string(SHARP_SYMBOL), string('#'):
-		newpc.alteration = newpc.alteration + 1
-
-	case "double flat", string(DOUBLE_FLAT_SYMBOL), "bb":
-		newpc.alteration = newpc.alteration - 2
-
-	case "double sharp", string(DOUBLE_SHARP_SYMBOL), "##":
-		newpc.alteration = newpc.alteration + 2
-
-	default:
-		fallthrough
-	case "", "natural", string(NATURAL_SYMBOL):
-		return newpc
-	}
-	return newpc
+	result.alteration, err = ParseAlteration(text[1:])
+	return result, err
 }
 
 func (pc PitchClass) String() string {
@@ -130,7 +104,7 @@ func (pc PitchClass) OnOctave(octave int) Pitch {
 
 func (pc PitchClass) number() int {
 	var num int
-	switch pc.step.Normalized() {
+	switch pc.step {
 	default:
 		fallthrough
 	case StepC:
@@ -192,8 +166,8 @@ func (pc PitchClass) Previous() PitchClass {
 	return pc
 }
 
-func (pc PitchClass) Normalized() PitchClass {
-	pc.step = pc.step.Normalized()
-	pc.alteration = pc.alteration.Normalized()
+func (pc PitchClass) normalized() PitchClass {
+	pc.step = pc.step.normalized()
+	pc.alteration = pc.alteration.normalized()
 	return pc
 }

@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func Test_PitchClass_Step_Normal_values_should_work(t *testing.T) {
@@ -319,8 +320,8 @@ func TestPitchClass_Parse(t *testing.T) {
 			for istep, step := range stepTexts {
 				text := step + alt
 				t.Run(text, func(t *testing.T) {
-					parsed := ParsePitchClass(text)
-
+					parsed, err := ParsePitchClass(text)
+					require.NoError(t, err)
 					assert.Equal(t, Step(istep+1), parsed.GetStep())
 					assert.Equal(t, Alteration(ialt-2), parsed.GetAlteration())
 				})
@@ -335,8 +336,8 @@ func TestPitchClass_Parse(t *testing.T) {
 			for istep, step := range stepTexts {
 				text := step + alt
 				t.Run(text, func(t *testing.T) {
-					parsed := ParsePitchClass(text)
-
+					parsed, err := ParsePitchClass(text)
+					require.NoError(t, err)
 					assert.Equal(t, Step(istep+1), parsed.GetStep())
 					assert.Equal(t, Alteration(ialt-2), parsed.GetAlteration())
 				})
@@ -351,8 +352,8 @@ func TestPitchClass_Parse(t *testing.T) {
 			for istep, step := range stepTexts {
 				text := fmt.Sprintf("%s %s", step, alt)
 				t.Run(text, func(t *testing.T) {
-					parsed := ParsePitchClass(text)
-
+					parsed, err := ParsePitchClass(text)
+					require.NoError(t, err)
 					assert.Equal(t, Step(istep+1), parsed.GetStep())
 					assert.Equal(t, Alteration(ialt-2), parsed.GetAlteration())
 				})
