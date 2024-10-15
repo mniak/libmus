@@ -43,7 +43,7 @@ func ParsePitch(text string) (Pitch, error) {
 		return pitch, ErrInvalidPitchOctave
 	}
 
-	pitchClassString := text[:len(text)-2]
+	pitchClassString := text[:len(text)-1]
 	pitch.PitchClass, err = ParsePitchClass(pitchClassString)
 	if err != nil {
 		return pitch, err

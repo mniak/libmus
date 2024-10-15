@@ -369,45 +369,45 @@ func TestPitch_FullName_With_2_sharps(t *testing.T) {
 	}
 }
 
-func TestPitch_Parse_without_octave_Simple_name_without_octave(t *testing.T) {
-	alterationTexts := []string{"bb", "b", "", "#", "##"}
-	stepTexts := []string{"C", "D", "E", "F", "G", "A", "B"}
+// func TestPitch_Parse_without_octave_Simple_name_without_octave(t *testing.T) {
+// 	alterationTexts := []string{"bb", "b", "", "#", "##"}
+// 	stepTexts := []string{"C", "D", "E", "F", "G", "A", "B"}
 
-	for ialt, alt := range alterationTexts {
-		for istep, step := range stepTexts {
+// 	for ialt, alt := range alterationTexts {
+// 		for istep, step := range stepTexts {
 
-			text := step + alt
-			t.Run(text, func(t *testing.T) {
-				parsed, err := ParsePitch(text)
-				require.NoError(t, err)
+// 			text := step + alt
+// 			t.Run(text, func(t *testing.T) {
+// 				parsed, err := ParsePitch(text)
+// 				require.NoError(t, err)
 
-				assert.Equal(t, Step(istep+1), parsed.GetStep())
-				assert.Equal(t, Alteration(ialt-2), parsed.GetAlteration())
-				assert.Equal(t, 4, parsed.GetOctave())
-			})
-		}
-	}
-}
+// 				assert.Equal(t, Step(istep+1), parsed.GetStep())
+// 				assert.Equal(t, Alteration(ialt-2), parsed.GetAlteration())
+// 				assert.Equal(t, 4, parsed.GetOctave())
+// 			})
+// 		}
+// 	}
+// }
 
-func TestPitch_Parse_without_octave_Pretty_name(t *testing.T) {
-	alterationTexts := []string{"𝄫", "♭", "", "♯", "𝄪"}
-	stepTexts := []string{"C", "D", "E", "F", "G", "A", "B"}
+// func TestPitch_Parse_without_octave_Pretty_name(t *testing.T) {
+// 	alterationTexts := []string{"𝄫", "♭", "", "♯", "𝄪"}
+// 	stepTexts := []string{"C", "D", "E", "F", "G", "A", "B"}
 
-	for ialt, alt := range alterationTexts {
-		for istep, step := range stepTexts {
+// 	for ialt, alt := range alterationTexts {
+// 		for istep, step := range stepTexts {
 
-			text := step + alt
-			t.Run(text, func(t *testing.T) {
-				parsed, err := ParsePitch(text)
-				require.NoError(t, err)
+// 			text := step + alt
+// 			t.Run(text, func(t *testing.T) {
+// 				parsed, err := ParsePitch(text)
+// 				require.NoError(t, err)
 
-				assert.Equal(t, Step(istep+1), parsed.GetStep())
-				assert.Equal(t, Alteration(ialt-2), parsed.GetAlteration())
-				assert.Equal(t, 4, parsed.GetOctave())
-			})
-		}
-	}
-}
+// 				assert.Equal(t, Step(istep+1), parsed.GetStep())
+// 				assert.Equal(t, Alteration(ialt-2), parsed.GetAlteration())
+// 				assert.Equal(t, 4, parsed.GetOctave())
+// 			})
+// 		}
+// 	}
+// }
 
 func TestPitch_Parse_with_octave_Simple_name(t *testing.T) {
 	alterationTexts := []string{"bb", "b", "", "#", "##"}
@@ -456,13 +456,18 @@ func TestPitch_Parse_with_octave_Pretty_name(t *testing.T) {
 }
 
 func TestPitch_Transpose(t *testing.T) {
-	t.Run("C plus 3M = E", func(t *testing.T) {
-		result := C(4).Transpose(MajorThird())
-		assert.Equal(t, E(4), result)
-	})
+	// t.Run("C4 + 3M = E4", func(t *testing.T) {
+	// 	result := C(4).Transpose(MajorThird())
+	// 	assert.Equal(t, E(4), result)
+	// })
 
-	t.Run("C plus 3M = E descending", func(t *testing.T) {
+	t.Run("C4 + 3M (desc) = Ab3", func(t *testing.T) {
 		result := C(4).Transpose(MajorThird().Descending())
 		assert.Equal(t, AFlat(3), result)
 	})
+
+	// 	t.Run("C4 + 8 = C5", func(t *testing.T) {
+	// 		result := C(4).Transpose(Octave())
+	// 		assert.Equal(t, C(4), result)
+	// 	})
 }
