@@ -104,26 +104,42 @@ func (d Degree) semitones() int {
 	return result
 }
 
+type Direction bool
+
+const (
+	Ascending  Direction = false
+	Descending Direction = true
+)
+
 type Interval struct {
-	Degree  Degree
-	Quality Quality
+	Degree    Degree
+	Quality   Quality
+	Direction Direction
 }
 
 func (i Interval) Semitones() int {
-	// isDescending := i.Degree < 0
-	// if isDescending {
-	// 	i.Degree *= -1
-	// }
+	offset := i.Quality.Offset(i.Degree)
 	s := i.Degree.semitones()
-	off := i.Quality.Offset(i.Degree)
-	result := s + off
-	// if isDescending {
-	// 	result *= -1
-	// }
+
+	result := s + offset
+
+	if i.Direction == Descending {
+		return -result
+	}
 	return result
 }
 
+func (i Interval) Ascending() Interval {
+	i.Direction = Ascending
+	return i
+}
+
 func (i Interval) Descending() Interval {
-	i.Degree *= -1
+	i.Direction = Descending
+	return i
+}
+
+func (i Interval) Reverse() Interval {
+	i.Direction = !i.Direction
 	return i
 }

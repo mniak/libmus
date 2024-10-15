@@ -456,18 +456,18 @@ func TestPitch_Parse_with_octave_Pretty_name(t *testing.T) {
 }
 
 func TestPitch_Transpose(t *testing.T) {
-	// t.Run("C4 + 3M = E4", func(t *testing.T) {
-	// 	result := C(4).Transpose(MajorThird())
-	// 	assert.Equal(t, E(4), result)
-	// })
+	t.Run("C4 + 3M = E4", func(t *testing.T) {
+		result := C(4).Transpose(MajorThird())
+		assert.Equal(t, E(4), result)
+	})
 
 	t.Run("C4 + 3M (desc) = Ab3", func(t *testing.T) {
 		result := C(4).Transpose(MajorThird().Descending())
 		assert.Equal(t, AFlat(3), result)
 	})
 
-	// 	t.Run("C4 + 8 = C5", func(t *testing.T) {
-	// 		result := C(4).Transpose(Octave())
-	// 		assert.Equal(t, C(4), result)
-	// 	})
+	t.Run("C4 + 8 = C5", func(t *testing.T) {
+		result := C(4).Transpose(Octave())
+		assert.Equal(t, C(4), result)
+	})
 }
