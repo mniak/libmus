@@ -22,26 +22,27 @@ const (
 func ParseStep(r rune) (Step, error) {
 	for iname, name := range STEP_NAMES {
 		if name == string(r) {
-			return Step(iname + 1).Normalized(), nil
+			return Step(iname + 1), nil
 		}
 	}
 	return StepC, ErrInvalidPitchStep
 }
 
 func (s Step) Next() Step {
-	return (s + 1).Normalized()
+	return (s + 1).normalized()
 }
 
 func (s Step) Previous() Step {
-	return (s - 1).Normalized()
+	return (s - 1).normalized()
 }
 
-func (s Step) Normalized() Step {
+// normalized should only be calling during the creation of a new Step.
+func (s Step) normalized() Step {
 	return rmod(s, StepC, StepB)
 }
 
 func (s Step) Name() string {
-	return STEP_NAMES[s.Normalized()-1]
+	return STEP_NAMES[s.normalized()-1]
 }
 
 func (s Step) String() string {
