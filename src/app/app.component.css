@@ -1,0 +1,18 @@
+.logo.vanilla:hover {
+    filter: drop-shadow(0 0 2em #ffe21c);
+}
+
+.logo {
+    height: 6em;
+    padding: 1.5em;
+    will-change: filter;
+    transition: 0.75s;
+}
+
+.logo.tauri:hover {
+    filter: drop-shadow(0 0 2em #24c8db);
+}
+
+#greet-input {
+    margin-right: 5px;
+}
