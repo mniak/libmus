@@ -1,12 +1,19 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { invoke } from '@tauri-apps/api/core';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [FormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'musigym';
+  greetMessage = "";
+  name = "";
+
+  async submitForm(e: SubmitEvent) {
+    e.preventDefault();
+    this.greetMessage = await invoke("greet", { name: this.name });
+  }
 }
