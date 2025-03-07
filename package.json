@@ -22,7 +22,7 @@
     "@types/verovio": "^5.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "verovio": "^5.0.0",
+    "verovio": "^5.1.0",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
