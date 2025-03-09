@@ -14,6 +14,7 @@ pub fn run() {
                 let window = app.get_webview_window("main").unwrap();
                 window.open_devtools();
                 window.maximize();
+                window.set_fullscreen(true);
             }
             Ok(())
         })
