@@ -58,7 +58,6 @@ export class VerovioDisplayComponent {
          }),
          map(svg => sanitizer.bypassSecurityTrustHtml(svg)),
       ).subscribe(svg => {
-         console.log("re render");
          this.rawContent.set(svg);
       });
    }
