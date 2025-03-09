@@ -10,7 +10,8 @@ import { VerovioDisplayComponent } from "./verovio-display/verovio-display.compo
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  public sangue = meiSangue;
+  sangue = meiSangue;
+  page = 1;
 }
 
 
