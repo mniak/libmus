@@ -1,6 +1,6 @@
-import { Injectable, Signal, WritableSignal, computed, input, signal } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Injectable, signal } from '@angular/core';
 import { Observable, combineLatestWith, debounceTime, distinctUntilChanged, filter, map } from 'rxjs';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { VerovioOptions } from 'verovio';
 import { VerovioToolkit } from 'verovio/esm';
 import createVerovioModule from 'verovio/wasm';
