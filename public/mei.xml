@@ -1,53 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="https://music-encoding.org/schema/5.0/mei-basic.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
-<?xml-model href="https://music-encoding.org/schema/5.0/mei-basic.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
-<mei xmlns="http://www.music-encoding.org/ns/mei" meiversion="5.0+basic">
+<?xml-model href="https://music-encoding.org/schema/5.1/mei-basic.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.1"?>
+<?xml-model href="https://music-encoding.org/schema/5.1/mei-basic.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<mei xmlns="http://www.music-encoding.org/ns/mei" meiversion="5.1">
   <meiHead>
     <fileDesc>
       <titleStmt>
-        <title type="main">Untitled score</title>
-        <title type="subordinate">Subtitle</title>
-        <respStmt>
-          <persName role="composer">Composer / arranger</persName>
-        </respStmt>
+        <!-- <title type="main">Pozzoli</title> -->
+        <!-- <title type="subordinate">Primeira série</title> -->
+        <title type="main">Primeira série</title>
       </titleStmt>
-      <pubStmt>
-        <date isodate="2025-03-09T12:17:44" />
-      </pubStmt>
     </fileDesc>
   </meiHead>
   <music>
     <body>
       <mdiv>
         <score>
-          <scoreDef>
-            <pgHead>
-              <rend halign="center" valign="top">
-                <rend type="title" fontsize="x-large">Pozzoli</rend>
-                <lb />
-                <rend type="subtitle" fontsize="large">Primeira série</rend>
-              </rend>
-            </pgHead>
+          <scoreDef measureNumbers="true">
             <staffGrp>
-              <staffDef n="1" lines="5" lines.visible="false" meter.count="2"
-                meter.unit="4">
+              <staffDef n="1" lines="5" lines.visible="true" meter.count="2" meter.unit="4">
               </staffDef>
             </staffGrp>
           </scoreDef>
           <section xml:id="s1">
-            <measure xml:id="m42j4hb" n="0">
-              <staff xml:id="m1s1" n="1">
-                <layer xml:id="m1s1l1" n="1">
-                  <note xml:id="n14c3kqh" dur="4" pname="e" oct="5" />
-                  <note xml:id="n16dpotb" dur="4" pname="e" oct="5" />
-                </layer>
-                <layer xml:id="m1s1l1" n="2">
-                  <note xml:id="n14c3kqh" dur="4" pname="g" oct="4" />
-                  <note xml:id="n16dpotb" dur="4" pname="g" oct="4" />
-                </layer>
-              </staff>
-            </measure>
-            <measure xml:id="m42j4hb" n="1">
+            <measure xml:id="m42j4hb" left="dbl" right="single" n="1">
+              <mNum>1</mNum>
               <staff xml:id="m1s1" n="1">
                 <layer xml:id="m1s1l1" n="1">
                   <note xml:id="n14c3kqh" dur="4" pname="e" oct="5" />
@@ -55,7 +31,8 @@
                 </layer>
               </staff>
             </measure>
-            <measure xml:id="msb0m6f" right="dbl" n="2">
+            <measure xml:id="msb0m6f" right="dbl" left="single" n="2">
+              <mNum></mNum>
               <staff xml:id="m2s1" n="1">
                 <layer xml:id="m2s1l1" n="1">
                   <note xml:id="n5ve2xh" dur="4" pname="e" oct="5" />
@@ -63,7 +40,8 @@
                 </layer>
               </staff>
             </measure>
-            <measure xml:id="m1812i3x" n="3">
+            <measure xml:id="m1812i3x" left="dbl" right="single" n="3">
+              <mNum>2</mNum>
               <staff xml:id="m3s1" n="1">
                 <layer xml:id="m3s1l1" n="1">
                   <note xml:id="nq7gfuh" dur="4" pname="e" oct="5" />
@@ -74,7 +52,8 @@
                 </layer>
               </staff>
             </measure>
-            <measure xml:id="m1xeafja" right="dbl" n="4">
+            <measure xml:id="m1xeafja" right="dbl" left="single" n="4">
+              <mNum></mNum>
               <staff xml:id="m4s1" n="1">
                 <layer xml:id="m4s1l1" n="1">
                   <note xml:id="n1wm5mq1" dur="4" pname="e" oct="5" />
@@ -82,7 +61,8 @@
                 </layer>
               </staff>
             </measure>
-            <measure xml:id="me0t7qy" n="5">
+            <measure xml:id="me0t7qy" left="dbl" right="single" n="5">
+              <mNum>3</mNum>
               <staff xml:id="m5s1" n="1">
                 <layer xml:id="m5s1l1" n="1">
                   <beam>
@@ -93,7 +73,8 @@
                 </layer>
               </staff>
             </measure>
-            <measure xml:id="mxcs6v2" right="dbl" n="6">
+            <measure xml:id="mxcs6v2" right="dbl" left="single" n="6">
+              <mNum></mNum>
               <staff xml:id="m6s1" n="1">
                 <layer xml:id="m6s1l1" n="1">
                   <note xml:id="n1rdrp60" dur="4" pname="e" oct="5" />
@@ -101,7 +82,8 @@
                 </layer>
               </staff>
             </measure>
-            <measure xml:id="mslkcwc" n="7">
+            <measure xml:id="mslkcwc" n="7" left="dbl" right="single" break="no">
+              <mNum>4</mNum>
               <staff xml:id="m7s1" n="1">
                 <layer xml:id="m7s1l1" n="1">
                   <beam>
@@ -115,7 +97,8 @@
                 </layer>
               </staff>
             </measure>
-            <measure xml:id="mkj35u9" right="dbl" n="8">
+            <measure xml:id="mkj35u9" right="dbl" left="single" n="8">
+              <mNum></mNum>
               <staff xml:id="m8s1" n="1">
                 <layer xml:id="m8s1l1" n="1">
                   <note xml:id="n15lthwj" dur="8" pname="e" oct="5" />
@@ -124,7 +107,8 @@
                 </layer>
               </staff>
             </measure>
-            <measure xml:id="mec8j3f" n="9">
+            <measure xml:id="mec8j3f" left="dbl" right="single" n="9">
+              <mNum>5</mNum>
               <staff xml:id="m9s1" n="1">
                 <layer xml:id="m9s1l1" n="1">
                   <beam>
@@ -138,7 +122,8 @@
                 </layer>
               </staff>
             </measure>
-            <measure xml:id="mle3gt9" right="dbl" n="10">
+            <measure xml:id="mle3gt9" right="dbl" left="single" n="10">
+              <mNum></mNum>
               <staff xml:id="m10s1" n="1">
                 <layer xml:id="m10s1l1" n="1">
                   <note xml:id="nq8e51o" dur="4" pname="e" oct="5" />
@@ -147,7 +132,8 @@
                 </layer>
               </staff>
             </measure>
-            <measure xml:id="m1bqezlj" n="11">
+            <measure xml:id="m1bqezlj" left="dbl" right="single" n="11">
+              <mNum>6</mNum>
               <staff xml:id="m11s1" n="1">
                 <layer xml:id="m11s1l1" n="1">
                   <note xml:id="n1szw9pi" dur="4" pname="e" oct="5" />
@@ -158,7 +144,8 @@
                 </layer>
               </staff>
             </measure>
-            <measure xml:id="m2jxael" right="dbl" n="12">
+            <measure xml:id="m2jxael" right="dbl" left="single" n="12">
+              <mNum></mNum>
               <staff xml:id="m12s1" n="1">
                 <layer xml:id="m12s1l1" n="1">
                   <beam>
@@ -170,7 +157,8 @@
                 </layer>
               </staff>
             </measure>
-            <measure xml:id="mlnnt80" n="13">
+            <measure xml:id="mlnnt80" left="dbl" right="single" n="13">
+              <mNum>7</mNum>
               <staff xml:id="m13s1" n="1">
                 <layer xml:id="m13s1l1" n="1">
                   <beam>
@@ -181,7 +169,8 @@
                 </layer>
               </staff>
             </measure>
-            <measure xml:id="m1v0h2ps" right="dbl" n="14">
+            <measure xml:id="m1v0h2ps" right="dbl" left="single" n="14">
+              <mNum></mNum>
               <staff xml:id="m14s1" n="1">
                 <layer xml:id="m14s1l1" n="1">
                   <note xml:id="n7qklim" dur="4" pname="e" oct="5" />
@@ -190,7 +179,8 @@
                 </layer>
               </staff>
             </measure>
-            <measure xml:id="m2fg2lx" n="15">
+            <measure xml:id="m2fg2lx" left="dbl" right="single" n="15">
+              <mNum>8</mNum>
               <staff xml:id="m15s1" n="1">
                 <layer xml:id="m15s1l1" n="1">
                   <beam>
@@ -204,7 +194,8 @@
                 </layer>
               </staff>
             </measure>
-            <measure xml:id="m2ssg4h" right="dbl" n="16">
+            <measure xml:id="m2ssg4h" right="dbl" left="single" n="16">
+              <mNum></mNum>
               <staff xml:id="m16s1" n="1">
                 <layer xml:id="m16s1l1" n="1">
                   <beam>
@@ -216,7 +207,8 @@
                 </layer>
               </staff>
             </measure>
-            <measure xml:id="m1moresd" n="17">
+            <measure xml:id="m1moresd" left="dbl" right="single" n="17">
+              <mNum>9</mNum>
               <staff xml:id="m17s1" n="1">
                 <layer xml:id="m17s1l1" n="1">
                   <note xml:id="nddb11i" dur="4" pname="e" oct="5" />
@@ -227,7 +219,8 @@
                 </layer>
               </staff>
             </measure>
-            <measure xml:id="mh9gvwa" right="dbl" n="18">
+            <measure xml:id="mh9gvwa" right="dbl" left="single" n="18">
+              <mNum></mNum>
               <staff xml:id="m18s1" n="1">
                 <layer xml:id="m18s1l1" n="1">
                   <note xml:id="n601ehm" dur="4" pname="e" oct="5" />
@@ -236,14 +229,16 @@
                 </layer>
               </staff>
             </measure>
-            <measure xml:id="mqsmzrr" n="19">
+            <measure xml:id="mqsmzrr" left="dbl" right="single" n="19">
+              <mNum>10</mNum>
               <staff xml:id="m19s1" n="1">
                 <layer xml:id="m19s1l1" n="1">
                   <note xml:id="n1l4er9p" dur="2" pname="e" oct="5" />
                 </layer>
               </staff>
             </measure>
-            <measure xml:id="m15xzjv5" right="dbl" n="20">
+            <measure xml:id="m15xzjv5" right="dbl" left="single" n="20">
+              <mNum></mNum>
               <staff xml:id="m20s1" n="1">
                 <layer xml:id="m20s1l1" n="1">
                   <beam>

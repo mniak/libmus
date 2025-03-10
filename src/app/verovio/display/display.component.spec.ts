@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { VerovioDisplayComponent } from './verovio-display.component';
+import { DisplayComponent } from './display.component';
 
-describe('VerovioDisplayComponent', () => {
-  let component: VerovioDisplayComponent;
-  let fixture: ComponentFixture<VerovioDisplayComponent>;
+describe('DisplayComponent', () => {
+  let component: DisplayComponent;
+  let fixture: ComponentFixture<DisplayComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [VerovioDisplayComponent]
+      imports: [DisplayComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(VerovioDisplayComponent);
+    fixture = TestBed.createComponent(DisplayComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
