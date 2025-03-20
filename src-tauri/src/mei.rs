@@ -12,7 +12,7 @@ fn pretty_xml<T: Serialize>(item: T) -> Result<String, SeError> {
 }
 
 struct Mei {
-    header: Option<MeiHead>,
+    header: Option<Header>,
     music: Option<Music>,
 }
 
@@ -43,14 +43,21 @@ impl Mei {
 }
 
 #[derive(Serialize)]
-struct MeiHead {
+#[serde(rename = "meiHead")]
+struct Header {
     #[serde(rename = "fileDesc")]
-    file_description: String,
+    file_descriptor: FileDescriptor,
 }
 
 #[derive(Serialize)]
+struct FileDescriptor {
+    #[serde(rename = "titleStmt")]
+    title_statement: TitleStatement,
+}
+#[derive(Serialize)]
 struct TitleStatement {
-    title: Title,
+    #[serde(rename = "title")]
+    titles: Vec<Title>,
 }
 #[derive(Serialize)]
 struct Title {
@@ -243,6 +250,30 @@ mod tests {
         };
 
         let result = mei.to_xml().unwrap();
+        assert_eq_text!(expected, &result);
+    }
+    #[test]
+    fn mei_head_serialize() {
+        let expected = r##"<meiHead>
+  <fileDesc>
+    <titleStmt>
+      <title type="main">My document</title>
+    </titleStmt>
+  </fileDesc>
+</meiHead>"##;
+
+        let mei_head = Header {
+            file_descriptor: FileDescriptor {
+                title_statement: TitleStatement {
+                    titles: vec![Title {
+                        type_: "main".to_owned(),
+                        value: "My document".to_owned(),
+                    }],
+                },
+            },
+        };
+
+        let result = pretty_xml(mei_head).unwrap();
         assert_eq_text!(expected, &result);
     }
 }
