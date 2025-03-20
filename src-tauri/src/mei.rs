@@ -1,7 +1,8 @@
 use quick_xml::se::Serializer;
-use quick_xml::{SeError, Writer};
+use quick_xml::SeError;
 use serde::ser::SerializeStruct;
 use serde::Serialize;
+
 fn pretty_xml<T: Serialize>(item: T) -> Result<String, SeError> {
     let mut buffer = String::new();
     let mut ser = Serializer::new(&mut buffer);
@@ -11,7 +12,7 @@ fn pretty_xml<T: Serialize>(item: T) -> Result<String, SeError> {
 }
 
 struct Mei {
-    meiHead: Option<MeiHead>,
+    header: Option<MeiHead>,
     music: Option<Music>,
 }
 
@@ -23,7 +24,7 @@ impl Serialize for Mei {
         let mut s = serializer.serialize_struct("mei", 3)?;
         s.serialize_field("@xmlns", "http://www.music-encoding.org/ns/mei")?;
         s.serialize_field("@meiversion", "5.1")?;
-        s.serialize_field("meiHead", &self.meiHead)?;
+        s.serialize_field("meiHead", &self.header)?;
         s.serialize_field("music", &self.music)?;
         s.end()
     }
@@ -32,24 +33,23 @@ impl Serialize for Mei {
 impl Mei {
     fn to_xml(self) -> Result<String, SeError> {
         let serialized = pretty_xml(self)?;
-
         let mut result = String::new();
         result += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         result += "<?xml-model href=\"https://music-encoding.org/schema/5.1/mei-basic.rng\" type=\"application/xml\" schematypens=\"http://relaxng.org/ns/structure/1.1\"?>\n";
         result += "<?xml-model href=\"https://music-encoding.org/schema/5.1/mei-basic.rng\" type=\"application/xml\" schematypens=\"http://purl.oclc.org/dsdl/schematron\"?>\n";
         result += &serialized;
-
         Ok(result)
     }
 }
 
 #[derive(Serialize)]
 struct MeiHead {
-    fileDesc: String,
+    #[serde(rename = "fileDesc")]
+    file_description: String,
 }
 
 #[derive(Serialize)]
-struct TitleStmt {
+struct TitleStatement {
     title: Title,
 }
 #[derive(Serialize)]
@@ -73,29 +73,32 @@ struct Mdiv {
 }
 #[derive(Serialize)]
 struct Score {
-    scoreDef: ScoreDef,
+    #[serde(rename = "scoreDef")]
+    score_definition: ScoreDefinition,
     section: Section,
 }
 #[derive(Serialize)]
-struct ScoreDef {
-    staffGrp: StaffGrp,
+struct ScoreDefinition {
+    #[serde(rename = "staffGrp")]
+    staff_group: StaffGrp,
 }
 #[derive(Serialize)]
 struct StaffGrp {
-    staffDef: StaffDef,
+    #[serde(rename = "staffDef")]
+    staff_definition: StaffDefinition,
 }
 #[derive(Serialize)]
-struct StaffDef {
+struct StaffDefinition {
     #[serde(rename = "@n")]
-    n: String,
+    number: String,
     #[serde(rename = "@lines")]
     lines: String,
     #[serde(rename = "@lines.visible")]
-    linesVisible: String,
+    lines_visible: String,
     #[serde(rename = "@meter.count")]
-    meterCount: String,
+    meter_count: String,
     #[serde(rename = "@meter.unit")]
-    meterUnit: String,
+    meter_unit: String,
 }
 #[derive(Serialize)]
 struct Section {}
@@ -112,7 +115,8 @@ pub struct Measure {
     #[serde(rename = "@n")]
     n: u16,
 
-    mNum: u16,
+    #[serde(rename = "mNum")]
+    number: u16,
     staff: Staff,
 }
 #[derive(Debug, Serialize)]
@@ -138,7 +142,7 @@ struct Layer {
     #[serde(rename = "@xml:id")]
     id: String,
     #[serde(rename = "@n")]
-    n: u16,
+    number: u16,
     #[serde(rename = "note")]
     notes: Vec<Note>,
 }
@@ -195,13 +199,13 @@ mod tests {
             left: BarRendition::Double,
             right: BarRendition::Single,
             n: 1,
-            mNum: 1,
+            number: 1,
             staff: Staff {
                 id: "m1s1".to_owned(),
                 n: 1,
                 layers: vec![Layer {
                     id: "m1s1l1".to_owned(),
-                    n: 1,
+                    number: 1,
                     notes: vec![
                         Note {
                             id: "n14c3kqh".to_owned(),
@@ -234,7 +238,7 @@ mod tests {
 </mei>"##;
 
         let mei = Mei {
-            meiHead: None,
+            header: None,
             music: None,
         };
 
