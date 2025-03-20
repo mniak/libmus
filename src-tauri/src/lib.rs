@@ -1,7 +1,9 @@
-use core::time;
-use std::thread::sleep;
-
 use tauri::{Emitter, Manager};
+
+mod mei;
+mod pozzoli;
+#[cfg(test)]
+mod test_utils;
 
 #[derive(Clone, serde::Serialize)]
 struct MeiChangedEvent {
@@ -9,22 +11,23 @@ struct MeiChangedEvent {
 }
 
 #[tauri::command]
-async fn action(app: tauri::AppHandle) {
+async fn action(app: tauri::AppHandle) -> Result<(), String> {
     app.emit(
         "meiChanged",
         MeiChangedEvent {
-            mei: MEI_SANGUE.into(),
+            // mei: pozzoli::generate1_2_4()?,
+            mei: todo!(),
         },
     )
-    .unwrap();
-    sleep(time::Duration::from_secs(3));
-    app.emit(
-        "meiChanged",
-        MeiChangedEvent {
-            mei: MEI_POZZOLI.into(),
-        },
-    )
-    .unwrap();
+    .map_err(|e| "failed".to_owned())
+    //  sleep(time::Duration::from_secs(3));
+    //  app.emit(
+    //      "meiChanged",
+    //      MeiChangedEvent {
+    //          mei: MEI_POZZOLI.into(),
+    //      },
+    //  )
+    //  .unwrap();
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
