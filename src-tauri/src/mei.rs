@@ -1,58 +1,90 @@
 use quick_xml::se::Serializer;
-use quick_xml::{
-    events::{BytesStart, Event},
-    Writer,
-};
-use serde::{Deserialize, Serialize};
-use std::io::Cursor;
-
-#[derive(Deserialize)]
-struct Mei {
-    meiHead: MeiHead,
-    music: Music,
+use quick_xml::{SeError, Writer};
+use serde::ser::SerializeStruct;
+use serde::Serialize;
+fn pretty_xml<T: Serialize>(item: T) -> Result<String, SeError> {
+    let mut buffer = String::new();
+    let mut ser = Serializer::new(&mut buffer);
+    ser.indent(' ', 2);
+    item.serialize(ser)?;
+    Ok(buffer)
 }
-#[derive(Deserialize)]
+
+struct Mei {
+    meiHead: Option<MeiHead>,
+    music: Option<Music>,
+}
+
+impl Serialize for Mei {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let mut s = serializer.serialize_struct("mei", 3)?;
+        s.serialize_field("@xmlns", "http://www.music-encoding.org/ns/mei")?;
+        s.serialize_field("@meiversion", "5.1")?;
+        s.serialize_field("meiHead", &self.meiHead)?;
+        s.serialize_field("music", &self.music)?;
+        s.end()
+    }
+}
+
+impl Mei {
+    fn to_xml(self) -> Result<String, SeError> {
+        let serialized = pretty_xml(self)?;
+
+        let mut result = String::new();
+        result += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+        result += "<?xml-model href=\"https://music-encoding.org/schema/5.1/mei-basic.rng\" type=\"application/xml\" schematypens=\"http://relaxng.org/ns/structure/1.1\"?>\n";
+        result += "<?xml-model href=\"https://music-encoding.org/schema/5.1/mei-basic.rng\" type=\"application/xml\" schematypens=\"http://purl.oclc.org/dsdl/schematron\"?>\n";
+        result += &serialized;
+
+        Ok(result)
+    }
+}
+
+#[derive(Serialize)]
 struct MeiHead {
     fileDesc: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Serialize)]
 struct TitleStmt {
     title: Title,
 }
-#[derive(Deserialize)]
+#[derive(Serialize)]
 struct Title {
     #[serde(rename = "@type")]
     type_: String,
     #[serde(rename = "$value")]
     value: String,
 }
-#[derive(Deserialize)]
+#[derive(Serialize)]
 struct Music {
     body: Body,
 }
-#[derive(Deserialize)]
+#[derive(Serialize)]
 struct Body {
     mdiv: Mdiv,
 }
-#[derive(Deserialize)]
+#[derive(Serialize)]
 struct Mdiv {
     score: Score,
 }
-#[derive(Deserialize)]
+#[derive(Serialize)]
 struct Score {
     scoreDef: ScoreDef,
     section: Section,
 }
-#[derive(Deserialize)]
+#[derive(Serialize)]
 struct ScoreDef {
     staffGrp: StaffGrp,
 }
-#[derive(Deserialize)]
+#[derive(Serialize)]
 struct StaffGrp {
     staffDef: StaffDef,
 }
-#[derive(Deserialize)]
+#[derive(Serialize)]
 struct StaffDef {
     #[serde(rename = "@n")]
     n: String,
@@ -65,7 +97,7 @@ struct StaffDef {
     #[serde(rename = "@meter.unit")]
     meterUnit: String,
 }
-#[derive(Deserialize)]
+#[derive(Serialize)]
 struct Section {}
 
 #[derive(Debug, Serialize)]
@@ -146,14 +178,6 @@ mod tests {
     use super::*;
     use crate::assert_eq_text;
 
-    fn pretty_xml<T: Serialize>(item: T) -> Result<String, String> {
-        let mut buffer = String::new();
-        let mut ser = Serializer::new(&mut buffer);
-        ser.indent(' ', 2);
-        item.serialize(ser).map_err(|e| e.to_string())?;
-        Ok(buffer)
-    }
-
     #[test]
     fn measure_serialize() {
         let expected = r##"<measure xml:id="m42j4hb" left="dbl" right="single" n="1">
@@ -197,6 +221,24 @@ mod tests {
         };
 
         let result = pretty_xml(measure).unwrap();
+        assert_eq_text!(expected, &result);
+    }
+    #[test]
+    fn mei_serialize() {
+        let expected = r##"<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://music-encoding.org/schema/5.1/mei-basic.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.1"?>
+<?xml-model href="https://music-encoding.org/schema/5.1/mei-basic.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<mei xmlns="http://www.music-encoding.org/ns/mei" meiversion="5.1">
+  <meiHead/>
+  <music/>
+</mei>"##;
+
+        let mei = Mei {
+            meiHead: None,
+            music: None,
+        };
+
+        let result = mei.to_xml().unwrap();
         assert_eq_text!(expected, &result);
     }
 }
