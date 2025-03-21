@@ -67,6 +67,7 @@ struct Title {
     value: String,
 }
 #[derive(Serialize)]
+#[serde(rename = "music")]
 struct Music {
     body: Body,
 }
@@ -86,45 +87,53 @@ struct Score {
 }
 #[derive(Serialize)]
 struct ScoreDefinition {
+    #[serde(rename = "@measureNumbers", skip_serializing_if = "Option::is_none")]
+    measure_numbers: Option<bool>,
     #[serde(rename = "staffGrp")]
-    staff_group: StaffGrp,
+    staff_group: StaffGroup,
 }
 #[derive(Serialize)]
-struct StaffGrp {
+struct StaffGroup {
     #[serde(rename = "staffDef")]
     staff_definition: StaffDefinition,
 }
 #[derive(Serialize)]
 struct StaffDefinition {
     #[serde(rename = "@n")]
-    number: String,
+    n: u16,
     #[serde(rename = "@lines")]
-    lines: String,
+    lines: u8,
     #[serde(rename = "@lines.visible")]
-    lines_visible: String,
+    lines_visible: bool,
     #[serde(rename = "@meter.count")]
-    meter_count: String,
+    meter_count: u8,
     #[serde(rename = "@meter.unit")]
-    meter_unit: String,
+    meter_unit: u8,
 }
 #[derive(Serialize)]
-struct Section {}
+struct Section {
+    #[serde(rename = "@xml:id")]
+    id: String,
+    #[serde(rename = "measure")]
+    measures: Vec<Measure>,
+}
 
 #[derive(Debug, Serialize)]
 #[serde(rename = "measure")]
 pub struct Measure {
     #[serde(rename = "@xml:id")]
     id: String,
-    #[serde(rename = "@left")]
-    left: BarRendition,
-    #[serde(rename = "@right")]
-    right: BarRendition,
+    #[serde(rename = "@left", skip_serializing_if = "Option::is_none")]
+    left_bar: Option<BarRendition>,
+    #[serde(rename = "@right", skip_serializing_if = "Option::is_none")]
+    right_bar: Option<BarRendition>,
     #[serde(rename = "@n")]
     n: u16,
 
-    #[serde(rename = "mNum")]
-    number: u16,
-    staff: Staff,
+    #[serde(rename = "mNum", skip_serializing_if = "Option::is_none")]
+    number: Option<u16>,
+    #[serde(rename = "staff", skip_serializing_if = "Option::is_none")]
+    staff: Option<Staff>,
 }
 #[derive(Debug, Serialize)]
 enum BarRendition {
@@ -149,7 +158,7 @@ struct Layer {
     #[serde(rename = "@xml:id")]
     id: String,
     #[serde(rename = "@n")]
-    number: u16,
+    n: u16,
     #[serde(rename = "note")]
     notes: Vec<Note>,
 }
@@ -159,11 +168,11 @@ struct Note {
     #[serde(rename = "@xml:id")]
     id: String,
     #[serde(rename = "@dur")]
-    dur: u16,
+    duration: u16,
     #[serde(rename = "@pname")]
-    pname: PitchName,
+    pitch: PitchName,
     #[serde(rename = "@oct")]
-    oct: u8,
+    octave: u8,
 }
 
 #[derive(Debug, Serialize)]
@@ -192,7 +201,7 @@ mod tests {
     #[test]
     fn measure_serialize() {
         let expected = r##"<measure xml:id="m42j4hb" left="dbl" right="single" n="1">
-  <mNum>1</mNum>
+  <mNum>123</mNum>
   <staff xml:id="m1s1" n="1">
     <layer xml:id="m1s1l1" n="1">
       <note xml:id="n14c3kqh" dur="4" pname="e" oct="5"/>
@@ -203,32 +212,32 @@ mod tests {
 
         let measure = Measure {
             id: "m42j4hb".to_owned(),
-            left: BarRendition::Double,
-            right: BarRendition::Single,
+            left_bar: Some(BarRendition::Double),
+            right_bar: Some(BarRendition::Single),
             n: 1,
-            number: 1,
-            staff: Staff {
+            number: Some(123),
+            staff: Some(Staff {
                 id: "m1s1".to_owned(),
                 n: 1,
                 layers: vec![Layer {
                     id: "m1s1l1".to_owned(),
-                    number: 1,
+                    n: 1,
                     notes: vec![
                         Note {
                             id: "n14c3kqh".to_owned(),
-                            dur: 4,
-                            pname: PitchName::E,
-                            oct: 5,
+                            duration: 4,
+                            pitch: PitchName::E,
+                            octave: 5,
                         },
                         Note {
                             id: "n16dpotb".to_owned(),
-                            dur: 4,
-                            pname: PitchName::E,
-                            oct: 5,
+                            duration: 4,
+                            pitch: PitchName::E,
+                            octave: 5,
                         },
                     ],
                 }],
-            },
+            }),
         };
 
         let result = pretty_xml(measure).unwrap();
@@ -274,6 +283,72 @@ mod tests {
         };
 
         let result = pretty_xml(mei_head).unwrap();
+        assert_eq_text!(expected, &result);
+    }
+
+    #[test]
+    fn music_serialize() {
+        let expected = r##"<music>
+  <body>
+    <mdiv>
+      <score>
+        <scoreDef measureNumbers="true">
+          <staffGrp>
+            <staffDef n="1" lines="5" lines.visible="true" meter.count="2" meter.unit="4"/>
+          </staffGrp>
+        </scoreDef>
+        <section xml:id="section1">
+          <measure xml:id="measure1" n="8"/>
+          <measure xml:id="measure2" n="12"/>
+        </section>
+      </score>
+    </mdiv>
+  </body>
+</music>"##;
+
+        let music = Music {
+            body: Body {
+                mdiv: Mdiv {
+                    score: Score {
+                        score_definition: ScoreDefinition {
+                            measure_numbers: Some(true),
+                            staff_group: StaffGroup {
+                                staff_definition: StaffDefinition {
+                                    n: 1,
+                                    lines: 5,
+                                    lines_visible: true,
+                                    meter_count: 2,
+                                    meter_unit: 4,
+                                },
+                            },
+                        },
+                        section: Section {
+                            id: "section1".to_owned(),
+                            measures: vec![
+                                Measure {
+                                    id: "measure1".to_owned(),
+                                    n: 8,
+                                    left_bar: None,
+                                    right_bar: None,
+                                    number: None,
+                                    staff: None,
+                                },
+                                Measure {
+                                    id: "measure2".to_owned(),
+                                    n: 12,
+                                    left_bar: None,
+                                    right_bar: None,
+                                    number: None,
+                                    staff: None,
+                                },
+                            ],
+                        },
+                    },
+                },
+            },
+        };
+
+        let result = pretty_xml(music).unwrap();
         assert_eq_text!(expected, &result);
     }
 }
