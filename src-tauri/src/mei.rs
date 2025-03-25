@@ -11,9 +11,9 @@ fn pretty_xml<T: Serialize>(item: T) -> Result<String, SeError> {
     Ok(buffer)
 }
 
-struct Mei {
-    header: Option<Header>,
-    music: Option<Music>,
+pub struct Mei {
+    pub header: Option<Header>,
+    pub music: Option<Music>,
 }
 
 impl Serialize for Mei {
@@ -31,7 +31,7 @@ impl Serialize for Mei {
 }
 
 impl Mei {
-    fn to_xml(self) -> Result<String, SeError> {
+    pub fn to_xml(self) -> Result<String, SeError> {
         let serialized = pretty_xml(self)?;
         let mut result = String::new();
         result += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
@@ -44,139 +44,177 @@ impl Mei {
 
 #[derive(Serialize)]
 #[serde(rename = "meiHead")]
-struct Header {
+pub struct Header {
     #[serde(rename = "fileDesc")]
-    file_descriptor: FileDescriptor,
+    pub file_descriptor: FileDescriptor,
 }
 
 #[derive(Serialize)]
-struct FileDescriptor {
+pub struct FileDescriptor {
     #[serde(rename = "titleStmt")]
-    title_statement: TitleStatement,
+    pub title_statement: TitleStatement,
 }
 #[derive(Serialize)]
-struct TitleStatement {
+pub struct TitleStatement {
     #[serde(rename = "title")]
-    titles: Vec<Title>,
+    pub titles: Vec<Title>,
 }
 #[derive(Serialize)]
-struct Title {
+pub struct Title {
     #[serde(rename = "@type")]
-    type_: String,
+    pub type_: String,
     #[serde(rename = "$value")]
-    value: String,
+    pub value: String,
 }
 #[derive(Serialize)]
 #[serde(rename = "music")]
-struct Music {
-    body: Body,
+pub struct Music {
+    pub body: Body,
 }
 #[derive(Serialize)]
-struct Body {
-    mdiv: Mdiv,
+pub struct Body {
+    pub mdiv: Mdiv,
 }
 #[derive(Serialize)]
-struct Mdiv {
-    score: Score,
+pub struct Mdiv {
+    pub score: Score,
 }
 #[derive(Serialize)]
-struct Score {
+pub struct Score {
     #[serde(rename = "scoreDef")]
-    score_definition: ScoreDefinition,
-    section: Section,
+    pub score_definition: ScoreDefinition,
+    pub section: Section,
 }
 #[derive(Serialize)]
-struct ScoreDefinition {
+pub struct ScoreDefinition {
     #[serde(rename = "@measureNumbers", skip_serializing_if = "Option::is_none")]
-    measure_numbers: Option<bool>,
+    pub measure_numbers: Option<bool>,
     #[serde(rename = "staffGrp")]
-    staff_group: StaffGroup,
+    pub staff_group: StaffGroup,
 }
 #[derive(Serialize)]
-struct StaffGroup {
+pub struct StaffGroup {
     #[serde(rename = "staffDef")]
-    staff_definition: StaffDefinition,
+    pub staff_definition: StaffDefinition,
 }
 #[derive(Serialize)]
-struct StaffDefinition {
+pub struct StaffDefinition {
     #[serde(rename = "@n")]
-    n: u16,
+    pub n: u16,
     #[serde(rename = "@lines")]
-    lines: u8,
+    pub lines: u8,
     #[serde(rename = "@lines.visible")]
-    lines_visible: bool,
+    pub lines_visible: bool,
     #[serde(rename = "@meter.count")]
-    meter_count: u8,
+    pub meter_count: u8,
     #[serde(rename = "@meter.unit")]
-    meter_unit: u8,
+    pub meter_unit: u8,
 }
 #[derive(Serialize)]
-struct Section {
+pub struct Section {
     #[serde(rename = "@xml:id")]
-    id: String,
+    pub id: String,
     #[serde(rename = "measure")]
-    measures: Vec<Measure>,
+    pub measures: Vec<Measure>,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Serialize, Default)]
 #[serde(rename = "measure")]
 pub struct Measure {
     #[serde(rename = "@xml:id")]
-    id: String,
-    #[serde(rename = "@left", skip_serializing_if = "Option::is_none")]
-    left_bar: Option<BarRendition>,
-    #[serde(rename = "@right", skip_serializing_if = "Option::is_none")]
-    right_bar: Option<BarRendition>,
+    pub id: String,
     #[serde(rename = "@n")]
-    n: u16,
+    pub n: u16,
 
     #[serde(rename = "mNum", skip_serializing_if = "Option::is_none")]
-    number: Option<u16>,
+    pub number: Option<u16>,
+    #[serde(rename = "@left", skip_serializing_if = "Option::is_none")]
+    pub left_bar: Option<Bar>,
+    #[serde(rename = "@right", skip_serializing_if = "Option::is_none")]
+    pub right_bar: Option<Bar>,
     #[serde(rename = "staff", skip_serializing_if = "Option::is_none")]
-    staff: Option<Staff>,
+    pub staff: Option<Staff>,
 }
-#[derive(Debug, Serialize)]
-enum BarRendition {
+impl Measure {
+    pub fn new<S: Into<String>>(id: S, n: u16) -> Self {
+        Self {
+            id: id.into(),
+            n,
+            ..Measure::default()
+        }
+    }
+
+    pub fn with_number<I: Into<u16>>(&mut self, number: I) -> &mut Self {
+        self.number = Some(number.into());
+        return self;
+    }
+    pub fn with_left_bar(&mut self, left_bar: Bar) -> &mut Self {
+        self.left_bar = Some(left_bar);
+        return self;
+    }
+    pub fn with_right_bar(&mut self, right_bar: Bar) -> &mut Self {
+        self.right_bar = Some(right_bar);
+        return self;
+    }
+    pub fn with_staff(&mut self, staff: Staff) -> &mut Self {
+        self.staff = Some(staff);
+        return self;
+    }
+}
+
+#[derive(Serialize)]
+pub enum Bar {
     #[serde(rename = "dbl")]
     Double,
     #[serde(rename = "single")]
     Single,
 }
 
-#[derive(Debug, Serialize)]
-struct Staff {
+#[derive(Serialize, Default)]
+pub struct Staff {
     #[serde(rename = "@xml:id")]
-    id: String,
+    pub id: String,
     #[serde(rename = "@n")]
-    n: u16,
+    pub n: u16,
     #[serde(rename = "layer")]
-    layers: Vec<Layer>,
+    pub layers: Vec<Layer>,
 }
-#[derive(Debug, Serialize)]
 
-struct Layer {
+#[derive(Serialize, Default)]
+pub struct Layer {
     #[serde(rename = "@xml:id")]
-    id: String,
+    pub id: String,
     #[serde(rename = "@n")]
-    n: u16,
+    pub n: u16,
     #[serde(rename = "note")]
-    notes: Vec<Note>,
+    pub notes: Vec<Note>,
 }
-#[derive(Debug, Serialize)]
 
-struct Note {
+#[derive(Serialize)]
+pub struct Note {
     #[serde(rename = "@xml:id")]
-    id: String,
+    pub id: String,
     #[serde(rename = "@dur")]
-    duration: u16,
+    pub duration: u8,
     #[serde(rename = "@pname")]
-    pitch: PitchName,
+    pub pitch: PitchName,
     #[serde(rename = "@oct")]
-    octave: u8,
+    pub octave: u8,
 }
 
-#[derive(Debug, Serialize)]
-enum PitchName {
+impl Default for Note {
+    fn default() -> Self {
+        Self {
+            id: Default::default(),
+            duration: Default::default(),
+            pitch: PitchName::A,
+            octave: Default::default(),
+        }
+    }
+}
+
+#[derive(Serialize)]
+pub enum PitchName {
     #[serde(rename = "a")]
     A,
     #[serde(rename = "b")]
@@ -199,8 +237,15 @@ mod tests {
     use crate::assert_eq_text;
 
     #[test]
+    fn measure_new() {
+        let mut m = Measure::new("m1", 1);
+        assert_eq!("m1", m.id);
+        assert_eq!(1, m.n);
+    }
+
+    #[test]
     fn measure_serialize() {
-        let expected = r##"<measure xml:id="m42j4hb" left="dbl" right="single" n="1">
+        let expected = r##"<measure xml:id="m42j4hb" n="1" left="dbl" right="single">
   <mNum>123</mNum>
   <staff xml:id="m1s1" n="1">
     <layer xml:id="m1s1l1" n="1">
@@ -210,37 +255,35 @@ mod tests {
   </staff>
 </measure>"##;
 
-        let measure = Measure {
-            id: "m42j4hb".to_owned(),
-            left_bar: Some(BarRendition::Double),
-            right_bar: Some(BarRendition::Single),
+        let mut m = Measure::new("m42j4hb", 1);
+        m.left_bar = Some(Bar::Double);
+        m.right_bar = Some(Bar::Single);
+        // n: 1,
+        m.number = Some(123);
+        m.staff = Some(Staff {
+            id: "m1s1".to_owned(),
             n: 1,
-            number: Some(123),
-            staff: Some(Staff {
-                id: "m1s1".to_owned(),
+            layers: vec![Layer {
+                id: "m1s1l1".to_owned(),
                 n: 1,
-                layers: vec![Layer {
-                    id: "m1s1l1".to_owned(),
-                    n: 1,
-                    notes: vec![
-                        Note {
-                            id: "n14c3kqh".to_owned(),
-                            duration: 4,
-                            pitch: PitchName::E,
-                            octave: 5,
-                        },
-                        Note {
-                            id: "n16dpotb".to_owned(),
-                            duration: 4,
-                            pitch: PitchName::E,
-                            octave: 5,
-                        },
-                    ],
-                }],
-            }),
-        };
+                notes: vec![
+                    Note {
+                        id: "n14c3kqh".to_owned(),
+                        duration: 4,
+                        pitch: PitchName::E,
+                        octave: 5,
+                    },
+                    Note {
+                        id: "n16dpotb".to_owned(),
+                        duration: 4,
+                        pitch: PitchName::E,
+                        octave: 5,
+                    },
+                ],
+            }],
+        });
 
-        let result = pretty_xml(measure).unwrap();
+        let result = pretty_xml(m).unwrap();
         assert_eq_text!(expected, &result);
     }
     #[test]
