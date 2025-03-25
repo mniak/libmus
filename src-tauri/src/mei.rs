@@ -11,6 +11,16 @@ fn pretty_xml<T: Serialize>(item: T) -> Result<String, SeError> {
     Ok(buffer)
 }
 
+use rand::Rng;
+use std::iter;
+
+pub fn random_id() -> String {
+    const LEN: usize = 10;
+    const CHARSET: &[u8] = b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let mut rng = rand::rng();
+    let one_char = || CHARSET[rng.random_range(0..CHARSET.len())] as char;
+    iter::repeat_with(one_char).take(LEN).collect()
+}
 pub struct Mei {
     pub header: Option<Header>,
     pub music: Option<Music>,

@@ -103,14 +103,14 @@ fn notes_from_durations(durations: Vec<i8>) -> Vec<NoteOrRest> {
             if d < 0 {
                 NoteOrRest::Rest(Rest {
                     duration: d as u8,
-                    ..Rest::default()
+                    id: random_id(),
                 })
             } else {
                 NoteOrRest::Note(Note {
+                    id: random_id(),
                     duration: d as u8,
                     pitch: PitchName::E,
                     octave: 5,
-                    ..Note::default()
                 })
             }
         })
@@ -118,8 +118,11 @@ fn notes_from_durations(durations: Vec<i8>) -> Vec<NoteOrRest> {
 }
 fn measure_from_durations(durations: Vec<i8>) -> Measure {
     Measure {
+        id: random_id(),
         staff: Some(Staff {
+            id: random_id(),
             layers: vec![Layer {
+                id: random_id(),
                 elements: notes_from_durations(durations),
                 ..Layer::default()
             }],
