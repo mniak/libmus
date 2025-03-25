@@ -37,20 +37,6 @@ impl Proposition {
             })
             .collect();
         return x;
-        // map(|m|
-        // vec![
-        //     Measure {
-        //         left_bar: Some(Bar::Double),
-        //         right_bar: Some(Bar::Single),
-        //         ..self.measures.0
-        //     },
-        //     Measure {
-        //         left_bar: Some(Bar::Single),
-        //         right_bar: Some(Bar::Double),
-        //         ..self.measures.1
-        //     },
-        // ]
-        // .into_iter()
     }
 }
 struct Exercise {
@@ -110,22 +96,31 @@ impl Exercise {
     }
 }
 
-fn notes_from_durations(durations: Vec<u8>) -> Vec<Note> {
+fn notes_from_durations(durations: Vec<i8>) -> Vec<NoteOrRest> {
     return durations
         .iter()
-        .map(|&d| Note {
-            duration: d,
-            pitch: PitchName::E,
-            octave: 5,
-            ..Note::default()
+        .map(|&d| {
+            if d < 0 {
+                NoteOrRest::Rest(Rest {
+                    duration: d as u8,
+                    ..Rest::default()
+                })
+            } else {
+                NoteOrRest::Note(Note {
+                    duration: d as u8,
+                    pitch: PitchName::E,
+                    octave: 5,
+                    ..Note::default()
+                })
+            }
         })
         .collect();
 }
-fn measure_from_durations(durations: Vec<u8>) -> Measure {
+fn measure_from_durations(durations: Vec<i8>) -> Measure {
     Measure {
         staff: Some(Staff {
             layers: vec![Layer {
-                notes: notes_from_durations(durations),
+                elements: notes_from_durations(durations),
                 ..Layer::default()
             }],
             ..Staff::default()
@@ -141,13 +136,13 @@ pub fn series1_time2() -> Mei {
             Proposition {
                 measures: vec![
                     measure_from_durations(vec![4, 4]),
-                    measure_from_durations(vec![4, 4]),
+                    measure_from_durations(vec![4, -4]),
                 ],
             },
             Proposition {
                 measures: vec![
                     measure_from_durations(vec![4, 8, 8]),
-                    measure_from_durations(vec![4, 4]),
+                    measure_from_durations(vec![4, -4]),
                 ],
             },
         ],

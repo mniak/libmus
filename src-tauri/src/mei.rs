@@ -186,8 +186,17 @@ pub struct Layer {
     pub id: String,
     #[serde(rename = "@n")]
     pub n: u16,
+    // #[serde(rename = "note")]
+    #[serde(rename = "$value")]
+    pub elements: Vec<NoteOrRest>,
+}
+
+#[derive(Serialize)]
+pub enum NoteOrRest {
     #[serde(rename = "note")]
-    pub notes: Vec<Note>,
+    Note(Note),
+    #[serde(rename = "rest")]
+    Rest(Rest),
 }
 
 #[derive(Serialize)]
@@ -211,6 +220,14 @@ impl Default for Note {
             octave: Default::default(),
         }
     }
+}
+
+#[derive(Serialize, Default)]
+pub struct Rest {
+    #[serde(rename = "@xml:id")]
+    pub id: String,
+    #[serde(rename = "@dur")]
+    pub duration: u8,
 }
 
 #[derive(Serialize)]
@@ -250,6 +267,7 @@ mod tests {
   <staff xml:id="m1s1" n="1">
     <layer xml:id="m1s1l1" n="1">
       <note xml:id="n14c3kqh" dur="4" pname="e" oct="5"/>
+      <rest xml:id="r11z73rv" dur="4"/>
       <note xml:id="n16dpotb" dur="4" pname="e" oct="5"/>
     </layer>
   </staff>
@@ -258,7 +276,6 @@ mod tests {
         let mut m = Measure::new("m42j4hb", 1);
         m.left_bar = Some(Bar::Double);
         m.right_bar = Some(Bar::Single);
-        // n: 1,
         m.number = Some(123);
         m.staff = Some(Staff {
             id: "m1s1".to_owned(),
@@ -266,19 +283,23 @@ mod tests {
             layers: vec![Layer {
                 id: "m1s1l1".to_owned(),
                 n: 1,
-                notes: vec![
-                    Note {
+                elements: vec![
+                    NoteOrRest::Note(Note {
                         id: "n14c3kqh".to_owned(),
                         duration: 4,
                         pitch: PitchName::E,
                         octave: 5,
-                    },
-                    Note {
+                    }),
+                    NoteOrRest::Rest(Rest {
+                        id: "r11z73rv".to_owned(),
+                        duration: 4,
+                    }),
+                    NoteOrRest::Note(Note {
                         id: "n16dpotb".to_owned(),
                         duration: 4,
                         pitch: PitchName::E,
                         octave: 5,
-                    },
+                    }),
                 ],
             }],
         });
