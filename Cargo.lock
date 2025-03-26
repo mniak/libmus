@@ -2637,6 +2637,7 @@ name = "musigym"
 version = "0.1.0"
 dependencies = [
  "dioxus",
+ "wasm-bindgen",
 ]
 
 [[package]]

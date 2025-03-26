@@ -8,6 +8,7 @@ edition = "2021"
 
 [dependencies]
 dioxus = { version = "0.6.0", features = ["fullstack"] }
+wasm-bindgen = "0.2.100"
 
 [features]
 default = ["desktop"]
