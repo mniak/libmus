@@ -15,7 +15,7 @@
         <score>
           <scoreDef measureNumbers="true">
             <staffGrp>
-              <staffDef n="1" lines="5" lines.visible="true" meter.count="2" meter.unit="4">
+              <staffDef n="1" lines="5" lines.visible="false" meter.count="2" meter.unit="4">
               </staffDef>
             </staffGrp>
           </scoreDef>
