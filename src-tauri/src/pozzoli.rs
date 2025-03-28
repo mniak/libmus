@@ -121,8 +121,10 @@ fn measure_from_durations(durations: Vec<i8>) -> Measure {
         id: random_id(),
         staff: Some(Staff {
             id: random_id(),
+            n: 1,
             layers: vec![Layer {
                 id: random_id(),
+                n: 1,
                 elements: notes_from_durations(durations),
                 ..Layer::default()
             }],
