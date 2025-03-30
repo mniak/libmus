@@ -9,12 +9,6 @@ struct Proposition {
     measures: Vec<Measure>,
 }
 impl Proposition {
-    // fn from_measures(measures: Vec<Measure>) -> Proposition {
-    //     durations.iter().map(|durations|{
-
-    //     })
-    // }
-
     fn into_iter(self) -> Vec<Measure> {
         let count = self.measures.len();
         let x = self
@@ -136,6 +130,18 @@ fn measure_from_durations(durations: Vec<i8>) -> Measure {
         ..Measure::default()
     }
 }
+fn measures_from_durations(durations: Vec<i8>, max: f32) -> Vec<Measure> {
+    SplitDurations { max, durations }
+        .map(measure_from_durations)
+        .collect()
+}
+
+// fn propositions_from_durations(durations: Vec<i8>, max: f32) -> Vec<Measure> {
+//     SplitDurations { max, durations }
+//         .map(measure_from_durations)
+//         .chunks(2)
+//         .collect()
+// }
 
 struct SplitDurations {
     max: f32,
@@ -148,19 +154,19 @@ impl Iterator for SplitDurations {
             return None;
         }
         let mut accumulator: f32 = 0.0;
-        for (i, d) in self.durations.iter().enumerate() {
-            let inverse = 1.0 / d.abs() as f32;
-            accumulator += inverse;
+        for (idx, val) in self
+            .durations
+            .iter()
+            .filter(|&&d| d != 0)
+            .map(|d| 1.0 / d.abs() as f32)
+            .enumerate()
+        {
+            accumulator += val;
             if accumulator >= self.max {
-                return Some(self.durations.drain(..=i).collect());
+                return Some(self.durations.drain(..=idx).collect());
             }
         }
-        return if !self.durations.is_empty() {
-            self.durations = vec![];
-            Some(self.durations.clone())
-        } else {
-            None
-        };
+        Some(self.durations.drain(..).collect())
     }
 }
 
