@@ -152,9 +152,7 @@ impl Iterator for SplitDurations {
             let inverse = 1.0 / d.abs() as f32;
             accumulator += inverse;
             if accumulator >= self.max {
-                let (left, right) = self.durations.split_at(i);
-                self.durations = right.to_vec();
-                return Some(left.to_vec());
+                return Some(self.durations.drain(..=i).collect());
             }
         }
         return if !self.durations.is_empty() {
@@ -214,7 +212,7 @@ mod tests {
             vec![4, 8, 8],
             vec![4, 8, -8],
             vec![2],
-            vec![4, 4, 8, -8],
+            vec![8, 8, 8, -8],
         ];
 
         let mut iterator = SplitDurations {
