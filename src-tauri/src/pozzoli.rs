@@ -184,3 +184,44 @@ pub fn series1_time2() -> Mei {
     }
     .into_mei()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::assert_eq_text;
+
+    #[test]
+    fn split_durations() {
+        let expected: Vec<Vec<i8>> = vec![
+            vec![4, 4],
+            vec![4, -4],
+            vec![4, 8, 8],
+            vec![4, -4],
+            vec![8, 8, 4],
+            vec![4, -4],
+            vec![8, 8, 8, 8],
+            vec![8, -8, -4],
+            vec![8, 8, 8, 8],
+            vec![4, 8, -8],
+            vec![4, 8, 8],
+            vec![8, 8, 8, -8],
+            vec![8, 8, 4],
+            vec![4, 8, -8],
+            vec![8, 8, 8, 8],
+            vec![8, 8, 8, -8],
+            vec![4, 8, 8],
+            vec![4, 8, -8],
+            vec![2],
+            vec![4, 4, 8, -8],
+        ];
+
+        // let result = super::split_durations(input, 2, 4);
+        let iterator = Durations {
+            durations: expected.iter().flatten().map(|x| x.to_owned()),
+        };
+
+        for e in expected {
+            assert_eq!(iterator.next(), Some());
+        }
+    }
+}
