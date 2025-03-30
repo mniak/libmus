@@ -137,32 +137,34 @@ fn measure_from_durations(durations: Vec<i8>) -> Measure {
     }
 }
 
-struct Durations<'a> {
-    durs: &'a [i8],
+struct SplitDurations {
+    max: f32,
+    durations: Vec<i8>,
 }
-impl<'a> Iterator for Durations<'a> {
-    type Item = &'a [i8];
+impl Iterator for SplitDurations {
+    type Item = Vec<i8>;
     fn next(&mut self) -> Option<Self::Item> {
-        if self.durs.len() == 0 {
+        if self.durations.len() == 0 {
             return None;
         }
-        let accumulator: f32 = 0.0;
-        let counter = 0;
-        for d in self.durs {
-            // let absolute = if d > 0 { d } else { -d };
-            // let inverse = 1 as f32 / absolute as f32;
-            // accumulator += inverse;
-            // if accumulator > 1 {
-            //     result.append(current_measure);
-            // }
+        let mut accumulator: f32 = 0.0;
+        for (i, d) in self.durations.iter().enumerate() {
+            let inverse = 1.0 / d.abs() as f32;
+            accumulator += inverse;
+            if accumulator >= self.max {
+                let (left, right) = self.durations.split_at(i);
+                self.durations = right.to_vec();
+                return Some(left.to_vec());
+            }
         }
-        let (left, right) = self.durs.split_at(counter);
-        self.durs = right;
-        return Some(left);
+        return if !self.durations.is_empty() {
+            self.durations = vec![];
+            Some(self.durations.clone())
+        } else {
+            None
+        };
     }
 }
-
-// fn measures_from_durations(durations: Vec<i8>) -> Iter {}
 
 pub fn series1_time2() -> Mei {
     Exercise {
@@ -215,13 +217,19 @@ mod tests {
             vec![4, 4, 8, -8],
         ];
 
-        // let result = super::split_durations(input, 2, 4);
-        let iterator = Durations {
-            durations: expected.iter().flatten().map(|x| x.to_owned()),
+        let mut iterator = SplitDurations {
+            max: 2.0 / 4.0,
+            durations: expected.iter().flatten().map(|x| x.to_owned()).collect(),
         };
 
-        for e in expected {
-            assert_eq!(iterator.next(), Some());
+        for (i, e) in expected.into_iter().enumerate() {
+            let got = iterator.next();
+            let expected = Some(e);
+            println!("Iteration {}: got {:?} expecting {:?}", i, got, expected);
+            assert_eq!(got, expected);
         }
+        let got = iterator.next();
+        println!("Last iteration: got {:?} expecting None", got);
+        assert_eq!(got, None);
     }
 }
