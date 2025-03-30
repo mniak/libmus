@@ -1,5 +1,6 @@
 use std::{time::Duration, usize};
 
+use rand::distr::Iter;
 use serde_json::map;
 
 use crate::mei::*;
@@ -8,9 +9,11 @@ struct Proposition {
     measures: Vec<Measure>,
 }
 impl Proposition {
-    // type Item = Measure;
+    // fn from_measures(measures: Vec<Measure>) -> Proposition {
+    //     durations.iter().map(|durations|{
 
-    // type IntoIter = std::vec::IntoIter<Measure>;
+    //     })
+    // }
 
     fn into_iter(self) -> Vec<Measure> {
         let count = self.measures.len();
@@ -102,7 +105,7 @@ fn notes_from_durations(durations: Vec<i8>) -> Vec<NoteOrRest> {
         .map(|&d| {
             if d < 0 {
                 NoteOrRest::Rest(Rest {
-                    duration: d as u8,
+                    duration: (-d) as u8,
                     id: random_id(),
                 })
             } else {
@@ -133,6 +136,33 @@ fn measure_from_durations(durations: Vec<i8>) -> Measure {
         ..Measure::default()
     }
 }
+
+struct Durations<'a> {
+    durs: &'a [i8],
+}
+impl<'a> Iterator for Durations<'a> {
+    type Item = &'a [i8];
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.durs.len() == 0 {
+            return None;
+        }
+        let accumulator: f32 = 0.0;
+        let counter = 0;
+        for d in self.durs {
+            // let absolute = if d > 0 { d } else { -d };
+            // let inverse = 1 as f32 / absolute as f32;
+            // accumulator += inverse;
+            // if accumulator > 1 {
+            //     result.append(current_measure);
+            // }
+        }
+        let (left, right) = self.durs.split_at(counter);
+        self.durs = right;
+        return Some(left);
+    }
+}
+
+// fn measures_from_durations(durations: Vec<i8>) -> Iter {}
 
 pub fn series1_time2() -> Mei {
     Exercise {

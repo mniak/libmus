@@ -30,6 +30,7 @@ fn send_mei(app: tauri::AppHandle, m: mei::Mei) -> Result<(), Error> {
     let xml = m
         .to_xml()
         .map_err(|e| Error::XmlSerialization(e.to_string()))?;
+    // let xml = include_str!("../../public/mei.xml").to_string();
     app.emit("meiChanged", MeiChangedEvent { mei: xml.clone() })
         .map_err(|e| Error::TauriFailed(e.to_string()))?;
 
