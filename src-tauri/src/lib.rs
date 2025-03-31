@@ -3,6 +3,7 @@ use std::fmt::Display;
 use serde::Serialize;
 use tauri::{Emitter, Manager};
 
+mod iter;
 mod mei;
 mod pozzoli;
 #[cfg(test)]
