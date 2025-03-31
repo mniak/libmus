@@ -175,20 +175,6 @@ where
     get_value: F,
 }
 
-impl<T, I, F> IntoGroups<T, I, F>
-where
-    I: Iterator<Item = T>,
-    F: Fn(&T) -> f32,
-{
-    fn new(iter: I, threshold: f32, get_value: F) -> Self {
-        Self {
-            iter,
-            threshold,
-            get_value,
-        }
-    }
-}
-
 impl<T, I, F> Iterator for IntoGroups<T, I, F>
 where
     I: Iterator<Item = T>,
