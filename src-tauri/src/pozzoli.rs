@@ -216,42 +216,6 @@ where
     }
 }
 
-struct SplitDurations<I>
-where
-    I: Iterator<Item = i8>,
-{
-    max: f32,
-    iter: I,
-}
-
-impl<I> Iterator for SplitDurations<I>
-where
-    I: Iterator<Item = i8>,
-{
-    type Item = Vec<i8>;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        let mut accumulator: f32 = 0.0;
-        let mut group = Vec::new();
-
-        while let Some(d) = self.iter.next() {
-            if d != 0 {
-                accumulator += 1.0 / d.abs() as f32;
-            }
-            group.push(d);
-
-            if accumulator >= self.max {
-                return Some(group);
-            }
-        }
-
-        match group.is_empty() {
-            true => None,
-            false => Some(group),
-        }
-    }
-}
-
 pub fn series1_time2() -> Mei {
     Exercise {
         name: "Série 1: 2/4".to_owned(),
