@@ -130,11 +130,11 @@ fn measure_from_durations(durations: Vec<i8>) -> Measure {
         ..Measure::default()
     }
 }
-fn measures_from_durations(durations: Vec<i8>, max: f32) -> Vec<Measure> {
-    SplitDurations { max, durations }
-        .map(measure_from_durations)
-        .collect()
-}
+// fn measures_from_durations(durations: Vec<i8>, max: f32) -> Vec<Measure> {
+//     SplitDurations { max, durations }
+//         .map(measure_from_durations)
+//         .collect()
+// }
 
 // fn propositions_from_durations(durations: Vec<i8>, max: f32) -> Vec<Measure> {
 //     SplitDurations { max, durations }
@@ -143,30 +143,40 @@ fn measures_from_durations(durations: Vec<i8>, max: f32) -> Vec<Measure> {
 //         .collect()
 // }
 
-struct SplitDurations {
+struct SplitDurations<I>
+where
+    I: Iterator<Item = i8>,
+{
     max: f32,
-    durations: Vec<i8>,
+    iter: I,
 }
-impl Iterator for SplitDurations {
+
+impl<I> Iterator for SplitDurations<I>
+where
+    I: Iterator<Item = i8>,
+{
     type Item = Vec<i8>;
+
     fn next(&mut self) -> Option<Self::Item> {
-        if self.durations.len() == 0 {
-            return None;
-        }
         let mut accumulator: f32 = 0.0;
-        for (idx, val) in self
-            .durations
-            .iter()
-            .filter(|&&d| d != 0)
-            .map(|d| 1.0 / d.abs() as f32)
-            .enumerate()
-        {
-            accumulator += val;
+        let mut group = Vec::new();
+
+        while let Some(d) = self.iter.next() {
+            if d != 0 {
+                accumulator += 1.0 / d.abs() as f32;
+            }
+            group.push(d);
+
             if accumulator >= self.max {
-                return Some(self.durations.drain(..=idx).collect());
+                return Some(group);
             }
         }
-        Some(self.durations.drain(..).collect())
+
+        if group.is_empty() {
+            None
+        } else {
+            Some(group)
+        }
     }
 }
 
@@ -223,7 +233,7 @@ mod tests {
 
         let mut iterator = SplitDurations {
             max: 2.0 / 4.0,
-            durations: expected.iter().flatten().map(|x| x.to_owned()).collect(),
+            iter: expected.clone().into_iter().flatten(),
         };
 
         for (i, e) in expected.into_iter().enumerate() {
