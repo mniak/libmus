@@ -147,12 +147,23 @@ fn split_durations<I: Iterator<Item = i8>>(
     threshold: f32,
     iter: I,
 ) -> impl Iterator<Item = Vec<i8>> {
-    IntoGroups {
-        iter,
-        threshold,
-        get_value: |d| 1.0 / d.abs() as f32,
+    iter.into_groups(threshold, |d| 1.0 / d.abs() as f32)
+}
+
+trait IntoGroupsExt<T>: Iterator<Item = T> + Sized {
+    fn into_groups<F>(self, threshold: f32, get_value: F) -> IntoGroups<T, Self, F>
+    where
+        F: Fn(&T) -> f32,
+    {
+        IntoGroups {
+            iter: self,
+            threshold,
+            get_value,
+        }
     }
 }
+
+impl<T, I> IntoGroupsExt<T> for I where I: Iterator<Item = T> {}
 
 struct IntoGroups<T, I, F>
 where
@@ -291,7 +302,13 @@ mod tests {
             vec![8, 8, 8, -8],
         ];
 
-        let mut iter = super::split_durations(2.0 / 4.0, expected.clone().into_iter().flatten());
+        let mut iter = expected
+            .clone()
+            .into_iter()
+            .flatten()
+            .into_groups(2.0 / 4.0, |d| 1.0 / d.abs() as f32);
+
+        // let mut iter = super::split_durations(2.0 / 4.0, expected.clone().into_iter().flatten());
         for (i, e) in expected.into_iter().enumerate() {
             let got = iter.next();
             let expected = Some(e);
