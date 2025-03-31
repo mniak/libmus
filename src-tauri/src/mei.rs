@@ -213,7 +213,7 @@ pub enum NoteOrRest {
 #[derive(Serialize)]
 pub struct Beam {
     #[serde(rename = "note")]
-    notes: Vec<Note>,
+    pub notes: Vec<Note>,
 }
 
 #[derive(Serialize)]
