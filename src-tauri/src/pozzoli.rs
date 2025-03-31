@@ -1,5 +1,6 @@
 use crate::iter::IntoGroupsExt;
 use crate::mei::*;
+use itertools::*;
 use rand::distr::Iter;
 use serde_json::map;
 use std::{time::Duration, usize};
@@ -8,7 +9,7 @@ struct Proposition {
     measures: Vec<Measure>,
 }
 impl Proposition {
-    fn into_iter(self) -> Vec<Measure> {
+    fn measures(self) -> Vec<Measure> {
         let count = self.measures.len();
         let x = self
             .measures
@@ -46,10 +47,16 @@ impl Exercise {
         let measures = self
             .propositions
             .into_iter()
-            .flat_map(|p| p.into_iter())
-            .map(|mut m: Measure| {
-                counter += 1;
-                m.n = counter;
+            .enumerate()
+            .map(|(idx, prop)| {
+                let mut measures = prop.measures();
+                measures[0].number = Some(idx as u16 + 1);
+                return measures;
+            })
+            .flatten()
+            .enumerate()
+            .map(|(idx, mut m)| {
+                m.n = idx as u16 + 1;
                 m
             });
 
@@ -129,18 +136,19 @@ fn measure_from_durations(durations: Vec<i8>) -> Measure {
         ..Measure::default()
     }
 }
-// fn measures_from_durations(durations: Vec<i8>, max: f32) -> Vec<Measure> {
-//     SplitDurations { max, durations }
-//         .map(measure_from_durations)
-//         .collect()
-// }
 
-// fn propositions_from_durations(durations: Vec<i8>, max: f32) -> Vec<Measure> {
-//     SplitDurations { max, durations }
-//         .map(measure_from_durations)
-//         .chunks(2)
-//         .collect()
-// }
+fn propositions_from_durations(durations: Vec<i8>, max: f32) -> Vec<Proposition> {
+    durations
+        .into_iter()
+        .into_groups(2.0 / 4.0, |d| 1.0 / d.abs() as f32)
+        .map(measure_from_durations)
+        .chunks(2)
+        .into_iter()
+        .map(|ms| Proposition {
+            measures: ms.collect_vec(),
+        })
+        .collect()
+}
 
 fn split_durations<I: Iterator<Item = i8>>(
     threshold: f32,
@@ -150,22 +158,16 @@ fn split_durations<I: Iterator<Item = i8>>(
 }
 
 pub fn series1_time2() -> Mei {
+    let durations: Vec<i8> = vec![
+        4, 4, 4, -4, 4, 8, 8, 4, -4, 8, 8, 4, 4, -4, 8, 8, 8, 8, 8, -8, -4, 8, 8, 8, 8, 4, 8, -8,
+        4, 8, 8, 8, 8, 8, -8, 8, 8, 4, 4, 8, -8, 8, 8, 8, 8, 8, 8, 8, -8, 4, 8, 8, 4, 8, -8, 2, 8,
+        8, 8, -8,
+    ];
+    let propositions = propositions_from_durations(durations, 2.0 / 4.0);
+
     Exercise {
         name: "Série 1: 2/4".to_owned(),
-        propositions: vec![
-            Proposition {
-                measures: vec![
-                    measure_from_durations(vec![4, 4]),
-                    measure_from_durations(vec![4, -4]),
-                ],
-            },
-            Proposition {
-                measures: vec![
-                    measure_from_durations(vec![4, 8, 8]),
-                    measure_from_durations(vec![4, -4]),
-                ],
-            },
-        ],
+        propositions,
     }
     .into_mei()
 }
@@ -205,15 +207,14 @@ mod tests {
             .flatten()
             .into_groups(2.0 / 4.0, |d| 1.0 / d.abs() as f32);
 
-        // let mut iter = super::split_durations(2.0 / 4.0, expected.clone().into_iter().flatten());
         for (i, e) in expected.into_iter().enumerate() {
             let got = iter.next();
             let expected = Some(e);
-            println!("Iteration {}: got {:?} expecting {:?}", i, got, expected);
-            assert_eq!(got, expected);
+            println!("Iteration {}: expecting {:?} got {:?} ", i, expected, got);
+            assert_eq!(expected, got);
         }
         let got = iter.next();
-        println!("Last iteration: got {:?} expecting None", got);
-        assert_eq!(got, None);
+        println!("Last iteration: expecting None got {:?} ", got);
+        assert_eq!(None, got);
     }
 }
