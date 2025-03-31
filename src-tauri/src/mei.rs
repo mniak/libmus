@@ -196,7 +196,6 @@ pub struct Layer {
     pub id: String,
     #[serde(rename = "@n")]
     pub n: u16,
-    // #[serde(rename = "note")]
     #[serde(rename = "$value")]
     pub elements: Vec<NoteOrRest>,
 }
@@ -207,6 +206,14 @@ pub enum NoteOrRest {
     Note(Note),
     #[serde(rename = "rest")]
     Rest(Rest),
+    #[serde(rename = "beam")]
+    Beam(Beam),
+}
+
+#[derive(Serialize)]
+pub struct Beam {
+    #[serde(rename = "note")]
+    notes: Vec<Note>,
 }
 
 #[derive(Serialize)]
@@ -279,6 +286,10 @@ mod tests {
       <note xml:id="n14c3kqh" dur="4" pname="e" oct="5"/>
       <rest xml:id="r11z73rv" dur="4"/>
       <note xml:id="n16dpotb" dur="4" pname="e" oct="5"/>
+      <beam>
+        <note xml:id="n22547l" dur="8" pname="e" oct="5"/>
+        <note xml:id="nm124p" dur="8" pname="e" oct="5"/>
+      </beam>
     </layer>
   </staff>
 </measure>"##;
@@ -309,6 +320,22 @@ mod tests {
                         duration: 4,
                         pitch: PitchName::E,
                         octave: 5,
+                    }),
+                    NoteOrRest::Beam(Beam {
+                        notes: vec![
+                            Note {
+                                id: "n22547l".to_owned(),
+                                duration: 8,
+                                pitch: PitchName::E,
+                                octave: 5,
+                            },
+                            Note {
+                                id: "nm124p".to_owned(),
+                                duration: 8,
+                                pitch: PitchName::E,
+                                octave: 5,
+                            },
+                        ],
                     }),
                 ],
             }],
