@@ -143,8 +143,66 @@ fn measure_from_durations(durations: Vec<i8>) -> Measure {
 //         .collect()
 // }
 
-fn split_durations<I: Iterator<Item = i8>>(max: f32, iter: I) -> SplitDurations<I> {
-    SplitDurations { max, iter }
+fn split_durations<I: Iterator<Item = i8>>(
+    threshold: f32,
+    iter: I,
+) -> impl Iterator<Item = Vec<i8>> {
+    IntoGroups {
+        iter,
+        threshold,
+        get_value: |d| 1.0 / d.abs() as f32,
+    }
+}
+
+struct IntoGroups<T, I, F>
+where
+    I: Iterator<Item = T>,
+    F: Fn(&T) -> f32,
+{
+    iter: I,
+    threshold: f32,
+    get_value: F,
+}
+
+impl<T, I, F> IntoGroups<T, I, F>
+where
+    I: Iterator<Item = T>,
+    F: Fn(&T) -> f32,
+{
+    fn new(iter: I, threshold: f32, get_value: F) -> Self {
+        Self {
+            iter,
+            threshold,
+            get_value,
+        }
+    }
+}
+
+impl<T, I, F> Iterator for IntoGroups<T, I, F>
+where
+    I: Iterator<Item = T>,
+    F: Fn(&T) -> f32,
+{
+    type Item = Vec<T>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let mut accumulator: f32 = 0.0;
+        let mut group = Vec::new();
+
+        while let Some(d) = self.iter.next() {
+            accumulator += (&self.get_value)(&d);
+            group.push(d);
+
+            if accumulator >= self.threshold {
+                return Some(group);
+            }
+        }
+
+        match group.is_empty() {
+            true => None,
+            false => Some(group),
+        }
+    }
 }
 
 struct SplitDurations<I>
@@ -233,16 +291,14 @@ mod tests {
             vec![8, 8, 8, -8],
         ];
 
-        let mut iterator =
-            super::split_durations(2.0 / 4.0, expected.clone().into_iter().flatten());
-
+        let mut iter = super::split_durations(2.0 / 4.0, expected.clone().into_iter().flatten());
         for (i, e) in expected.into_iter().enumerate() {
-            let got = iterator.next();
+            let got = iter.next();
             let expected = Some(e);
             println!("Iteration {}: got {:?} expecting {:?}", i, got, expected);
             assert_eq!(got, expected);
         }
-        let got = iterator.next();
+        let got = iter.next();
         println!("Last iteration: got {:?} expecting None", got);
         assert_eq!(got, None);
     }
