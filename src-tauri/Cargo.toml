@@ -26,10 +26,3 @@ quick-xml = { version = "0.37.2", features = ["serialize"] }
 dissimilar = "1.0.10"
 rand = "0.9.0"
 itertools = "0.14.0"
-
-[profile.dev]
-debug = 0
-strip = "debuginfo"
-
-[lints.rust]
-unused = "allow"
