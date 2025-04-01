@@ -7,4 +7,8 @@ node_modules/:
 
 .PHONY=build
 build:
-	cargo tauri build
+	cargo tauri build --bundles=deb,rpm --verbose
+
+.PHONY=build-run
+build-run: build
+	WEBKIT_DISABLE_DMABUF_RENDERER=1 ./src-tauri/target/release/musigym
