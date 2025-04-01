@@ -229,96 +229,62 @@ pub fn series1_time2() -> mei::Mei {
     .into_mei()
 }
 
-// #[cfg(test)]
-// mod tests {
-//     use super::*;
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-//     #[test]
-//     fn split_durations() {
-//         let expected: Vec<Vec<Element>> = vec![
-//             vec![
-//                 Element::Note(4),
-//                 Element::Note(4),
-//                 Element::Note(4),
-//                 Element::Rest(4),
-//             ],
-//             vec![
-//                 Element::Note(4),
-//                 Element::Beam(vec![8, 8]),
-//                 Element::Note(4),
-//                 Element::Rest(4),
-//             ],
-//             vec![
-//                 Element::Beam(vec![8, 8]),
-//                 Element::Note(4),
-//                 Element::Note(4),
-//                 Element::Rest(4),
-//             ],
-//             vec![
-//                 Element::Beam(vec![8, 8]),
-//                 Element::Beam(vec![8, 8]),
-//                 Element::Note(8),
-//                 Element::Rest(8),
-//                 Element::Rest(4),
-//             ],
-//             vec![
-//                 Element::Beam(vec![8, 8]),
-//                 Element::Beam(vec![8, 8]),
-//                 Element::Note(4),
-//                 Element::Note(8),
-//                 Element::Rest(8),
-//             ],
-//             vec![
-//                 Element::Note(4),
-//                 Element::Beam(vec![8, 8]),
-//                 Element::Beam(vec![8, 8]),
-//                 Element::Note(8),
-//                 Element::Rest(8),
-//             ],
-//             vec![
-//                 Element::Beam(vec![8, 8]),
-//                 Element::Note(4),
-//                 Element::Note(4),
-//                 Element::Note(8),
-//                 Element::Rest(8),
-//             ],
-//             vec![
-//                 Element::Beam(vec![8, 8]),
-//                 Element::Beam(vec![8, 8]),
-//                 Element::Beam(vec![8, 8]),
-//                 Element::Note(8),
-//                 Element::Rest(8),
-//             ],
-//             vec![
-//                 Element::Note(4),
-//                 Element::Beam(vec![8, 8]),
-//                 Element::Note(4),
-//                 Element::Note(8),
-//                 Element::Rest(8),
-//             ],
-//             vec![
-//                 Element::Note(2),
-//                 Element::Beam(vec![8, 8]),
-//                 Element::Note(8),
-//                 Element::Rest(8),
-//             ],
-//         ];
+    #[test]
+    fn split_durations() {
+        let input: Vec<Element> = vec![
+            Element::Note(4),
+            Element::Note(4),
+            Element::Note(4),
+            Element::Rest(4),
+            Element::Note(4),
+            Element::Beam(vec![8, 8]),
+            Element::Note(4),
+            Element::Rest(4),
+            Element::Beam(vec![8, 8]),
+            Element::Note(4),
+            Element::Note(4),
+            Element::Rest(4),
+        ];
 
-//         let input: Vec<Element> = expected.into_iter().flatten().collect();
-//         let mut iter = input.into_groups(2.0 / 4.0, |el| match el {
-//             Element::Note(d) => 1.0 / d as f32,
-//             Element::Rest(d) => 1.0 / d as f32,
-//             Element::Beam(d) => 1.0 / d.into_iter().sum::<u8>() as f32,
-//         });
+        let expected: Vec<Vec<Element>> = vec![
+            vec![
+                Element::Note(4),
+                Element::Note(4),
+                Element::Note(4),
+                Element::Rest(4),
+            ],
+            vec![
+                Element::Note(4),
+                Element::Beam(vec![8, 8]),
+                Element::Note(4),
+                Element::Rest(4),
+            ],
+            vec![
+                Element::Beam(vec![8, 8]),
+                Element::Note(4),
+                Element::Note(4),
+                Element::Rest(4),
+            ],
+        ];
 
-//         for (i, e) in expected.into_iter().enumerate() {
-//             let got = iter.next();
-//             let expected = Some(e);
-//             println!("Iteration {}: expecting {:?} got {:?} ", i, expected, got);
-//             assert_eq!(expected, got);
-//         }
-//         let got = iter.next();
-//         println!("Last iteration: expecting None got {:?} ", got);
-//         assert_eq!(None, got);
-//     }
-// }
+        let mut iter = input.into_iter().into_groups(2.0 / 4.0, |el| match el {
+            Element::Note(d) => 1.0 / *d as f32,
+            Element::Rest(d) => 1.0 / *d as f32,
+            Element::Beam(d) => 1.0 / d.into_iter().sum::<u8>() as f32,
+        });
+
+        for (i, e) in expected.into_iter().enumerate() {
+            let got = iter.next();
+            let expected = Some(e);
+            println!("Iteration {}: expecting {:?} got {:?} ", i, expected, got);
+            assert_eq!(expected, got);
+        }
+        let got = iter.next();
+        println!("Last iteration: expecting None got {:?} ", got);
+        assert_eq!(None, got);
+    }
+}
