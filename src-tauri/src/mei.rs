@@ -153,23 +153,6 @@ impl Measure {
             ..Measure::default()
         }
     }
-
-    pub fn with_number<I: Into<u16>>(&mut self, number: I) -> &mut Self {
-        self.number = Some(number.into());
-        return self;
-    }
-    pub fn with_left_bar(&mut self, left_bar: Bar) -> &mut Self {
-        self.left_bar = Some(left_bar);
-        return self;
-    }
-    pub fn with_right_bar(&mut self, right_bar: Bar) -> &mut Self {
-        self.right_bar = Some(right_bar);
-        return self;
-    }
-    pub fn with_staff(&mut self, staff: Staff) -> &mut Self {
-        self.staff = Some(staff);
-        return self;
-    }
 }
 
 #[derive(Serialize)]
@@ -272,7 +255,7 @@ mod tests {
 
     #[test]
     fn measure_new() {
-        let mut m = Measure::new("m1", 1);
+        let m = Measure::new("m1", 1);
         assert_eq!("m1", m.id);
         assert_eq!(1, m.n);
     }

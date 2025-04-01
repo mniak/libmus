@@ -1,9 +1,6 @@
 use crate::iter::IntoGroupsExt;
 use crate::mei;
 use itertools::*;
-use rand::distr::Iter;
-use serde_json::map;
-use std::{time::Duration, usize};
 
 struct Proposition {
     measures: Vec<mei::Measure>,
@@ -35,7 +32,6 @@ struct Exercise {
 }
 impl Exercise {
     fn into_mei(self) -> mei::Mei {
-        let mut counter = 0;
         let measures = self
             .propositions
             .into_iter()
@@ -144,12 +140,6 @@ fn propositions_from_durations(elements: Vec<Element>, threshold: f32) -> Vec<Pr
         .collect()
 }
 
-fn split_durations<I: Iterator<Item = i8>>(
-    threshold: f32,
-    iter: I,
-) -> impl Iterator<Item = Vec<i8>> {
-    iter.into_groups(threshold, |d| 1.0 / d.abs() as f32)
-}
 #[derive(Debug, PartialEq)]
 enum Element {
     Note(u8),
