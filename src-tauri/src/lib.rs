@@ -31,12 +31,8 @@ fn send_mei(app: tauri::AppHandle, m: mei::Mei) -> Result<(), Error> {
     let xml = m
         .to_xml()
         .map_err(|e| Error::XmlSerialization(e.to_string()))?;
-    // let xml = include_str!("../../public/mei.xml").to_string();
-    app.emit("meiChanged", MeiChangedEvent { mei: xml.clone() })
+    app.emit("meiChanged", MeiChangedEvent { mei: xml })
         .map_err(|e| Error::TauriFailed(e.to_string()))?;
-
-    println!("XML sent to frontend: {}", xml);
-
     Ok(())
 }
 #[tauri::command]
@@ -53,8 +49,6 @@ pub fn run() {
             {
                 let window = app.get_webview_window("main").unwrap();
                 window.open_devtools();
-                window.maximize()?;
-                window.set_fullscreen(true)?;
             }
             Ok(())
         })

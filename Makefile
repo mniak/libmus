@@ -4,3 +4,7 @@ run: node_modules/
 
 node_modules/:
 	npm install
+
+.PHONY=build
+build:
+	cargo tauri build
