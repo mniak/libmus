@@ -1,4 +1,4 @@
-import { Component, signal } from "@angular/core";
+import { Component, input, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
@@ -13,6 +13,7 @@ import { DisplayComponent } from "./verovio/display/display.component";
 export class AppComponent {
   mei = signal("");
   page = 1;
+  exercise = "Simple";
 
   async ngOnInit() {
     // let response = await fetch('mei.xml')
@@ -23,9 +24,8 @@ export class AppComponent {
       this.mei.set(event.payload.mei);
     });
   }
-  async doAction() {
-    console.log("invoking action");
-    await invoke("action");
+  async refresh() {
+    await invoke("refresh", { exercise: this.exercise});
   }
 }
 

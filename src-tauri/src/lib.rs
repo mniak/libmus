@@ -3,9 +3,14 @@ use std::fmt::Display;
 use serde::Serialize;
 use tauri::{Emitter, Manager};
 
+use crate::theory::BASS_CLEFF_RANGE;
+
 mod iter;
 mod mei;
 mod pozzoli;
+mod simple;
+mod theory;
+
 #[cfg(test)]
 mod test_utils;
 
@@ -36,8 +41,13 @@ fn send_mei(app: tauri::AppHandle, m: mei::Mei) -> Result<(), Error> {
     Ok(())
 }
 #[tauri::command]
-async fn action(app: tauri::AppHandle) -> Result<(), String> {
-    let drill = pozzoli::series1_time2();
+async fn refresh(app: tauri::AppHandle, exercise: &str) -> Result<(), String> {
+    let drill = match exercise {
+        "Simple" => {
+            simple::quarters_in_quadruple("C2-C4 on Bass Clef".to_owned(), 100, BASS_CLEFF_RANGE)
+        }
+        _ => pozzoli::series1_time2(),
+    };
     send_mei(app, drill).map_err(|e| e.to_string())
 }
 
@@ -53,7 +63,7 @@ pub fn run() {
             Ok(())
         })
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![action])
+        .invoke_handler(tauri::generate_handler![refresh])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

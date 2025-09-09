@@ -72,6 +72,7 @@ impl Exercise {
                                         lines_visible: false,
                                         meter_count: 2,
                                         meter_unit: 4,
+                                        ..Default::default()
                                     },
                                 },
                             },

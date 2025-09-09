@@ -107,7 +107,7 @@ pub struct StaffGroup {
     #[serde(rename = "staffDef")]
     pub staff_definition: StaffDefinition,
 }
-#[derive(Serialize)]
+#[derive(Serialize, Default)]
 pub struct StaffDefinition {
     #[serde(rename = "@n")]
     pub n: u16,
@@ -119,7 +119,23 @@ pub struct StaffDefinition {
     pub meter_count: u8,
     #[serde(rename = "@meter.unit")]
     pub meter_unit: u8,
+    #[serde(rename = "clef")]
+    pub clef: Option<Clef>,
 }
+#[derive(Serialize)]
+pub struct Clef {
+    #[serde(rename = "@shape")]
+    pub shape: String,
+    #[serde(rename = "@line")]
+    pub line: u8,
+}
+pub fn bass_clef() -> Clef {
+    Clef {
+        shape: "F".to_string(),
+        line: 4,
+    }
+}
+
 #[derive(Serialize)]
 pub struct Section {
     #[serde(rename = "@xml:id")]
@@ -230,7 +246,7 @@ pub struct Rest {
     pub duration: u8,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Clone, Copy, PartialEq, Debug)]
 pub enum PitchName {
     #[serde(rename = "a")]
     A,
@@ -246,6 +262,32 @@ pub enum PitchName {
     F,
     #[serde(rename = "g")]
     G,
+}
+
+impl PitchName {
+    pub fn diatonic_value(self) -> u8 {
+        match self {
+            PitchName::C => 0,
+            PitchName::D => 1,
+            PitchName::E => 2,
+            PitchName::F => 3,
+            PitchName::G => 4,
+            PitchName::A => 5,
+            PitchName::B => 6,
+        }
+    }
+    pub fn from_diatonic_value(v: u8) -> Self {
+        match v % 7 {
+            0 => PitchName::C,
+            1 => PitchName::D,
+            2 => PitchName::E,
+            3 => PitchName::F,
+            4 => PitchName::G,
+            5 => PitchName::A,
+            6 => PitchName::B,
+            _ => panic!("invalid diatonic value"),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -403,6 +445,7 @@ mod tests {
                                     lines_visible: true,
                                     meter_count: 2,
                                     meter_unit: 4,
+                                    ..Default::default()
                                 },
                             },
                         },

@@ -1,10 +1,15 @@
 <div class="navbar bg-base-100 shadow-sm">
   <div class="navbar-start">
-    <a class="text-xl">Pozzoli</a>
+    <a class="text-xl">Trainer</a>
   </div>
   <div class="navbar-end">
-    <input type="number" class="input" required placeholder="Page" min="1" max="10" [(ngModel)]="page" />
-    <a class="btn btn-primary" (click)="doAction()">Atualizar</a>
+    <!-- <input type="number" class="input" required placeholder="Page" min="1" max="10" [(ngModel)]="page" /> -->
+    <select class="select" [(ngModel)]="exercise" >
+      <option>Pozolli</option>
+      <option>Simple</option>
+    </select>
+    <!-- <input type="text" [(ngModel)]="exercise" /> -->
+    <a class="btn btn-primary" (click)="refresh()">Refresh</a>
   </div>
 </div>
 
